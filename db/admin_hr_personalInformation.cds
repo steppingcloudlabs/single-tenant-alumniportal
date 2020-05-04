@@ -1,6 +1,7 @@
 namespace sclabs.alumniportal.personalinformation;
+using { managed, sap } from '@sap/cds/common';
 
-entity admin_hr_personalinformation{
+entity admin_hr_personalinformation : managed{
 	key ID: UUID @odata.Type:'Edm.String';
 	usertype : userType;
 	salutation: String;
