@@ -1,5 +1,5 @@
 ID: multitenant-alumniportal-sap
-_schema-version: "2.1"
+_schema-version: '2.1'
 version: 0.0.1
 modules:
   - name: multitenant-alumniportal-sap-db
@@ -19,20 +19,29 @@ modules:
     provides:
       - name: srv_api
         properties:
-          url: ${default-url}
+          url: '${default-url}'
     requires:
       - name: multitenant-alumniportal-sap-db-hdi-container
       - name: multitenant-alumniportal-sap-uaa
+  - name: express-api-server
+    type: nodejs
+    path: express-api-server
+    provides:
+      - name: express-api-server_api
+        properties:
+          url: '${default-url}'
+    requires:
+      - name: multitenant-alumniportal-sap-db-hdi-container
 resources:
   - name: multitenant-alumniportal-sap-db-hdi-container
     type: com.sap.xs.hdi-container
     properties:
-      hdi-container-name: ${service-name}
+      hdi-container-name: '${service-name}'
   - name: multitenant-alumniportal-sap-uaa
     type: org.cloudfoundry.managed-service
     parameters:
       service-plan: application
       service: xsuaa
       config:
-        xsappname: multitenant-alumniportal-sap-${space}
+        xsappname: 'multitenant-alumniportal-sap-${space}'
         tenant-mode: dedicated

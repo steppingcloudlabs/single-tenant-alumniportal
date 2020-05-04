@@ -6,6 +6,7 @@
         "@sap/cds": "^3.34.1",
         "express": "^4.17.1",
         "@sap/hana-client": "^2.4.196"
+        
     },
     "engines": {
         "node": "^10 || ^12"
