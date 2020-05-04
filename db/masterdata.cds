@@ -1,6 +1,8 @@
 namespace sclabs.alumniportal.masterdata;
 
-entity MasterData {
+using { managed, sap } from '@sap/cds/common';
+
+entity MasterData : managed{
   key ID : UUID  not null @odata.Type:'Edm.String';
   user_id : String not null;
   gender: String ;
