@@ -32,6 +32,7 @@ modules:
           url: '${default-url}'
     requires:
       - name: multitenant-alumniportal-sap-db-hdi-container
+      - name: multitenant-alumniportal-sap-uaa
 resources:
   - name: multitenant-alumniportal-sap-db-hdi-container
     type: com.sap.xs.hdi-container
