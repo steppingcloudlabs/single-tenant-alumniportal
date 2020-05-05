@@ -1,7 +1,6 @@
 /*eslint no-console: 0*/
 "use strict";
 
-const http = require("http");
 const express = require("express");
 const morgan = require("morgan");
 const bodyParser = require("body-parser");
@@ -16,6 +15,12 @@ const port = process.env.PORT || 3000;
 //Initialize Express App for XS UAA and HDBEXT Middleware
 const app = express();
 //logging
+app.use(morgan("dev"));
+app.use(
+  bodyParser.json({
+    limit: "200mb"
+  })
+);
 const logging = require("@sap/logging");
 const appContext = logging.createAppContext();
 
@@ -37,6 +42,7 @@ passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
 		tag: "xsuaa"
 	}
 }).uaa));
+
 app.use(logging.middleware({
 	appContext: appContext,
 	logNetwork: true
@@ -74,11 +80,15 @@ app.use(function(req, res, next) {
     next();
 });
 
-
-
 app.get("/", (req, res) => {
 	res.send("YESS!!");
 });
+
+// ROUTES
+// nef routes
+const nefRoutes = require("./router/nef");
+app.use("/admin/action", nefRoutes);
+
 
 app.listen(port, () => {
     console.log(`Server listening on port: ${port}`);
