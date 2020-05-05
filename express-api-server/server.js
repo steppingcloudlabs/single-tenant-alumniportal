@@ -37,17 +37,17 @@ app.use(helmet.contentSecurityPolicy({
 // Sets "Referrer-Policy: no-referrer".
 app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
 
-passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
-	uaa: {
-		tag: "xsuaa"
-	}
-}).uaa));
+// passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
+// 	uaa: {
+// 		tag: "xsuaa"
+// 	}
+// }).uaa));
 
 app.use(logging.middleware({
 	appContext: appContext,
 	logNetwork: true
 }));
-app.use(passport.initialize());
+// app.use(passport.initialize());
 var hanaOptions = xsenv.getServices({
 	hana: {
 		tag: "hana"
@@ -55,9 +55,9 @@ var hanaOptions = xsenv.getServices({
 });
 hanaOptions.hana.pooling = true;
 app.use(
-	passport.authenticate("JWT", {
-		session: false
-	}),
+// 	passport.authenticate("JWT", {
+// 		session: false
+// 	}),
 	xsHDBConn.middleware(hanaOptions.hana)
 );
 
