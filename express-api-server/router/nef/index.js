@@ -1,7 +1,7 @@
-const Router = require('express').Router();
-const nefController = require("../../controller/nef/index");
-Router
-    .route('/view/news')
-    .get((req, res, next) => nefController.viewNews(req, res, next));
+const expressrouter = require("express").Router();
+const nefcontroller = require("../../controller/nef/index");
+expressrouter
+	.route("/view/news")
+	.get((req, res, next) => nefcontroller.viewnews(req, res, next));
 
-module.exports = Router;
+module.exports = expressrouter;
