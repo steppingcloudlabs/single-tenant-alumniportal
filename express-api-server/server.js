@@ -104,16 +104,15 @@ app.use(function (req, res, next) {
 
 // ROUTES
 
-// nef routes
-const nefRoutes = require("./router/nef");
-app.use("/admin/action", nefRoutes);
+// news, events, faq routes
+const adminnefRoutes = require("./router/nef");
+const usernefRoutes = require("./router/nef");
+app.use("/admin/action", adminnefRoutes);
+app.use("/user/actions", usernefRoutes);
 
 // documents 
-
 // user 
-app.use("/user/action", nefRoutes);
 // admin
-app.use("/admin/action", nefRoutes);
 // login and signup
 
 // additional serivce

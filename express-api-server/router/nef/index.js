@@ -20,6 +20,6 @@ expressrouter
 	.post((req, res, next) => nefcontroller.updatefaq(req, res, next));
 expressrouter
 	.route("/faq/delete")
-	.post((req, res, next) => nefcontroller.updatefaq(req, res, next));
+	.post((req, res, next) => nefcontroller.deletefaq(req, res, next));
 
 module.exports = expressrouter;
