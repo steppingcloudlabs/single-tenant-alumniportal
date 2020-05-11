@@ -154,7 +154,7 @@
  	},
  	deletefaq: async(req, res) => {
  		try {
- 			const payload = req.params;
+ 			const payload = req.body;
  			let db = new dbClass(req.db);
  			const response = await nefserivce.deletefaq({
  				payload,
@@ -165,16 +165,11 @@
  					status: "200",
  					result: response,
  				});
- 			} else {
- 				res.status(400).send({
- 					status: "400",
- 					result: `${e.toString()}`
- 				});
  			}
  		} catch (error) {
- 			res.status(400).send({
+ 			res.status(200).send({
  				status: "400",
- 				result: error
+ 				result: "Element Not Found"
  			});
  		}
  	},

@@ -130,8 +130,11 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				console.log(
+					`DELETE FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE ID = '${payload.id}'`
+				)
 				const statement = await db.preparePromisified(
-					`DELETE FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE ID = ${payload.id}`
+					`DELETE FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE ID = '${payload.id}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
