@@ -1,26 +1,79 @@
  /* eslint-disable */
  const nefserivce = require("../../service/nef")();
+ const dbClass = require("sap-hdbext-promisfied");
  module.exports = {
  	// News Controllers
- 	viewnews: async(req, res) => {
- 		const {
- 			payload
- 		} = req.param;
- 		const response = await nefserivce.viewNews({
+ 	getnews: async(req, res) => {
+ 		const payload = req.params;
+ 		let db = new dbClass(req.db);
+ 		const response = await nefserivce.viewnews({
  			payload,
- 			token
+ 			db
  		});
- 		if (!response) {
+ 		if (response) {
  			res.status(200).send({
  				status: "200",
- 				result: "TEST REJECT"
+ 				result: response,
  			});
  		} else {
  			res.status(400).send({
  				status: "400",
- 				result: "TEST REJECT"
+ 				result: `${e.toString()}`
  			});
  		}
+ 	},
+
+ 	createnews: async(req, res) => {
+
+ 		const payload = req.body;
+ 		let db = new dbClass(req.db);
+ 		const response = await nefserivce.createnews({
+ 			payload,
+ 			db
+ 		});
+ 		if (response) {
+ 			res.type("application/json").status(200).send({
+ 				status: "200",
+ 				result: response
+ 			});
+ 		} else {
+ 			res.type("text/plain").status(200).send({
+ 				status: "500",
+ 				result: "Error"
+ 			});
+
+ 		}
+
+ 	},
+
+ 	updatenews: async(req, res) => {
+ 		try {
+ 			const payload = req.body;
+ 			let db = new dbClass(req.db);
+ 			const response = await nefserivce.updatenews({
+ 				payload,
+ 				db
+ 			});
+ 			if (response) {
+ 				res.type("application/json").status(200).send({
+ 					status: "200",
+ 					result: response
+ 				});
+ 			} else {
+ 				res.type("text/plain").status(200).send({
+ 					status: "500",
+ 					result: "Error"
+ 				});
+
+ 			}
+
+ 		} catch (error) {
+ 			res.type("text/plain").status(500).send({
+ 				status: "500",
+ 				error: error
+ 			});
+ 		}
+
  	}
 
  }
