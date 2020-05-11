@@ -2,6 +2,8 @@ const uuid = require("uuid");
 module.exports = () => {
 	/*
 	SERVICE FUNCTIONS FOR NEWS 
+	
+	REPONSIBILITY: HAMZA
 	*/
 	const viewnews = ({
 		payload,
@@ -60,6 +62,7 @@ module.exports = () => {
 	
 	SERVICE FUNCTIONS FOR FAQ
 	
+	REPONSIBILITY: PD
 	*/
 
 	const viewfaq = ({
@@ -117,6 +120,9 @@ module.exports = () => {
 
 	/*
 	SERVICE FUNCTIONS FOR EVENT 
+	
+	
+	REPONSIBILITY: MAAZ
 	*/
 
 	return {
