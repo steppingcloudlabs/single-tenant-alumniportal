@@ -82,31 +82,43 @@ app.use(function (req, res, next) {
 	next();
 });
 
-app.get("/", async(req, res) => {
-	try {
-		const dbClass = require("sap-hdbext-promisfied")
-		let db = new dbClass(req.db);
-		const statement = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
-		const results = await db.statementExecPromisified(statement, [])
-		let result = JSON.stringify({
-			Objects: results
-		})
-		return res.type("application/json").status(200).send(result)
-	} catch (e) {
-		return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
-	}
-});
-//  TESTING STUFF 
+// app.get("/", async(req, res) => {
+// 	try {
+// 		const dbClass = require("sap-hdbext-promisfied")
+// 		let db = new dbClass(req.db);
+// 		const statement = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
+// 		const results = await db.statementExecPromisified(statement, [])
+// 		let result = JSON.stringify({
+// 			Objects: results
+// 		})
+// 		return res.type("application/json").status(200).send(result)
+// 	} catch (e) {
+// 		return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
+// 	}
+// });
+// //  TESTING STUFF 
 
-app.get("/env", (req, res) => {
-	return res.type("application/json").status(200).send(JSON.stringify(process.env));
-});
+// app.get("/env", (req, res) => {
+// 	return res.type("application/json").status(200).send(JSON.stringify(process.env));
+// });
 
 // ROUTES
 
 // nef routes
 const nefRoutes = require("./router/nef");
 app.use("/admin/action", nefRoutes);
+
+// documents 
+
+// user 
+app.use("/user/action", nefRoutes);
+// admin
+app.use("/admin/action", nefRoutes);
+// login and signup
+
+// additional serivce
+// 1. usersearch, 
+// ASKHR
 
 app.listen(port, () => {
 	console.log(`Server listening on port: ${port}`);
