@@ -9,5 +9,17 @@ expressrouter
 expressrouter
 	.route("/news/update")
 	.post((req, res, next) => nefcontroller.updatenews(req, res, next));
+expressrouter
+	.route("/faq/get")
+	.get((req, res, next) => nefcontroller.getfaq(req, res, next));
+expressrouter
+	.route("/faq/create")
+	.post((req, res, next) => nefcontroller.createfaq(req, res, next));
+expressrouter
+	.route("/faq/update")
+	.post((req, res, next) => nefcontroller.updatefaq(req, res, next));
+expressrouter
+	.route("/faq/delete")
+	.post((req, res, next) => nefcontroller.updatefaq(req, res, next));
 
 module.exports = expressrouter;
