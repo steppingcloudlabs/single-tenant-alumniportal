@@ -31,8 +31,27 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				const createdat = new Date().toISOString();
+				const createdby = "admin";
+				const modifiedby = "admin";
+				const modifiedat = new Date().toISOString();
+				const date = new Date().toISOString();
+				const id = uuid();
 				const statement = await db.preparePromisified(
-					`INSERT INTO "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${payload.ID}', '${payload.QUESTION}', '${payload.ANSWER}', '${payload.CREATEDAT}', '${payload.CREATEDBY}', '${payload.MODIFIEDAT}','${payload.MODIFIEDBY}')`
+					`INSERT INTO "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" VALUES(
+					'${id}',
+					'${payload.title},
+					'${paylaod.content}',
+					'${paylaod.author},
+					'${paylaod.tag}',
+					'${date}',
+					'${paylaod.photo}',
+					'${createdat}',
+					'${createdby}',
+					'${modifiedat}',
+					'${modifiedby}',
+					'${payload.photoname}',
+)`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -72,8 +91,8 @@ module.exports = () => {
 		return new Promise(async(resolve, reject) => {
 			try {
 				// TODO: add pagination using [to, from] clauses in statement.
-				const limit = payload.limit == null ? 10 : payload.limit
-				const offset = payload.offset == null ? 0 : payload.offset
+				const limit = payload.limit == undefined ? 10 : payload.limit
+				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
 					`SELECT "ID","QUESTION","ANSWER" FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" rows limit ${limit} offset ${offset}`
 				)

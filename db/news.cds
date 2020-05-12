@@ -10,5 +10,5 @@ entity news : managed{
 	tags : String;
 	date : Date;
 	photo : LargeBinary;
-	photoname: String
+	photoname: String;
 }
