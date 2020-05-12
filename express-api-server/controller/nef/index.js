@@ -80,7 +80,7 @@
 
  	getfaq: async(req, res) => {
  		try {
- 			const payload = req.params;
+ 			const payload = req.query;
  			let db = new dbClass(req.db);
  			const response = await nefserivce.viewfaq({
  				payload,
