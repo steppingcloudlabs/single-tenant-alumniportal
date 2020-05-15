@@ -1,4 +1,4 @@
-/*eslint no-console: 0*/
+ /*eslint no-console: 0*/
 "use strict";
 
 const express = require("express");
@@ -111,6 +111,11 @@ app.use("/admin/action", adminnefRoutes);
 app.use("/user/actions", usernefRoutes);
 
 // documents 
+const admindocumentRoutes = require("./router/documents");
+const userdocumentRoutes = require("./router/documents/userindex.js");
+app.use("/admin/action", admindocumentRoutes);
+app.use("/user/actions", userdocumentRoutes);
+
 // user 
 // admin
 // login and signup
