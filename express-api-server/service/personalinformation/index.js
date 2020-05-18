@@ -1,9 +1,11 @@
 const uuid = require("uuid");
 module.exports = () => {
 	/*
-	SERVICE FUNCTIONS FOR DOCUMENT 
+	SERVICE FUNCTIONS FOR NEWS 
+	
+	REPONSIBILITY: HAMZA
 	*/
-	const viewdocuments = ({
+	const viewpersonalinformation = ({
 		payload,
 		db
 	}) => {
@@ -24,7 +26,7 @@ module.exports = () => {
 		});
 	};
 
-	const createdocuments = ({
+	const createpersonalinformation = ({
 		payload,
 		db
 	}) => {
@@ -58,7 +60,7 @@ module.exports = () => {
 		});
 	};
 
-	const updatedocuments = ({
+	const updatepersonalinformation = ({
 		payload,
 		db
 	}) => {
@@ -90,7 +92,7 @@ module.exports = () => {
 		});
 	};
 
-	const deletedocuments = ({
+	const deletepersonalinformation = ({
 		payload,
 		db
 	}) => {
@@ -114,10 +116,10 @@ module.exports = () => {
 	};
 
 	return {
-		viewdocuments,
-		createdocuments,
-		updatedocuments,
-		deletedocuments,
+		viewpersonalinformation,
+		createpersonalinformation,
+		updatepersonalinformation,
+		deletepersonalinformation,
 	};
 
 };
