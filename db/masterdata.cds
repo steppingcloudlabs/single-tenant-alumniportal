@@ -19,4 +19,5 @@ entity MasterData : managed{
   phone_number_phone_information : String;
   manager_job_information : String;
   designation_job_information : String;
+  
 }
