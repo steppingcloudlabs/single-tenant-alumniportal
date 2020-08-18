@@ -262,7 +262,7 @@
 			} catch (error) {
 				res.type("text/plain").status(200).send({
 					status: "500",
-					result: "Error"
+					result: error
 				});
 			}
 

@@ -1,4 +1,5 @@
 const uuid = require("uuid");
+const currentSchema = require("../../utils/database/index.js")();
 module.exports = () => {
 	/*
 	SERVICE FUNCTIONS FOR NEWS 
@@ -157,8 +158,10 @@ where
 				// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
+				const schema = currentSchema(db)
+				console.log(schema)
 				const statement = await db.preparePromisified(
-					`SELECT "ID","QUESTION","ANSWER" FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" rows limit ${limit} offset ${offset}`
+					`SELECT "ID","QUESTION","ANSWER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" rows limit ${limit} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -175,13 +178,17 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const createdat = new Date().toISOString();
+				const schemaSQL = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
+				const response = await db.statementExecPromisified(schemaSQL, [])
+				const currentSchema = response[0].CURRENT_SCHEMA;
+				const createdat = new Date().toISOString().split('T')[0];
 				const createdby = "admin";
 				const modifiedby = "admin";
-				const modifiedat = new Date().toISOString();
+				const modifiedat = new Date().toISOString().split('T')[0];
 				const id = uuid();
+				console.log(currentSchema);
 				const statement = await db.preparePromisified(
-					`INSERT INTO "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${id}', '${payload.question}', '${payload.answer}', '${createdat}', '${createdby}', '${modifiedat}','${modifiedby}')`
+					`INSERT INTO "${currentSchema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${id}', '${payload.question}', '${payload.answer}')`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -197,17 +204,20 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				const schemaSQL = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
+				const response = await db.statementExecPromisified(schemaSQL, [])
+				const currentSchema = response[0].CURRENT_SCHEMA;
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const statement = await db.preparePromisified(
-					`UPDATE "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ"
+					`UPDATE "${currentSchema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ"
 					SET "QUESTION" = CASE 
 					WHEN '${payload.question}' != 'undefined' THEN '${payload.question}'
-					ELSE (select "TITLE" FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+					ELSE (select "TITLE" FROM "${currentSchema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
 					END,
 					"ANSWER" = CASE
 					WHEN '${payload.answer}' != 'undefined' THEN '${payload.answer}'
-					ELSE (select "CONTENT" FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+					ELSE (select "CONTENT" FROM "${currentSchema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
 					end,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
@@ -228,11 +238,14 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				const schemaSQL = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
+				const response = await db.statementExecPromisified(schemaSQL, [])
+				const currentSchema = response[0].CURRENT_SCHEMA;
 				/*console.log(
 					`DELETE FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE ID = '${payload.id}'`
 				)*/
 				const statement = await db.preparePromisified(
-					`DELETE FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE ID = '${payload.id}'`
+					`DELETE FROM "${currentSchema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE ID = '${payload.id}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
@@ -254,12 +267,15 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				const schemaSQL = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
+				const response = await db.statementExecPromisified(schemaSQL, [])
+				const currentSchema = response[0].CURRENT_SCHEMA;
 
 				// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
-					`SELECT "ID","TITLE","CONTENT","AUTHOR","TAGS","DATE","PHOTO","PHOTO","CREATEDAT","CREATEDBY","MODIFIEDAT","MODIFIEDBY" FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" rows limit ${limit} offset ${offset}`
+					`SELECT "ID","TITLE","CONTENT","AUTHOR","TAGS","DATE","PHOTO","PHOTO","CREATEDAT","CREATEDBY","MODIFIEDAT","MODIFIEDBY" FROM "${currentSchema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" rows limit ${limit} offset ${offset}`
 				)
 
 				const results = await db.statementExecPromisified(statement, [])
