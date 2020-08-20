@@ -103,6 +103,7 @@
 
   // ROUTES
 
+//TODO MAAZ && SANA && PD.
   // login and signup
   const adminauthRoutes = require("./router/auth");
   const userauthRoutes = require("./router/auth/userindex.js");
@@ -120,17 +121,20 @@
   const userdocumentRoutes = require("./router/documents/userindex.js");
   app.use("/admin/action", admindocumentRoutes);
   app.use("/user/action", userdocumentRoutes);
-
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// TODO SANA
   // admin 
   const adminactionRoutes = require("./router/admin");
   app.use("/admin/action", adminactionRoutes);
 
+// TODO Maazzzzz
   // user
   const adminuseractionRoutes = require("./router/users");
   const useractionRoutes = require("./router/users/userindex.js");
   app.use("/admin/action", adminuseractionRoutes);
   app.use("/admin/action", useractionRoutes);
 
+// TODO PD
   // ADDITIONAL SERVICES 
 
   // usersearch
