@@ -103,7 +103,7 @@
 
   // ROUTES
 
-//TODO MAAZ && SANA && PD.
+  //TODO MAAZ && SANA && PD.
   // login and signup
   const adminauthRoutes = require("./router/auth");
   const userauthRoutes = require("./router/auth/userindex.js");
@@ -121,26 +121,25 @@
   const userdocumentRoutes = require("./router/documents/userindex.js");
   app.use("/admin/action", admindocumentRoutes);
   app.use("/user/action", userdocumentRoutes);
-//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-// TODO SANA
+  //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+  // TODO SANA
   // admin 
   const adminactionRoutes = require("./router/admin");
   app.use("/admin/action", adminactionRoutes);
 
-// TODO Maazzzzz
+  // TODO Maazzzzz
   // user
   const adminuseractionRoutes = require("./router/users");
   const useractionRoutes = require("./router/users/userindex.js");
   app.use("/admin/action", adminuseractionRoutes);
   app.use("/admin/action", useractionRoutes);
 
-// TODO PD
+  // TODO PD
   // ADDITIONAL SERVICES 
 
-  // usersearch
-  //const searchRoutes = require("./router/search");
-  //app.use("/admin/action", searchRoutes);
-  //app.use("/admin/action", searchRoutes);
+  //usersearch
+  const searchRoutes = require("./router/search");
+  app.use("/search", searchRoutes);
 
   // ASKHR
   //NEED TO BE BUILD AS A SAPERATE PRODUCT.
