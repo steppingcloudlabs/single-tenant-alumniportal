@@ -11,11 +11,12 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				// TODO: add pagination using [to, from] clauses in statement.
+				const schema = currentSchema(db)
+					// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
-					`SELECT "ID", "DOCUMENT", "FILENAME", "FILE", "CREATEDAT", "MODIFIEDAT" FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" rows limit ${limit} offset ${offset}`
+					`SELECT "ID", "DOCUMENT", "FILENAME", "FILE", "CREATEDAT", "MODIFIEDAT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" rows limit ${limit} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -32,6 +33,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				const schema = currentSchema(db)
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -41,7 +43,7 @@ module.exports = () => {
 				const document_ = payload.document;
 				const file_name = payload.filename;
 				const statement = await db.preparePromisified(
-					`INSERT INTO "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" VALUES(
+					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" VALUES(
 						'${createdat}',
 						'${createdby}',
 						'${modifiedat}',
@@ -66,6 +68,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				const schema = currentSchema(db)
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -73,10 +76,10 @@ module.exports = () => {
 				const date = new Date().toISOString();
 				const id = uuid();
 				const statement = await db.preparePromisified(
-					`UPDATE "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"
+					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"
 					SET "DOCUMENT" = CASE 
 					WHEN '${payload.document}' != 'undefined' THEN '${payload.document}'
-					ELSE (select "DOCUMENT" FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "ID"='${payload.id}')
+					ELSE (select "DOCUMENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "ID"='${payload.id}')
 					END,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
@@ -100,11 +103,11 @@ module.exports = () => {
 			try {
 
 				/*console.log(
-					`DELETE FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
+					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
 				)*/
-
+				const schema = currentSchema(db)
 				const statement = await db.preparePromisified(
-					`DELETE FROM "MULTITENANT_ALUMNIPORTAL_SAP_MULTITENANT_ALUMNIPORTAL_SAP_DB_1"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"  WHERE ID = '${payload.id}'`
+					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"  WHERE ID = '${payload.id}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
