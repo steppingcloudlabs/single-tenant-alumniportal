@@ -6,8 +6,8 @@ modules:
     type: hdb
     path: db
     parameters:
-      memory: 256M
-      disk-quota: 512M
+      memory: 150M
+      disk-quota: 800M
     requires:
       - name: multitenant-alumniportal-sap-db-hdi-container
   - name: multitenant-alumniportal-sap-srv
