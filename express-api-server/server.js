@@ -81,21 +81,21 @@
   	next();
   });
 
-  // app.get("/", async(req, res) => {
-  // 	try {
-  // 		const dbClass = require("sap-hdbext-promisfied")
-  // 		let db = new dbClass(req.db);
-  // 		const statement = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
-  // 		const results = await db.statementExecPromisified(statement, [])
-  // 		let result = JSON.stringify({
-  // 			Objects: results
-  // 		})
-  // 		return res.type("application/json").status(200).send(result)
-  // 	} catch (e) {
-  // 		return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
-  // 	}
-  // });
-  // //  TESTING STUFF 
+  app.get("/", async(req, res) => {
+  	try {
+  		const dbClass = require("sap-hdbext-promisfied")
+  		let db = new dbClass(req.db);
+  		const statement = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
+  		const results = await db.statementExecPromisified(statement, [])
+  		let result = JSON.stringify({
+  			Objects: results
+  		})
+  		return res.type("application/json").status(200).send(result)
+  	} catch (e) {
+  		return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
+  	}
+  });
+  //  TESTING STUFF 
 
   // app.get("/env", (req, res) => {
   // 	return res.type("application/json").status(200).send(JSON.stringify(process.env));
@@ -103,6 +103,7 @@
 
   // ROUTES
 
+//TODO MAAZ && SANA && PD.
   // login and signup
   const adminauthRoutes = require("./router/auth");
   const userauthRoutes = require("./router/auth/userindex.js");
@@ -120,23 +121,26 @@
   const userdocumentRoutes = require("./router/documents/userindex.js");
   app.use("/admin/action", admindocumentRoutes);
   app.use("/user/action", userdocumentRoutes);
-
-  // admin
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// TODO SANA
+  // admin 
   const adminactionRoutes = require("./router/admin");
   app.use("/admin/action", adminactionRoutes);
 
+// TODO Maazzzzz
   // user
-  const adminuseractionRoutes = require("./routes/users");
-  const useractionRoutes = require("./routes/users/userindex.js");
+  const adminuseractionRoutes = require("./router/users");
+  const useractionRoutes = require("./router/users/userindex.js");
   app.use("/admin/action", adminuseractionRoutes);
   app.use("/admin/action", useractionRoutes);
 
+// TODO PD
   // ADDITIONAL SERVICES 
 
   // usersearch
-  const searchRoutes = require("./routes/search");
-  app.use("/admin/action", searchRoutes);
-  app.use("/admin/action", searchRoutes);
+  //const searchRoutes = require("./router/search");
+  //app.use("/admin/action", searchRoutes);
+  //app.use("/admin/action", searchRoutes);
 
   // ASKHR
   //NEED TO BE BUILD AS A SAPERATE PRODUCT.

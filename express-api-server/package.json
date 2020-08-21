@@ -16,7 +16,8 @@
 		"helmet": "^3.22.0",
 		"morgan": "^1.10.0",
 		"passport": "^0.4.1",
-		"sap-hdbext-promisfied": "^2.202004.1"
+		"sap-hdbext-promisfied": "^2.202004.1",
+		"nodemon": ""
 	},
 	"files": [],
 	"main": "server.js",
@@ -24,7 +25,7 @@
 	"scripts": {
 		"test": "node node_modules/jest/bin/jest --config jest.json",
 		"test-coverage": "node node_modules/jest/bin/jest --coverage --config jest.json",
-		"start": "node server.js"
+		"start": "nodemon server.js"
 	},
 	"engines": {
 		"node": "10.x"
