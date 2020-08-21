@@ -212,7 +212,7 @@
 		//Responsibility by Maaz
 		getevent: async(req, res) => {
 			try {
-
+				
 				const payload = req.params;
 				let db = new dbClass(req.db);
 				const response = await nefserivce.getevent({
@@ -241,8 +241,10 @@
 
 		createevent: async(req, res) => {
 			try {
+				
 				const payload = req.body;
 				let db = new dbClass(req.db);
+				console.log(db)
 				const response = await nefserivce.createevent({
 					payload,
 					db

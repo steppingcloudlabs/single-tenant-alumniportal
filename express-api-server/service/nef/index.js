@@ -162,7 +162,7 @@ where
 					// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
-				const schema = currentSchema(db)
+				// const schema = currentSchema(db)
 				console.log(schema)
 				const statement = await db.preparePromisified(
 					`SELECT "ID","QUESTION","ANSWER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" rows limit ${limit} offset ${offset}`
@@ -270,7 +270,7 @@ where
 				const statement = await db.preparePromisified(
 					`SELECT "ID","TITLE","CONTENT","AUTHOR","TAGS","DATE","PHOTO","PHOTO","CREATEDAT","CREATEDBY","MODIFIEDAT","MODIFIEDBY" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" rows limit ${limit} offset ${offset}`
 				)
-
+				console.log(statement)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 
@@ -285,6 +285,7 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				
 				const schema = currentSchema(db)
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
@@ -292,20 +293,21 @@ where
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
 				const id = uuid();
-
+				console.log("hello");
+				console.log(schema)
 				const statement = await db.preparePromisified(
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" VALUES(
+						'${createdat}',
+						'${createdby}',
+							'${modifiedat}',
+						'${modifiedby}',
 						'${id}',
 						'${payload.title}',
 						'${payload.content}',
 						'${payload.author}',
 						'${payload.tag}',
 						'${date}',
-						'${payload.photo}',
-						'${createdat}',
-						'${createdby}',
-						'${modifiedat}',
-						'${modifiedby}')`
+						'${payload.photo}')`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 
