@@ -33,6 +33,9 @@ modules:
     requires:
       - name: multitenant-alumniportal-sap-db-hdi-container
       - name: multitenant-alumniportal-sap-uaa
+    parameters:
+      memory: 150M
+      disk-quota: 800M
 resources:
   - name: multitenant-alumniportal-sap-db-hdi-container
     type: com.sap.xs.hdi-container

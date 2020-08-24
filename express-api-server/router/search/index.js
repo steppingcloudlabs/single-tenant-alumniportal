@@ -20,3 +20,5 @@ expressrouter
 expressrouter
 	.route("/job")
 	.get((req, res, next) => searchContoller.job(req, res, next));
+
+module.exports = expressrouter;

@@ -158,8 +158,7 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
-					// TODO: add pagination using [to, from] clauses in statement.
+				// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const schema = currentSchema(db)
@@ -272,6 +271,7 @@ where
 				)
 
 				const results = await db.statementExecPromisified(statement, [])
+				console.log(results);
 				resolve(results);
 
 			} catch (error) {
@@ -308,7 +308,7 @@ where
 						'${modifiedby}')`
 				)
 				const results = await db.statementExecPromisified(statement, [])
-
+				console.log(results);
 				resolve(results);
 			} catch (error) {
 				reject(error);
