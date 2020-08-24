@@ -14,6 +14,7 @@ module.exports = {
 				res.status(200).send({
 					status: "200",
 					result: response,
+					
 				});
 			} else {
 				res.status(400).send({
