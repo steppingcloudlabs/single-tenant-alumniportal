@@ -129,10 +129,9 @@
 
   // TODO Maazzzzz
   // user
-  const adminuseractionRoutes = require("./router/users");
-  const useractionRoutes = require("./router/users/userindex.js");
-  app.use("/admin/action", adminuseractionRoutes);
-  app.use("/admin/action", useractionRoutes);
+  //const adminuseractionRoutes = require("./router/users");
+  const useractionRoutes = require("./router/users/index.js");
+  app.use("/user/action", useractionRoutes);
 
   // TODO PD
   // ADDITIONAL SERVICES 
