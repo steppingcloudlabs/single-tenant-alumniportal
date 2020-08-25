@@ -2,9 +2,11 @@ const userserivce = require("../../service/user/index.js")();
 const dbClass = require("sap-hdbext-promisfied");
 module.exports = {
 		// News Controllers
-		getprofile: async(req, res) => {
-			const payload = req.params;
+		getprofile: async(req, res,next) => {
+			try{
+			const payload = req.body;
 			let db = new dbClass(req.db);
+			console.log(db)
 			const response = await userserivce.getprofile({
 				payload,
 				db
@@ -19,6 +21,10 @@ module.exports = {
 					status: "400",
 					result: `${e.toString()}`
 				});
+			}
+			}
+			catch(error){
+				next(error)
 			}
 		},
 }
