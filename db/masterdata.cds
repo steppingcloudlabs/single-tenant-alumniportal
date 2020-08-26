@@ -6,9 +6,9 @@ entity MasterData : managed{
   key ID : UUID  not null @odata.Type:'Edm.String';
   user_id : String not null;
   gender: String ;
-  date_of_birth : Date;
-  date_of_resignation : Date;
-  last_working_day_as_per_notice_period : Date;
+  date_of_birth : String;
+  date_of_resignation : String;
+  last_working_day_as_per_notice_period : String;
   personal_email_id : String;
   first_name_personal_information : String;
   last_name_personal_information : String;
