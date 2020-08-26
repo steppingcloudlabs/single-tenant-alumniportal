@@ -2,31 +2,16 @@ const expressrouter = require("express").Router();
 const admincontroller = require("../../controller/admin/index");
 //admin control routers
 expressrouter
-	.route("/add/user")
-	.get((req, res, next) => admincontroller.login(req, res, next));
+	.route("/user/create")
+	.post((req, res, next) => admincontroller.createuser(req, res, next));
 expressrouter
-	.route("/add/admin")
-	.post((req, res, next) => admincontroller.resetpassword(req, res, next));
+	.route("/user/delete")
+	.post((req, res, next) => admincontroller.deleteuser(req, res, next));
 expressrouter
-	.route("/userdelete")
-	.post((req, res, next) => admincontroller.signup(req, res, next));
+	.route("/user/update")
+	.post((req, res, next) => admincontroller.userupdate(req, res, next));
 expressrouter
-	.route("/userupdate")
-	.post((req, res, next) => admincontroller.changepassword(req, res, next));
+	.route("/user/edit")
+	.post((req, res, next) => admincontroller.useredit(req, res, next));
 
-expressrouter
-	.route("/admindelete")
-	.post((req, res, next) => admincontroller.resetpassword(req, res, next));
-expressrouter
-	.route("/adminupadte")
-	.post((req, res, next) => admincontroller.resetpassword(req, res, next));
-expressrouter
-	.route("/hradd")
-	.post((req, res, next) => admincontroller.resetpassword(req, res, next));
-expressrouter
-	.route("/hrdelete")
-	.post((req, res, next) => admincontroller.resetpassword(req, res, next));
-expressrouter
-	.route("/hrupdate")
-	.post((req, res, next) => admincontroller.resetpassword(req, res, next));
 module.exports = expressrouter;
