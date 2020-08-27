@@ -5,13 +5,13 @@ expressrouter
 	.route("/user/create")
 	.post((req, res, next) => admincontroller.createuser(req, res, next));
 expressrouter
-	.route("/user/delete")
+	.route("/user/update")
 	.post((req, res, next) => admincontroller.deleteuser(req, res, next));
 expressrouter
-	.route("/user/update")
-	.post((req, res, next) => admincontroller.userupdate(req, res, next));
+	.route("/user/get")
+	.get((req, res, next) => admincontroller.getuser(req, res, next));
 expressrouter
-	.route("/user/edit")
-	.post((req, res, next) => admincontroller.useredit(req, res, next));
+	.route("/user/delete")
+	.post((req, res, next) => admincontroller.deleteuser(req, res, next));
 
 module.exports = expressrouter;

@@ -2,14 +2,15 @@ const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 module.exports = () => {
 
-	const viewuser = ({
+	const getuser = ({
 		payload,
 		db
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({db})
 					// TODO: add pagination using [to, from] clauses in statement.
+			
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
@@ -128,17 +129,14 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-
 				/*console.log(
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
 				)*/
-				const schema = currentSchema(db)
-				const statement = await db.preparePromisified(
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTER_MASTER"  WHERE ID = '${payload.id}'`
-				)
+				const schema = await utils.currentSchema({db})
+				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"  WHERE ID = '${payload.payload.id}'`
+				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
-
 			} catch (error) {
 				reject(error);
 			}
@@ -146,9 +144,9 @@ module.exports = () => {
 	};
 
 	return {
-		viewuser,
 		createuser,
 		updateuser,
+		getuser,
 		deleteuser,
 	};
 
