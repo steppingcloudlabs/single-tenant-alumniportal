@@ -89,30 +89,30 @@ module.exports = () => {
 				const date = new Date().toISOString();
 				const id = uuid();
 				const user_id = payload.user_id;
-				const _gender = payload._gender;
-			//	const _date_of_birth = payload.date_of_birth
-			//	const _date_of_resignation = payload.date_of_resignation
-			//	const _last_working_day_as_per_notice_period =payload.last_working_day_as_per_notice_period
-				const _personal_email_id = payload.personal_email_id 
-				const _first_name_personal_information =payload.first_name_personal_information
-				const _last_name_personal_information =payload.last_name_personal_information
-				const _middle_name_personal_information = payload.middle_name_personal_information
-				const _nationality_personal_information = payload.nationality_personal_information
-				const _salutation_personal_information =payload.salutation_personal_information
-				const _city_addresses =payload.city_addresses
-				const _phone_number_phone_information =payload.phone_number_phone_information
-				const _manager_job_information=payload.manager_job_informatio
-				const _designation_job_information = payload.designation_job_information
+				const gender = payload._gender;
+				const date_of_birth = payload.date_of_birth
+				const date_of_resignation = payload.date_of_resignation
+				const last_working_day_as_per_notice_period =payload.last_working_day_as_per_notice_period
+				const personal_email_id = payload.personal_email_id 
+				const first_name_personal_information =payload.first_name_personal_information
+				const last_name_personal_information =payload.last_name_personal_information
+				const middle_name_personal_information = payload.middle_name_personal_information
+				const nationality_personal_information = payload.nationality_personal_information
+				const salutation_personal_information =payload.salutation_personal_information
+				const city_addresses =payload.city_addresses
+				const phone_number_phone_information =payload.phone_number_phone_information
+				const manager_job_information=payload.manager_job_informatio
+				const designation_job_information = payload.designation_job_information
 				const statement = await db.preparePromisified(
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MASTER_MASTER"
 					SET "USER_ID" = CASE 
 					WHEN '${payload.document}' != 'undefined' THEN '${payload.document}'
-					ELSE (select "USER_ID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTER_MASTER" where "ID"='${payload.id}')
+					ELSE (select "USER_ID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" where "ID"='${payload.payload.id}')
 					END,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
     				where
-    				"ID" = '${payload.id}'`
+    				"ID" = '${payload.payload.id}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
