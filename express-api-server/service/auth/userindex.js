@@ -1,22 +1,23 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 module.exports = () => {
-	const getuser = ({
+	const login = ({
 		payload,
 		db
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({db})
-					// TODO: add pagination using [to, from] clauses in statement.
+				console.log("hello world")
+				// const schema = await utils.currentSchema({db})
+				// 	// TODO: add pagination using [to, from] clauses in statement.
 			
-				const limit = payload.limit == undefined ? 10 : payload.limit
-				const offset = payload.offset == undefined ? 0 : payload.offset
-				const statement = await db.preparePromisified(
-					`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows limit ${limit} offset ${offset}`
-				)
-				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				// const limit = payload.limit == undefined ? 10 : payload.limit
+				// const offset = payload.offset == undefined ? 0 : payload.offset
+				// const statement = await db.preparePromisified(
+				// 	`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows limit ${limit} offset ${offset}`
+				// )
+				// const results = await db.statementExecPromisified(statement, [])
+				// resolve(results);
 
 			} catch (error) {
 				reject(error);
@@ -24,7 +25,7 @@ module.exports = () => {
 		});
 	};
 
-	const createuser = ({
+	const signup = ({
 		payload,
 		db
 	}) => {
@@ -88,30 +89,30 @@ module.exports = () => {
 				const date = new Date().toISOString();
 				const id = uuid();
 				const user_id = payload.user_id;
-				const gender = payload._gender;
-				const date_of_birth = payload.date_of_birth
-				const date_of_resignation = payload.date_of_resignation
-				const last_working_day_as_per_notice_period =payload.last_working_day_as_per_notice_period
-				const personal_email_id = payload.personal_email_id 
-				const first_name_personal_information =payload.first_name_personal_information
-				const last_name_personal_information =payload.last_name_personal_information
-				const middle_name_personal_information = payload.middle_name_personal_information
-				const nationality_personal_information = payload.nationality_personal_information
-				const salutation_personal_information =payload.salutation_personal_information
-				const city_addresses =payload.city_addresses
-				const phone_number_phone_information =payload.phone_number_phone_information
-				const manager_job_information=payload.manager_job_informatio
-				const designation_job_information = payload.designation_job_information
+				const _gender = payload._gender;
+			//	const _date_of_birth = payload.date_of_birth
+			//	const _date_of_resignation = payload.date_of_resignation
+			//	const _last_working_day_as_per_notice_period =payload.last_working_day_as_per_notice_period
+				const _personal_email_id = payload.personal_email_id 
+				const _first_name_personal_information =payload.first_name_personal_information
+				const _last_name_personal_information =payload.last_name_personal_information
+				const _middle_name_personal_information = payload.middle_name_personal_information
+				const _nationality_personal_information = payload.nationality_personal_information
+				const _salutation_personal_information =payload.salutation_personal_information
+				const _city_addresses =payload.city_addresses
+				const _phone_number_phone_information =payload.phone_number_phone_information
+				const _manager_job_information=payload.manager_job_informatio
+				const _designation_job_information = payload.designation_job_information
 				const statement = await db.preparePromisified(
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MASTER_MASTER"
 					SET "USER_ID" = CASE 
 					WHEN '${payload.document}' != 'undefined' THEN '${payload.document}'
-					ELSE (select "USER_ID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" where "ID"='${payload.payload.id}')
+					ELSE (select "USER_ID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTER_MASTER" where "ID"='${payload.id}')
 					END,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
     				where
-    				"ID" = '${payload.payload.id}'`
+    				"ID" = '${payload.id}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
@@ -143,10 +144,9 @@ module.exports = () => {
 	};
 
 	return {
-		createuser,
-		updateuser,
-		getuser,
-		deleteuser,
+		login,
+		signup,
+	
 	};
 
 };
