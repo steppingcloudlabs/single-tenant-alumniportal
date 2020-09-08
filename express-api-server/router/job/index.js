@@ -13,4 +13,7 @@ expressrouter
 expressrouter
 	.route("/job/delete")
 	.post((req, res, next) => jobcontroller.deletejob(req, res, next));
+expressrouter
+	.route("/job/bulk/create")
+	.post((req, res, next) => jobcontroller.createbulkjob(req, res, next));
 module.exports = expressrouter;
