@@ -1,0 +1,1944 @@
+{
+  "namespace": "sclabs.alumniportal.personalinformation",
+  "definitions": {
+    "CatalogService": {
+      "@source": "srv/cat-service.cds",
+      "kind": "service"
+    },
+    "Country": {
+      "kind": "type",
+      "@description": "{i18n>CountryCode.Description}",
+      "@title": "{i18n>Country}",
+      "type": "cds.Association",
+      "target": "sap.common.Countries",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Currency": {
+      "kind": "type",
+      "@description": "{i18n>CurrencyCode.Description}",
+      "@title": "{i18n>Currency}",
+      "type": "cds.Association",
+      "target": "sap.common.Currencies",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "Language": {
+      "kind": "type",
+      "@description": "{i18n>LanguageCode.Description}",
+      "@title": "{i18n>Language}",
+      "type": "cds.Association",
+      "target": "sap.common.Languages",
+      "keys": [
+        {
+          "ref": [
+            "code"
+          ]
+        }
+      ]
+    },
+    "User": {
+      "kind": "type",
+      "@description": "{i18n>UserID.Description}",
+      "@title": "{i18n>UserID}",
+      "type": "cds.String",
+      "length": 255
+    },
+    "cuid": {
+      "kind": "entity",
+      "abstract": true,
+      "elements": {
+        "ID": {
+          "key": true,
+          "type": "cds.UUID"
+        }
+      }
+    },
+    "localized.sap.common.Countries": {
+      "kind": "entity",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.autoexpose": true,
+      "@cds.odata.valuelist": true,
+      "@cds.persistence.skip": "if-unused",
+      "@odata.draft.enabled": false,
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "sap.common.Countries"
+            ],
+            "as": "L"
+          },
+          "columns": [
+            "*",
+            {
+              "func": "coalesce",
+              "args": [
+                {
+                  "ref": [
+                    "L",
+                    "localized",
+                    "name"
+                  ]
+                },
+                {
+                  "ref": [
+                    "L",
+                    "name"
+                  ]
+                }
+              ],
+              "as": "name"
+            },
+            {
+              "func": "coalesce",
+              "args": [
+                {
+                  "ref": [
+                    "L",
+                    "localized",
+                    "descr"
+                  ]
+                },
+                {
+                  "ref": [
+                    "L",
+                    "descr"
+                  ]
+                }
+              ],
+              "as": "descr"
+            }
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@Core.Computed": true,
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@Core.Computed": true,
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CountryCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Countries_texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Countries_texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "localized.sap.common.Currencies": {
+      "kind": "entity",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.autoexpose": true,
+      "@cds.odata.valuelist": true,
+      "@cds.persistence.skip": "if-unused",
+      "@odata.draft.enabled": false,
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "sap.common.Currencies"
+            ],
+            "as": "L"
+          },
+          "columns": [
+            "*",
+            {
+              "func": "coalesce",
+              "args": [
+                {
+                  "ref": [
+                    "L",
+                    "localized",
+                    "name"
+                  ]
+                },
+                {
+                  "ref": [
+                    "L",
+                    "name"
+                  ]
+                }
+              ],
+              "as": "name"
+            },
+            {
+              "func": "coalesce",
+              "args": [
+                {
+                  "ref": [
+                    "L",
+                    "localized",
+                    "descr"
+                  ]
+                },
+                {
+                  "ref": [
+                    "L",
+                    "descr"
+                  ]
+                }
+              ],
+              "as": "descr"
+            }
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@Core.Computed": true,
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@Core.Computed": true,
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Currencies_texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Currencies_texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "localized.sap.common.Languages": {
+      "kind": "entity",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.autoexpose": true,
+      "@cds.odata.valuelist": true,
+      "@cds.persistence.skip": "if-unused",
+      "@odata.draft.enabled": false,
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "sap.common.Languages"
+            ],
+            "as": "L"
+          },
+          "columns": [
+            "*",
+            {
+              "func": "coalesce",
+              "args": [
+                {
+                  "ref": [
+                    "L",
+                    "localized",
+                    "name"
+                  ]
+                },
+                {
+                  "ref": [
+                    "L",
+                    "name"
+                  ]
+                }
+              ],
+              "as": "name"
+            },
+            {
+              "func": "coalesce",
+              "args": [
+                {
+                  "ref": [
+                    "L",
+                    "localized",
+                    "descr"
+                  ]
+                },
+                {
+                  "ref": [
+                    "L",
+                    "descr"
+                  ]
+                }
+              ],
+              "as": "descr"
+            }
+          ]
+        }
+      },
+      "elements": {
+        "name": {
+          "@Core.Computed": true,
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@Core.Computed": true,
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Languages_texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Languages_texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "managed": {
+      "kind": "type",
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        }
+      },
+      "$syntax": "aspect"
+    },
+    "sap.common": {
+      "kind": "context"
+    },
+    "sap.common.CodeList": {
+      "kind": "type",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.autoexpose": true,
+      "@cds.odata.valuelist": true,
+      "@cds.persistence.skip": "if-unused",
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        }
+      },
+      "$syntax": "aspect"
+    },
+    "sap.common.Countries": {
+      "kind": "entity",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.autoexpose": true,
+      "@cds.odata.valuelist": true,
+      "@cds.persistence.skip": "if-unused",
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CountryCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Countries_texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Countries_texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Countries_texts": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CountryCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Currencies": {
+      "kind": "entity",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.autoexpose": true,
+      "@cds.odata.valuelist": true,
+      "@cds.persistence.skip": "if-unused",
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>CurrencyCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        },
+        "symbol": {
+          "@title": "{i18n>CurrencySymbol}",
+          "type": "cds.String",
+          "length": 5
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Currencies_texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Currencies_texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Currencies_texts": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>CurrencyCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 3
+        }
+      }
+    },
+    "sap.common.Languages": {
+      "kind": "entity",
+      "@UI.Identification": [
+        {
+          "Value": {
+            "=": "name"
+          }
+        }
+      ],
+      "@cds.autoexpose": true,
+      "@cds.odata.valuelist": true,
+      "@cds.persistence.skip": "if-unused",
+      "includes": [
+        "sap.common.CodeList"
+      ],
+      "elements": {
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": true,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "texts": {
+          "type": "cds.Composition",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sap.common.Languages_texts",
+          "on": [
+            {
+              "ref": [
+                "texts",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            }
+          ]
+        },
+        "localized": {
+          "type": "cds.Association",
+          "target": "sap.common.Languages_texts",
+          "on": [
+            {
+              "ref": [
+                "localized",
+                "code"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "code"
+              ]
+            },
+            "and",
+            {
+              "ref": [
+                "localized",
+                "locale"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$user",
+                "locale"
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "sap.common.Languages_texts": {
+      "kind": "entity",
+      "@cds.autoexpose": true,
+      "@odata.draft.enabled": false,
+      "elements": {
+        "locale": {
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        },
+        "name": {
+          "@title": "{i18n>Name}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 255
+        },
+        "descr": {
+          "@title": "{i18n>Description}",
+          "localized": false,
+          "type": "cds.String",
+          "length": 1000
+        },
+        "code": {
+          "@odata.containment.ignore": true,
+          "@title": "{i18n>LanguageCode}",
+          "key": true,
+          "type": "cds.String",
+          "length": 14
+        }
+      }
+    },
+    "sclabs.alumniportal.auth.login": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "userid": {
+          "type": "cds.String",
+          "notNull": true
+        },
+        "username": {
+          "type": "cds.String",
+          "notNull": true
+        },
+        "password": {
+          "type": "cds.String",
+          "notNull": true
+        }
+      }
+    },
+    "sclabs.alumniportal.documents.doctype": {
+      "kind": "type",
+      "type": "cds.String",
+      "enum": {
+        "form16": {},
+        "salarycurrent": {},
+        "salaryprevious": {},
+        "salarylast": {}
+      }
+    },
+    "sclabs.alumniportal.documents.documents": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "document": {
+          "type": "sclabs.alumniportal.documents.doctype"
+        },
+        "filename": {
+          "type": "cds.String"
+        },
+        "file": {
+          "type": "cds.LargeBinary"
+        }
+      }
+    },
+    "sclabs.alumniportal.events.events": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "title": {
+          "type": "cds.String"
+        },
+        "content": {
+          "type": "cds.String"
+        },
+        "author": {
+          "type": "cds.String"
+        },
+        "tags": {
+          "type": "cds.String"
+        },
+        "date": {
+          "type": "cds.Date"
+        },
+        "photo": {
+          "type": "cds.LargeBinary"
+        }
+      }
+    },
+    "sclabs.alumniportal.faq.FAQ": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "question": {
+          "type": "cds.String"
+        },
+        "answer": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "sclabs.alumniportal.job.job": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "requisition_id": {
+          "type": "cds.String",
+          "notNull": true
+        },
+        "posting_end_date": {
+          "type": "cds.Date"
+        },
+        "posting_start_date": {
+          "type": "cds.Date"
+        },
+        "job_posting_status": {
+          "type": "cds.String"
+        },
+        "title": {
+          "type": "cds.String"
+        },
+        "job_role": {
+          "type": "cds.String"
+        },
+        "job_details": {
+          "type": "cds.String"
+        },
+        "country_of_residence": {
+          "type": "cds.String"
+        },
+        "city": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "sclabs.alumniportal.masterdata.MasterData": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID",
+          "notNull": true
+        },
+        "user_id": {
+          "type": "cds.String",
+          "notNull": true
+        },
+        "gender": {
+          "type": "cds.String"
+        },
+        "date_of_birth": {
+          "type": "cds.String"
+        },
+        "date_of_resignation": {
+          "type": "cds.String"
+        },
+        "last_working_day_as_per_notice_period": {
+          "type": "cds.String"
+        },
+        "personal_email_id": {
+          "type": "cds.String"
+        },
+        "first_name_personal_information": {
+          "type": "cds.String"
+        },
+        "last_name_personal_information": {
+          "type": "cds.String"
+        },
+        "middle_name_personal_information": {
+          "type": "cds.String"
+        },
+        "nationality_personal_information": {
+          "type": "cds.String"
+        },
+        "salutation_personal_information": {
+          "type": "cds.String"
+        },
+        "city_addresses": {
+          "type": "cds.String"
+        },
+        "phone_number_phone_information": {
+          "type": "cds.String"
+        },
+        "manager_job_information": {
+          "type": "cds.String"
+        },
+        "designation_job_information": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "sclabs.alumniportal.news.news": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "title": {
+          "type": "cds.String"
+        },
+        "content": {
+          "type": "cds.String"
+        },
+        "author": {
+          "type": "cds.String"
+        },
+        "tags": {
+          "type": "cds.String"
+        },
+        "date": {
+          "type": "cds.Date"
+        },
+        "photo": {
+          "type": "cds.LargeBinary"
+        },
+        "photoname": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "sclabs.alumniportal.personalinformation.admin_hr_personalinformation": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "usertype": {
+          "type": "sclabs.alumniportal.personalinformation.userType"
+        },
+        "salutation": {
+          "type": "cds.String"
+        },
+        "firstname": {
+          "type": "cds.String"
+        },
+        "middlename": {
+          "type": "cds.String"
+        },
+        "last_name": {
+          "type": "cds.String"
+        },
+        "email": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "sclabs.alumniportal.personalinformation.userType": {
+      "kind": "type",
+      "type": "cds.String",
+      "enum": {
+        "admin": {},
+        "hr": {}
+      }
+    },
+    "sclabs.alumniportal.skills.skills": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "skill": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "sclabs.alumniportal.users.users": {
+      "kind": "entity",
+      "includes": [
+        "managed"
+      ],
+      "elements": {
+        "createdAt": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@odata.on.insert": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedAt}",
+          "type": "cds.Timestamp"
+        },
+        "createdBy": {
+          "@Core.Immutable": true,
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.insert": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>CreatedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "modifiedAt": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$now"
+          },
+          "@cds.on.update": {
+            "=": "$now"
+          },
+          "@odata.on.update": {
+            "#": "now"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedAt}",
+          "type": "cds.Timestamp"
+        },
+        "modifiedBy": {
+          "@UI.HiddenFilter": true,
+          "@cds.on.insert": {
+            "=": "$user"
+          },
+          "@cds.on.update": {
+            "=": "$user"
+          },
+          "@description": "{i18n>UserID.Description}",
+          "@odata.on.update": {
+            "#": "user"
+          },
+          "@readonly": true,
+          "@title": "{i18n>ChangedBy}",
+          "type": "User",
+          "length": 255
+        },
+        "ID": {
+          "@odata.Type": "Edm.String",
+          "key": true,
+          "type": "cds.UUID"
+        },
+        "user_id": {
+          "type": "cds.String",
+          "notNull": true
+        },
+        "gender": {
+          "type": "cds.String"
+        },
+        "date_of_birth": {
+          "type": "cds.Date"
+        },
+        "date_of_resignation": {
+          "type": "cds.Date"
+        },
+        "last_working_day_as_per_notice_period": {
+          "type": "cds.Date"
+        },
+        "personal_email_id": {
+          "type": "cds.String"
+        },
+        "first_name_personal_information": {
+          "type": "cds.String"
+        },
+        "last_name_personal_information": {
+          "type": "cds.String"
+        },
+        "middle_name_personal_information": {
+          "type": "cds.String"
+        },
+        "nationality_personal_information": {
+          "type": "cds.String"
+        },
+        "salutation_personal_information": {
+          "type": "cds.String"
+        },
+        "city_addresses": {
+          "type": "cds.String"
+        },
+        "phone_number_phone_information": {
+          "type": "cds.String"
+        },
+        "manager_job_information": {
+          "type": "cds.String"
+        },
+        "designation_job_information": {
+          "type": "cds.String"
+        },
+        "skills": {
+          "type": "cds.String"
+        },
+        "login_email": {
+          "type": "cds.String"
+        },
+        "linkedin": {
+          "type": "cds.String"
+        },
+        "facebook": {
+          "type": "cds.String"
+        },
+        "google": {
+          "type": "cds.String"
+        }
+      }
+    },
+    "temporal": {
+      "kind": "type",
+      "elements": {
+        "validFrom": {
+          "@cds.valid.from": true,
+          "type": "cds.Timestamp"
+        },
+        "validTo": {
+          "@cds.valid.to": true,
+          "type": "cds.Timestamp"
+        }
+      },
+      "$syntax": "aspect"
+    }
+  },
+  "meta": {
+    "creator": "CDS Compiler v1.26.2"
+  },
+  "$version": "1.0"
+}
