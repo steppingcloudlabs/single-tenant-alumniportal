@@ -1,22 +1,23 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 module.exports = () => {
-	const getuser = ({
+	const login = ({
 		payload,
 		db
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({db})
-					// TODO: add pagination using [to, from] clauses in statement.
+				console.log("hello world")
+				// const schema = await utils.currentSchema({db})
+				// 	// TODO: add pagination using [to, from] clauses in statement.
 			
-				const limit = payload.limit == undefined ? 10 : payload.limit
-				const offset = payload.offset == undefined ? 0 : payload.offset
-				const statement = await db.preparePromisified(
-					`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows limit ${limit} offset ${offset}`
-				)
-				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				// const limit = payload.limit == undefined ? 10 : payload.limit
+				// const offset = payload.offset == undefined ? 0 : payload.offset
+				// const statement = await db.preparePromisified(
+				// 	`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows limit ${limit} offset ${offset}`
+				// )
+				// const results = await db.statementExecPromisified(statement, [])
+				// resolve(results);
 
 			} catch (error) {
 				reject(error);
@@ -24,7 +25,7 @@ module.exports = () => {
 		});
 	};
 
-	const createuser = ({
+	const signup = ({
 		payload,
 		db
 	}) => {
@@ -143,10 +144,9 @@ module.exports = () => {
 	};
 
 	return {
-		createuser,
-		updateuser,
-		getuser,
-		deleteuser,
+		login,
+		signup,
+	
 	};
 
 };

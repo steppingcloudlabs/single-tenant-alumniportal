@@ -132,6 +132,11 @@
   //const adminuseractionRoutes = require("./router/users");
   const useractionRoutes = require("./router/users/index.js");
   app.use("/user/action", useractionRoutes);
+ 
+ // TODO Maazzzz
+  //user authorization routes
+  const userauthRoutes = require("./router/auth/userindex.js");
+  app.use("/user/auth", userauthRoutes);
 
   // TODO PD
   // ADDITIONAL SERVICES 
