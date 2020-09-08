@@ -112,13 +112,6 @@
   const userjobRoutes = require("./router/job/userindex.js");
   app.use("/admin/action", adminjobRoutes);
   app.use("/user/action", userjobRoutes);
-  //TODO MAAZ && SANA && PD.
-  // login and signup
-  const adminauthRoutes = require("./router/auth");
-  const userauthRoutes = require("./router/auth/userindex.js");
-  app.use("/admin", adminauthRoutes);
-  app.use("/user", userauthRoutes);
-
   // news, events, faq routes
   const adminnefRoutes = require("./router/nef");
   const usernefRoutes = require("./router/nef");
@@ -141,8 +134,8 @@
   //const adminuseractionRoutes = require("./router/users");
   const useractionRoutes = require("./router/users/index.js");
   app.use("/user/action", useractionRoutes);
- 
- // TODO Maazzzz
+
+  // TODO Maazzzz
   //user authorization routes
   const userauthRoutes = require("./router/auth/userindex.js");
   app.use("/user/auth", userauthRoutes);
@@ -161,4 +154,4 @@
   app.listen(port, () => {
   	console.log(`Server listening on port: ${port}`);
   });
-module.exports = express;
+  module.exports = express;
