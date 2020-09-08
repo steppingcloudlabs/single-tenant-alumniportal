@@ -17,7 +17,8 @@
 		"morgan": "^1.10.0",
 		"passport": "^0.4.1",
 		"sap-hdbext-promisfied": "^2.202004.1",
-		"nodemon": ""
+		"nodemon": "",
+		"joi": "^14.3.1",
 	},
 	"files": [],
 	"main": "server.js",
