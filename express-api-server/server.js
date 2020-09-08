@@ -102,7 +102,16 @@
   // });
 
   // ROUTES
-
+  //skills
+  const adminskillsRoutes = require("./router/skills");
+  const userskillsRoutes = require("./router/skills/userindex.js");
+  app.use("/admin/action", adminskillsRoutes);
+  app.use("/user/action", userskillsRoutes);
+  //jobs
+  const adminjobRoutes = require("./router/job");
+  const userjobRoutes = require("./router/job/userindex.js");
+  app.use("/admin/action", adminjobRoutes);
+  app.use("/user/action", userjobRoutes);
   //TODO MAAZ && SANA && PD.
   // login and signup
   const adminauthRoutes = require("./router/auth");
@@ -147,7 +156,9 @@
 
   // ASKHR
   //NEED TO BE BUILD AS A SAPERATE PRODUCT.
+  //skills
 
   app.listen(port, () => {
   	console.log(`Server listening on port: ${port}`);
   });
+module.exports = express;
