@@ -14,4 +14,30 @@ entity SCLABS_ALUMNIPORTAL_JOB_JOB {
   JOB_DETAILS : String(5000);
   COUNTRY_OF_RESIDENCE : String(5000);
   CITY : String(5000);
+}
+technical configuration {
+    fulltext index fti_requisiton_id on (REQUISITION_ID)
+        fast preprocess off
+        language detection('en')
+        fuzzy search index on;
+    fulltext index fti_title on (TITLE)
+        fast preprocess off
+        language detection('en')
+        fuzzy search index on;
+    fulltext index fti_job_role on (JOB_ROLE)
+        fast preprocess off
+        language detection('en')
+        fuzzy search index on;
+    fulltext index fti_job_details on (JOB_DETAILS)
+        fast preprocess off
+        language detection('en')
+        fuzzy search index on;
+    fulltext index fti_country_of_residence on (COUNTRY_OF_RESIDENCE)
+        fast preprocess off
+        language detection('en')
+        fuzzy search index on;
+    fulltext index fti_city on (CITY)
+        fast preprocess off
+        language detection('en')
+        fuzzy search index on;
 };
