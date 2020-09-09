@@ -80,9 +80,8 @@ module.exports = () => {
 				})
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
-				const statement = await db.preparePromisified(
-					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS (*,'${payload.query}', FUZZY(0.4)) limit ${limit} offset ${offset}`
-				)
+				const query = 	`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS ((REQUISITION_ID,TITLE,JOB_ROLE,JOB_DETAILS,COUNTRY_OF_RESIDENCE,CITY),'${payload.query}', FUZZY(0.4)) limit ${limit} offset ${offset}`
+				console.log(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
