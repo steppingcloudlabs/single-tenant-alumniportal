@@ -8,7 +8,7 @@ expressrouter
 
 // Skill Search Router
 expressrouter
-	.route("/skill")
+	.route("/skills")
 	.get((req, res, next) => searchContoller.skill(req, res, next));
 
 //  Admin search routers
