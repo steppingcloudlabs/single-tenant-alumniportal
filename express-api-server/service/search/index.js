@@ -1,5 +1,5 @@
 const uuid = require("uuid");
-const currentSchema = require("../../utils/database/index.js")();
+const utils = require("../../utils/database/index.js")();
 module.exports = () => {
 	const searchUser = ({
 		payload,
@@ -7,11 +7,13 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
-					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" WHERE CONTAINS (*, ${payload.query}, FUZZY (0.8))rows limit ${limit} offset ${offset}`
+					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" WHERE CONTAINS (*,'${payload.query}', FUZZY(0.4)) limit ${limit} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -27,15 +29,17 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
-				const statement = await db.preparePromisified(
-					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE CONTAINS (*, ${payload.query}, FUZZY (0.7 ))rows limit ${limit} offset ${offset}`
-				)
-				console.log(statement)
+				const query =
+					`SELECT ID, SKILL FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE CONTAINS ((SKILL),'${payload.query}', FUZZY(0.4)) limit ${limit} offset ${offset}`
+				console.log(query)
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-
+				console.log(results);
 				resolve(results);
 			} catch (error) {
 				console.log(error);
@@ -49,11 +53,13 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
-					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" WHERE CONTAINS (*, ${payload.query}, FUZZY (0.8))rows limit ${limit} offset ${offset}`
+					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" WHERE CONTAINS (*, '${payload.query}', FUZZY(0.4)) limit ${limit} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -69,11 +75,13 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
-					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS (*, ${payload.query}, FUZZY (0.8))rows limit ${limit} offset ${offset}`
+					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS (*,'${payload.query}', FUZZY(0.4)) limit ${limit} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);

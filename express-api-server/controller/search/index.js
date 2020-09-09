@@ -1,6 +1,7 @@
 /* eslint-disable */
-const searchSerivce = require("../../service/search")();
+const searchService = require("../../service/search")();
 const dbClass = require("sap-hdbext-promisfied");
+
 module.exports = {
 	user: async(req, res) => {
 		try {
@@ -36,19 +37,20 @@ module.exports = {
 				payload,
 				db
 			});
+
 			if (response) {
 				res.status(200).send({
 					status: "200",
 					result: response,
 				});
 			} else {
-				res.status(400).send({
+				res.status(200).send({
 					status: "400",
 					result: response
 				});
 			}
 		} catch (error) {
-			res.status(400).send({
+			res.status(200).send({
 				status: "400",
 				result: error
 			});
