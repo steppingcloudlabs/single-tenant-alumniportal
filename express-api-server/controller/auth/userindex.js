@@ -41,18 +41,39 @@ const dbClass = require("sap-hdbext-promisfied");
 					payload,
 					db
 				});
-				if (response) {
+				console.log(response)
+				if(response=="foundemail"){
+					res.type("application/json").status(200).send({
+						status: "200",
+						result: "Email already exists"
+					});
+				}
+				else if(response=="founduserid"){
+					res.type("application/json").status(200).send({
+						status: "200",
+						result: "UserId already exists"
+					});
+				}
+				else if(response=="notalumni"){
+						res.type("application/json").status(200).send({
+						status: "200",
+						result: "User is not an Alumni"
+					});
+				}
+				else {
+				 
 					res.type("application/json").status(200).send({
 						status: "200",
 						result: response
 					});
-				} else {
-					res.type("text/plain").status(200).send({
-						status: "500",
-						result: "Error"
-					});
-
 				}
+				// } else {
+				// 	res.type("text/plain").status(200).send({
+				// 		status: "500",
+				// 		result: "Error"
+				// 	});
+
+				
 
 			} catch (error) {
 				res.type("text/plain").status(500).send({
