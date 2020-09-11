@@ -11,7 +11,20 @@ const dbClass = require("sap-hdbext-promisfied");
 					payload,
 					db
 				});
-				console.log(response);
+			
+				if(response=="incorrectuser"){
+					res.type("application/json").status(200).send({
+						status: "200",
+						result: "Incorrect Username"
+					});
+				}
+					if(response=="incorrectpassword"){
+					res.type("application/json").status(200).send({
+						status: "200",
+						result: "Incorrect password"
+					});
+				}
+				
 				if (response) {
 					res.type("application/json").status(200).send({
 						status: "200",
