@@ -49,17 +49,17 @@ module.exports = () => {
 				const statement = await db.preparePromisified(
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" VALUES(
 						'${id}',
-						'${payload.title}',
-						'${payload.content}',
-						'${payload.author}',
-						'${payload.tag}',
+						'${payload.payload.title}',
+						'${payload.payload.content}',
+						'${payload.payload.author}',
+						'${payload.payload.tag}',
 						'${date}',
-						'${payload.photo}',
+						'${payload.payload.photo}',
 						'${createdat}',
 						'${createdby}',
 						'${modifiedat}',
 						'${modifiedby}',
-						'${payload.photoname}')`
+						'${payload.payload.photoname}')`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 
@@ -226,11 +226,11 @@ where
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ"
 					SET "QUESTION" = CASE 
 					WHEN '${payload.paylaod.question}' != 'undefined' THEN '${payload.payload.question}'
-					ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.id}')
+					ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
 					END,
 					"ANSWER" = CASE
 					WHEN '${payload.payload.answer}' != 'undefined' THEN '${payload.payload.answer}'
-					ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.id}')
+					ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
 					end,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
