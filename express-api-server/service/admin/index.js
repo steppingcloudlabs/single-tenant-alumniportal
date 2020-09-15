@@ -4,10 +4,16 @@ const decodetoken=require("../../utils/JWTtoken/jwtdecode.js")()
 module.exports = () => {
 	const getuser = ({
 		payload,
+		token,
 		db
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				const expirytimefromtoken = await decodetoken.decodejwt(token);
+				if (Date.now() > expirytimefromtoken) {
+        		resolve("tokenexpired");
+        		}
+        		else{
 				const schema = await utils.currentSchema({
 						db
 					})
@@ -20,7 +26,7 @@ module.exports = () => {
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
-
+			}
 			} catch (error) {
 				reject(error);
 			}
