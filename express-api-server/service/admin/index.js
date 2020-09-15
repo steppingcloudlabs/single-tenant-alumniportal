@@ -1,5 +1,6 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
+const decodetoken=require("../../utils/JWTtoken/jwtdecode.js")()
 module.exports = () => {
 	const getuser = ({
 		payload,
@@ -28,10 +29,16 @@ module.exports = () => {
 
 	const createuser = ({
 		payload,
+		token,
 		db
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				const expirytimefromtoken = await decodetoken.decodejwt(token);
+				if (Date.now() > expirytimefromtoken) {
+        		resolve("tokenexpired");
+        		}
+        		else{
 				const {
 					date_of_relieving,
 					user_id,
@@ -50,7 +57,9 @@ module.exports = () => {
 					skill,
 					gender,
 					date_of_birth
-				} = payload.payload;
+				} = payload;
+				
+				// console.log(expirytimefromtoken)
 				//console.log(date_of_relieving,user_id,date_of_resignation,last_working_day_as_per_notice_period,personal_email_id,first_name_personal_information,middle_name_personal_information,nationality_personal_information,salutation_personal_information,city_addresses,phone_number_phone_information,manager_job_information,designation_job_information,skill,gender,date_of_birth)
 				const schema = await utils.currentSchema({
 					db
@@ -62,6 +71,15 @@ module.exports = () => {
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
 				const id = uuid()
+				const query1=`SELECT USER_ID FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" WHERE USER_ID='${user_id}'`
+				
+				const statement1 = await db.preparePromisified(query1)
+
+				const results1 = await db.statementExecPromisified(statement1, [])
+				if(results1.length !=0){
+					resolve("userexists")
+				}
+				else{
 				const query =
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" VALUES(	
 				        '${createdat}',
@@ -84,13 +102,15 @@ module.exports = () => {
 						'${phone_number_phone_information}',
 						'${manager_job_information}',
 						'${designation_job_information}')`
-				console.log(query);
+			
 
 				const statement = await db.preparePromisified(query)
 
 				const results = await db.statementExecPromisified(statement, [])
 
 				resolve(results);
+				}
+        		}
 			} catch (error) {
 				reject(error);
 			}
