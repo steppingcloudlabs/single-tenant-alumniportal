@@ -77,16 +77,23 @@ module.exports = {
 		}
 	},
 	getuser: async(req, res) => {
-
 		try {
-			
 			const payload = req.params;
+			const {token}=req.body;
+			if(token){
 			let db = new dbClass(req.db);
 			const response = await adminserivce.getuser({
 				payload,
+				token,
 				db
 			});
-
+			if(response=="tokenexpired"){
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: "Token expired, Please Login Again"
+				});	
+			}
+			else{
 			if (response) {
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -96,6 +103,14 @@ module.exports = {
 				res.status(400).send({
 					status: "400",
 					result: response
+				});
+			}
+			}
+			}
+				else{
+					res.type("application/json").status(200).send({
+					status: "400",
+					result: "Rejected Request, Token Required"
 				});
 			}
 
