@@ -1,19 +1,13 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
-const decodetoken=require("../../utils/JWTtoken/jwtdecode.js")()
 module.exports = () => {
 	const getuser = ({
 		payload,
-		token,
 		db
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const expirytimefromtoken = await decodetoken.decodejwt(token);
-				if (Date.now() > expirytimefromtoken) {
-        		resolve("tokenexpired");
-        		}
-        		else{
+			
 				const schema = await utils.currentSchema({
 						db
 					})
@@ -27,7 +21,7 @@ module.exports = () => {
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			}
-			} catch (error) {
+			 catch (error) {
 				reject(error);
 			}
 		});
@@ -35,16 +29,12 @@ module.exports = () => {
 
 	const createuser = ({
 		payload,
-		token,
+	
 		db
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const expirytimefromtoken = await decodetoken.decodejwt(token);
-				if (Date.now() > expirytimefromtoken) {
-        		resolve("tokenexpired");
-        		}
-        		else{
+			
 				const {
 					date_of_relieving,
 					user_id,
@@ -116,7 +106,7 @@ module.exports = () => {
 
 				resolve(results);
 				}
-        		}
+        		
 			} catch (error) {
 				reject(error);
 			}

@@ -7,7 +7,7 @@
   const xsenv = require("@sap/xsenv");
   const xssec = require("@sap/xssec");
   const xsHDBConn = require("@sap/hdbext");
- const JWTtoken=require("./utils/JWTtoken/tokenchecks")()
+ const JWTtoken=require("./middleware/JWTtoken/tokenchecks")()
   const passport = require("passport");
   const port = process.env.PORT || 3000;
 
