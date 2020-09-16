@@ -4,23 +4,15 @@ const dbClass = require("sap-hdbext-promisfied");
 module.exports = {
 	createuser: async(req, res) => {
 		try {
-			const {payload,token} = req.body;
-			if(token){
+			const payload = req.body;
+		
 			let db = new dbClass(req.db);
 			const response = await adminserivce.createuser({
 				payload,
-				token,
 				db
 			});
 		
-			if(response=="tokenexpired"){
-				res.type("application/json").status(200).send({
-					status: "200",
-					result: "Token expired, Please Login Again"
-				});	
-			}
-			else{
-			if (response=="userexists") {
+					if (response=="userexists") {
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: "User Id already exists"
@@ -32,14 +24,8 @@ module.exports = {
 					result: response
 				});
 			}
-			}
-			}
-			else{
-					res.type("application/json").status(200).send({
-					status: "400",
-					result: "Rejected Request, Token Required"
-				});
-			}
+		
+		
 		} catch (error) {
 			res.type("application/json").status(500).send({
 				status: "500",
@@ -79,21 +65,15 @@ module.exports = {
 	getuser: async(req, res) => {
 		try {
 			const payload = req.params;
-			const {token}=req.body;
-			if(token){
+		
+			
 			let db = new dbClass(req.db);
 			const response = await adminserivce.getuser({
 				payload,
-				token,
+			
 				db
 			});
-			if(response=="tokenexpired"){
-				res.type("application/json").status(200).send({
-					status: "200",
-					result: "Token expired, Please Login Again"
-				});	
-			}
-			else{
+		
 			if (response) {
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -105,15 +85,6 @@ module.exports = {
 					result: response
 				});
 			}
-			}
-			}
-				else{
-					res.type("application/json").status(200).send({
-					status: "400",
-					result: "Rejected Request, Token Required"
-				});
-			}
-
 		} catch (error) {
 			res.status(400).send({
 				status: "400",
