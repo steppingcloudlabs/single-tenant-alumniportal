@@ -1,5 +1,5 @@
 namespace sclabs.alumniportal.masterdata;
-
+using {sclabs.alumniportal.skills.skills as skill} from './skills';
 using { managed, sap } from '@sap/cds/common';
 
 entity MasterData : managed{
@@ -19,5 +19,4 @@ entity MasterData : managed{
   phone_number_phone_information : String;
   manager_job_information : String;
   designation_job_information : String;
-  
 }
