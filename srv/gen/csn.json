@@ -1785,6 +1785,27 @@
         },
         "skill": {
           "type": "cds.String"
+        },
+        "users": {
+          "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
+          "target": "sclabs.alumniportal.users.users",
+          "on": [
+            {
+              "ref": [
+                "users",
+                "skills"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "$self"
+              ]
+            }
+          ]
         }
       }
     },
@@ -1906,18 +1927,17 @@
           "type": "cds.String"
         },
         "skills": {
-          "type": "cds.String"
-        },
-        "login_email": {
-          "type": "cds.String"
+          "type": "cds.Association",
+          "target": "sclabs.alumniportal.skills.skills",
+          "keys": [
+            {
+              "ref": [
+                "ID"
+              ]
+            }
+          ]
         },
         "linkedin": {
-          "type": "cds.String"
-        },
-        "facebook": {
-          "type": "cds.String"
-        },
-        "google": {
           "type": "cds.String"
         }
       }
