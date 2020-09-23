@@ -38,7 +38,7 @@ modules:
       disk-quota: 800M
   - name: multitenant-alumniportal-sap-ui
     type: html5
-    path: dev-alumniportal-ui
+    path: multitenant-alumniportal-sap-ui
     parameters:
       disk-quota: 512M
       memory: 512M
@@ -50,7 +50,7 @@ modules:
         group: destinations
         properties:
           name: saas-registry-alumni-portal_api
-          url: '~{backend_app_url}'
+          url: '~{url}'
           forwardAuthToken: true
     properties:
       TENANT_HOST_PATTERN: "^(.*)-dev-alumniportal-ui.cfapps.eu10.hana.ondemand.com"
@@ -61,7 +61,7 @@ modules:
     provides:
      - name: saas-registry-alumni-portal_api
        properties:
-          url: ${default-url}
+          url: '${default-url}'
 
 resources:
   - name: multitenant-alumniportal-sap-db-hdi-container
