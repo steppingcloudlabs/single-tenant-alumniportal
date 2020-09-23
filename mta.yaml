@@ -46,10 +46,10 @@ modules:
       builder: grunt
     requires:
       - name: dev-alumniportal-uaa
-      - name: saas-registry-alumni-portal_api
+      - name: express-api-server_api
         group: destinations
         properties:
-          name: saas-registry-alumni-portal_api
+          name: express-api-server_api
           url: '~{url}'
           forwardAuthToken: true
     properties:
