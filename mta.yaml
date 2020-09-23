@@ -22,7 +22,7 @@ modules:
           url: '${default-url}'
     requires:
       - name: multitenant-alumniportal-sap-db-hdi-container
-      - name: multitenant-alumniportal-sap-uaa
+      - name: dev-alumniportal-uaa
   - name: express-api-server
     type: nodejs
     path: express-api-server
@@ -32,20 +32,49 @@ modules:
           url: '${default-url}'
     requires:
       - name: multitenant-alumniportal-sap-db-hdi-container
-      - name: multitenant-alumniportal-sap-uaa
+      - name: dev-alumniportal-uaa
     parameters:
       memory: 150M
       disk-quota: 800M
+  - name: multitenant-alumniportal-sap-ui
+    type: html5
+    path: dev-alumniportal-ui
+    parameters:
+      disk-quota: 512M
+      memory: 512M
+    build-parameters:
+      builder: grunt
+    requires:
+      - name: dev-alumniportal-uaa
+      - name: saas-registry-alumni-portal_api
+        group: destinations
+        properties:
+          name: saas-registry-alumni-portal_api
+          url: '~{backend_app_url}'
+          forwardAuthToken: true
+    properties:
+      TENANT_HOST_PATTERN: "^(.*)-dev-alumniportal-ui.cfapps.eu10.hana.ondemand.com"
+
+  - name: saas-registry-alumni-portal
+    type: nodejs
+    path: saas-registry-alumni-portal
+    provides:
+     - name: saas-registry-alumni-portal_api
+       properties:
+          url: ${default-url}
+
 resources:
   - name: multitenant-alumniportal-sap-db-hdi-container
     type: com.sap.xs.hdi-container
     properties:
       hdi-container-name: '${service-name}'
-  - name: multitenant-alumniportal-sap-uaa
+  - name: dev-alumniportal-uaa
+    parameters:
+      path: ./xs-security.json
+      service-plan: application
+    type: com.sap.xs.uaa
+  - name: dev-alumniportal-destination
     type: org.cloudfoundry.managed-service
     parameters:
-      service-plan: application
-      service: xsuaa
-      config:
-        xsappname: 'multitenant-alumniportal-sap-${space}'
-        tenant-mode: dedicated
+      service: destination
+      service-plan: lite
