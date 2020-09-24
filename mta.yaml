@@ -53,8 +53,3 @@ resources:
       path: ./xs-security.json
       service-plan: application
     type: com.sap.xs.uaa
-  - name: dev-alumniportal-destination
-    type: org.cloudfoundry.managed-service
-    parameters:
-      service: destination
-      service-plan: lite
