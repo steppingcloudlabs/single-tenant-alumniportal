@@ -1888,13 +1888,13 @@
           "type": "cds.String"
         },
         "date_of_birth": {
-          "type": "cds.Date"
+          "type": "cds.String"
         },
         "date_of_resignation": {
-          "type": "cds.Date"
+          "type": "cds.String"
         },
         "last_working_day_as_per_notice_period": {
-          "type": "cds.Date"
+          "type": "cds.String"
         },
         "personal_email_id": {
           "type": "cds.String"
