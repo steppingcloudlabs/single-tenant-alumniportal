@@ -1,15 +1,22 @@
-ID: multitenant-alumniportal-sap
+ID: dev-alumniportal
 _schema-version: "2.1"
 version: 0.0.1
 modules:
-  - name: multitenant-alumniportal-sap-db
-    type: hdb
+  - name: dev-alumniportal-db
+    type: com.sap.xs.hdi-dynamic
     path: db
     parameters:
       memory: 256M
       disk-quota: 512M
-    requires:
-      - name: multitenant-alumniportal-sap-db-hdi-container
+    properties:
+      hdi_dynamic_deploy_user: ${generated-user}
+      hdi_dynamic_deploy_password: ${generated-password}
+    provides:
+      - name: db_api
+        properties:
+          url: ${default-url}
+          user: ${generated-user}
+          password: ${generated-password}
   - name: express-api-server
     type: nodejs
     path: express-api-server
@@ -20,16 +27,31 @@ modules:
     requires:
       - name: multitenant-alumniportal-sap-db-hdi-container
       - name: dev-alumniportal-uaa
+      - name: dev-alumniportal-saas-registry
+      - name: dev-alumniportal-sm
+      - name: db_api
+        properties:
+          db_api_url: ~{url}
+          db_api_user: ~{user}
+          db_api_password: ~{password}
+      - name: dev-alumniportal-dest
     parameters:
       memory: 150M
       disk-quota: 800M
+    properties:
+       SAP_JWT_TRUST_ACL:
+         - clientid: "*"
+         - identityzone: "sap-provisioning"
   - name: approuter
-    type: nodejs
+    type: html5
     path: approuter
     provides:
       - name: AppRouter
         properties:
           url: "${default-url}"
+          application: ${app-name}
+    properties:
+     TENANT_HOST_PATTERN: "^(.*)-${space}-${app-name}.${default-domain}"
     parameters:
       disk-quota: 256M
       memory: 256M
@@ -41,15 +63,52 @@ modules:
           name: backend-api-provider
           url: "~{backend-url}"
           forwardAuthToken: true
-    properties:
-      TENANT_HOST_PATTERN: "^(.*)-dev-alumniportal-ui.cfapps.eu10.hana.ondemand.com"
+    # properties:
+      #TENANT_HOST_PATTERN: "^(.*)-dev-alumniportal-ui.cfapps.eu10.hana.ondemand.com"
 resources:
   - name: multitenant-alumniportal-sap-db-hdi-container
     type: com.sap.xs.hdi-container
     properties:
       hdi-container-name: "${service-name}"
   - name: dev-alumniportal-uaa
+    type: com.sap.xs.uaa
+    requires:
+      -  name: AppRouter
+    properties:
+      XSAPPNAME: ${xsuaa-app}
     parameters:
       path: ./xs-security.json
+      service: xsuaa
       service-plan: application
-    type: com.sap.xs.uaa
+      xsuaa-app: ${space}-~{AppRouter/application}
+      config:
+        xsappname: ${xsuaa-app}
+  - name: dev-alumniportal-sm
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: service-manager
+      service-plan: container
+  - name: dev-alumniportal-saas-registry
+    type: org.cloudfoundry.managed-service
+    requires:
+      - name: dev-alumniportal-uaa
+    parameters:
+      service: saas-registry
+      service-plan: application
+      service-name: dev-alumniportal-registry
+      config:
+        xsappname: ~{dev-alumniportal-uaa/XSAPPNAME}
+        appName: dev-alumniportal
+        displayName: 'Y'
+        description: ''
+        category: 'Digital Partner Engineering'
+        appUrls:
+          onSubscription: https://${org}-${space}-express-api-server.${default-domain}/callback/v1.0/tenants/{tenantId}
+          getDependencies: https://${org}-${space}-express-api-server.${default-domain}/callback/v1.0/dependencies
+  - name: dev-alumniportal-dest
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite
+
+ 

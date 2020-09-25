@@ -1,7 +1,17 @@
 {
-    "routes": [{
-        "source": "/",
-        "target": "/",
-        "destination": "backend-api-provider"
-    }]
-}
+	"welcomefile": "index.html",
+	"authenticatedMethod":"route",
+    "routes": [
+    	{
+            "source": "^/srv/(.*)$",
+            "authenticationType": "xsuaa",
+            "scope": "$XSAPPNAME.User",
+            "destination": "backend-api-provider"
+        },
+        {
+        	"source": "^/(.*)",
+            "authenticationType": "none",
+            "destination": "resources"
+        }
+    ]
+} 
