@@ -14,6 +14,8 @@
   const hdbext = require('@sap/hdbext');
   const cfenv = require('cfenv');
   const appEnv = cfenv.getAppEnv();
+  xsenv.loadEnv();
+
   const services = xsenv.getServices({
   	uaa: {
   		tag: 'xsuaa'
@@ -102,21 +104,21 @@
   });
 
   //multi-tenant SaaS registry endpoints 
-  
-  //app.get("/", async (req, res) => {
-  //  try {
-  //    const dbClass = require("sap-hdbext-promisfied")
-  //    let db = new dbClass(req.db);
-  //    const statement = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
-  //    const results = await db.statementExecPromisified(statement, [])
-  //    let result = JSON.stringify({
-  //      Objects: results
-  //    })
-  //    return res.type("application/json").status(200).send(result)
-  //  } catch (e) {
-  //    return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
-  //  }
-  //});
+
+  app.get("/", async (req, res) => {
+  	try {
+  		const dbClass = require("sap-hdbext-promisfied")
+  		let db = new dbClass(req.db);
+  		const statement = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
+  		const results = await db.statementExecPromisified(statement, [])
+  		let result = JSON.stringify({
+  			Objects: results
+  		})
+  		return res.type("application/json").status(200).send(result)
+  	} catch (e) {
+  		return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
+  	}
+  });
   app.put('/callback/v1.0/tenants/*', function (req, res) {
   	let tenantHost = req.body.subscribedSubdomain + '-' + appEnv.app.space_name.toLowerCase().replace(/_/g, '-') + '-' + services.registry
   		.appName.toLowerCase().replace(/_/g, '-');
@@ -126,12 +128,12 @@
   		function (result) {
   			lib.createSMInstance(services.sm, services.registry.appName + '-' + req.body.subscribedTenantId).then(
   				async function (result) {
-  					res.status(200).send(tenantURL);
-  				},
-  				function (err) {
-  					console.log(err.stack);
-  					res.status(500).send(err.message);
-  				});
+  						res.status(200).send(tenantURL);
+  					},
+  					function (err) {
+  						console.log(err.stack);
+  						res.status(500).send(err.message);
+  					});
   		},
   		function (err) {
   			console.log(err.stack);
@@ -270,8 +272,8 @@
   app.use("/user/auth", userauthRoutes);
   //tokenization: tokens check middleware
   app.use(JWTtoken)
-  	// ROUTES
-  	//skills
+  // ROUTES
+  //skills
   const adminskillsRoutes = require("./router/skills");
   const userskillsRoutes = require("./router/skills/userindex.js");
   app.use("/admin/action", adminskillsRoutes);

@@ -3,41 +3,39 @@
     "tenant-mode": "shared",
     "description": "Multitenant alumni portal App based on Node.js",
     "scopes": [{
-        "name": "$XSAPPNAME.Callback",
-        "description": "With this scope set, the callbacks for tenant onboarding, offboarding and getDependencies can be called.",
-        "grant-as-authority-to-apps": [
-            "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
-        ]
-       
-    },
-    {
-    	 "name": "$XSAPPNAME.Administrator",
-         "description": "Administrate the application"
-    },
-    {
-    	 "name": "$XSAPPNAME.User",
-         "description": "Use the application"
-    }
+            "name": "$XSAPPNAME.Callback",
+            "description": "With this scope set, the callbacks for tenant onboarding, offboarding and getDependencies can be called.",
+            "grant-as-authority-to-apps": [
+                "$XSAPPNAME(application,sap-provisioning,tenant-onboarding)"
+            ]
+
+        },
+        {
+            "name": "$XSAPPNAME.Administrator",
+            "description": "Administrate the application"
+        },
+        {
+            "name": "$XSAPPNAME.User",
+            "description": "Use the application"
+        }
     ],
-    "role-templates": [
-    	{
-    		"name": "Administrator",
+    "role-templates": [{
+            "name": "Administrator",
             "description": "Administrate the application",
             "scope-references": [
-            	"$XAPPNAME.Administrator"
-            	]
-    	},
-    	{     
-    		"name": "User",
+                "$XSAPPNAME.Administrator"
+            ]
+        },
+        {
+            "name": "User",
             "description": "Administrate the User",
             "scope-references": [
-            	"$XAPPNAME.User"
-            	]
-    		
-    	}
+                "$XSAPPNAME.User"
+            ]
+
+        }
     ],
-    "role-collections": [
-        {
+    "role-collections": [{
             "name": "dev-alumniportal-Administrator",
             "description": "My SaaS App Administrator",
             "role-template-references": [
@@ -45,7 +43,7 @@
                 "$XSAPPNAME.User"
             ]
         },
-         {
+        {
             "name": "dev-alumniportal-User",
             "description": "My SaaS App User",
             "role-template-references": [
@@ -53,5 +51,5 @@
             ]
         }
     ]
-    
+
 }

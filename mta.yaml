@@ -39,9 +39,9 @@ modules:
       memory: 150M
       disk-quota: 800M
     properties:
-       SAP_JWT_TRUST_ACL:
-         - clientid: "*"
-         - identityzone: "sap-provisioning"
+      SAP_JWT_TRUST_ACL:
+        - clientid: "*"
+        - identityzone: "sap-provisioning"
   - name: approuter
     type: html5
     path: approuter
@@ -51,9 +51,9 @@ modules:
           url: "${default-url}"
           application: ${app-name}
     properties:
-     TENANT_HOST_PATTERN: "^(.*)-${space}-${app-name}.${default-domain}"
+      TENANT_HOST_PATTERN: "^(.*)-${space}-${app-name}.${default-domain}"
     parameters:
-      disk-quota: 256M
+      disk-quota: 1024M
       memory: 256M
     requires:
       - name: dev-alumniportal-uaa
@@ -64,7 +64,7 @@ modules:
           url: "~{backend-url}"
           forwardAuthToken: true
     # properties:
-      #TENANT_HOST_PATTERN: "^(.*)-dev-alumniportal-ui.cfapps.eu10.hana.ondemand.com"
+    #TENANT_HOST_PATTERN: "^(.*)-dev-alumniportal-ui.cfapps.eu10.hana.ondemand.com"
 resources:
   - name: multitenant-alumniportal-sap-db-hdi-container
     type: com.sap.xs.hdi-container
@@ -73,7 +73,7 @@ resources:
   - name: dev-alumniportal-uaa
     type: com.sap.xs.uaa
     requires:
-      -  name: AppRouter
+      - name: AppRouter
     properties:
       XSAPPNAME: ${xsuaa-app}
     parameters:
@@ -99,9 +99,9 @@ resources:
       config:
         xsappname: ~{dev-alumniportal-uaa/XSAPPNAME}
         appName: dev-alumniportal
-        displayName: 'Y'
-        description: ''
-        category: 'Digital Partner Engineering'
+        displayName: "Y"
+        description: ""
+        category: "Digital Partner Engineering"
         appUrls:
           onSubscription: https://${org}-${space}-express-api-server.${default-domain}/callback/v1.0/tenants/{tenantId}
           getDependencies: https://${org}-${space}-express-api-server.${default-domain}/callback/v1.0/dependencies
@@ -110,5 +110,3 @@ resources:
     parameters:
       service: destination
       service-plan: lite
-
- 
