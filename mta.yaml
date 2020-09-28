@@ -23,9 +23,8 @@ modules:
     provides:
       - name: backend-api-provider
         properties:
-          backend-url: "${default-url}"
+          backend-url: ${default-url}
     requires:
-      - name: multitenant-alumniportal-sap-db-hdi-container
       - name: dev-alumniportal-uaa
       - name: dev-alumniportal-saas-registry
       - name: dev-alumniportal-sm
@@ -71,7 +70,7 @@ resources:
     properties:
       hdi-container-name: "${service-name}"
   - name: dev-alumniportal-uaa
-    type: com.sap.xs.uaa
+    type: org.cloudfoundry.managed-service
     requires:
       - name: AppRouter
     properties:
@@ -99,8 +98,8 @@ resources:
       config:
         xsappname: ~{dev-alumniportal-uaa/XSAPPNAME}
         appName: dev-alumniportal
-        displayName: "Y"
-        description: ""
+        displayName: "Alumni Portal"
+        description: "Provide Solution for reconnceting with your Ex"
         category: "Digital Partner Engineering"
         appUrls:
           onSubscription: https://${org}-${space}-express-api-server.${default-domain}/callback/v1.0/tenants/{tenantId}

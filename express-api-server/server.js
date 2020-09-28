@@ -1,7 +1,7 @@
   /*eslint no-console: 0*/
   "use strict";
   const express = require("express");
-  const morgan = require("morgan");
+
   const bodyParser = require("body-parser");
   const compression = require("compression");
   const xsenv = require("@sap/xsenv");
@@ -13,9 +13,14 @@
   const lib = require('./library');
   const hdbext = require('@sap/hdbext');
   const cfenv = require('cfenv');
+  const logging = require("@sap/logging");
   const appEnv = cfenv.getAppEnv();
+  const appContext = logging.createAppContext();
+  const helmet = require("helmet");
+  // if using local envs
   xsenv.loadEnv();
 
+  // getting credentionals of sap cloudfoundry services 
   const services = xsenv.getServices({
   	uaa: {
   		tag: 'xsuaa'
@@ -30,22 +35,18 @@
   		tag: 'destination'
   	}
   });
-  //Initialize Express App for XS UAA and HDBEXT Middleware
+
+  //Initialize Express App.
   const app = express();
+
+  //   Middleware injection to express app
+
   app.use(bodyParser.json());
-  //logging
-  app.use(morgan("dev"));
   app.use(
   	bodyParser.json({
   		limit: "200mb"
   	})
   );
-
-  const logging = require("@sap/logging");
-  const appContext = logging.createAppContext();
-
-  const helmet = require("helmet");
-  // ...
   app.use(helmet());
   app.use(helmet.contentSecurityPolicy({
   	directives: {
@@ -58,30 +59,22 @@
   app.use(helmet.referrerPolicy({
   	policy: "no-referrer"
   }));
-
   passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
   	uaa: {
   		tag: "xsuaa"
   	}
   }).uaa));
   app.use(passport.initialize());
-
   app.use(logging.middleware({
   	appContext: appContext,
   	logNetwork: true
   }));
 
-  var hanaOptions = xsenv.getServices({
-  	hana: {
-  		tag: "hana"
-  	}
-  });
-  hanaOptions.hana.pooling = true;
+
   app.use(
   	passport.authenticate("JWT", {
   		session: false
-  	}),
-  	xsHDBConn.middleware(hanaOptions.hana)
+  	})
   );
 
   //Compression
@@ -102,9 +95,27 @@
   	);
   	next();
   });
+  //    HANA DATABASE CONNECTION WITH SM FOR MULTI_TENANT 
+  app.use(function (req, res, next) {
+  	if (req.authInfo.checkScope('$XSAPPNAME.User')) {
+  		lib.getSMInstance(services.sm, services.registry.appName + '-' + req.authInfo.identityZone).then(
+  			function (serviceBinding) {
+  				if (!serviceBinding.hasOwnProperty('error')) {
+  					let hanaOptions = serviceBinding.credentials;
+  					hanaOptions.hana.pooling = true;
+  					xsHDBConn.middleware(hanaOptions.hana)
+  					next()
+  				} else {
+  					res.status(500).send(serviceBinding);
+  				}
+  			})
+  	} else {
+  		res.status(403).send('Forbidden');
+  	}
 
-  //multi-tenant SaaS registry endpoints 
+  })
 
+  //Multi-tenant SaaS registry endpoints 
   app.get("/", async (req, res) => {
   	try {
   		const dbClass = require("sap-hdbext-promisfied")
@@ -267,12 +278,13 @@
   	}
   });
 
+  // Agency portal application routes    
   //user authorization routes
   const userauthRoutes = require("./router/auth/userindex.js");
   app.use("/user/auth", userauthRoutes);
   //tokenization: tokens check middleware
   app.use(JWTtoken)
-  // ROUTES
+  // Functional ROUTES
   //skills
   const adminskillsRoutes = require("./router/skills");
   const userskillsRoutes = require("./router/skills/userindex.js");
@@ -283,41 +295,26 @@
   const userjobRoutes = require("./router/job/userindex.js");
   app.use("/admin/action", adminjobRoutes);
   app.use("/user/action", userjobRoutes);
-  // news, events, faq routes
+  // news, events and faq 
   const adminnefRoutes = require("./router/nef");
   const usernefRoutes = require("./router/nef");
   app.use("/admin/action", adminnefRoutes);
   app.use("/user/action", usernefRoutes);
-
   // documents 
   const admindocumentRoutes = require("./router/documents");
   const userdocumentRoutes = require("./router/documents/userindex.js");
   app.use("/admin/action", admindocumentRoutes);
   app.use("/user/action", userdocumentRoutes);
-  //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  // TODO SANA
-  // admin 
+  // admin actions
   const adminactionRoutes = require("./router/admin");
   app.use("/admin/action", adminactionRoutes);
-
-  // TODO Maazzzzz
-  // user
   //const adminuseractionRoutes = require("./router/users");
+  // User actions
   const useractionRoutes = require("./router/users/index.js");
   app.use("/user/action", useractionRoutes);
-
-  // TODO Maazzzz
-
-  // TODO PD
-  // ADDITIONAL SERVICES 
-
-  //usersearch
+  //search engine
   const searchRoutes = require("./router/search");
   app.use("/search", searchRoutes);
-
-  // ASKHR
-  //NEED TO BE BUILD AS A SAPERATE PRODUCT.
-  //skills
 
   app.listen(port, () => {
   	console.log(`Server listening on port: ${port}`);

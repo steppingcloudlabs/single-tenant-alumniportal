@@ -2,9 +2,6 @@
   "name": "dev-alumniportal-ui",
   "version": "1.0.0",
   "description": "UI Module for Destination Application",
-  "devDependencies": {
-    "@sap/grunt-sapui5module-bestpractice-build": "^0.0.14"
-  },
   "dependencies": {
     "@sap/approuter": "^6"
   },
