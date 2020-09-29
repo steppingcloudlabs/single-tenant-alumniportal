@@ -17,6 +17,7 @@ modules:
           url: ${default-url}
           user: ${generated-user}
           password: ${generated-password}
+
   - name: express-api-server
     type: nodejs
     path: express-api-server
@@ -41,6 +42,7 @@ modules:
       SAP_JWT_TRUST_ACL:
         - clientid: "*"
         - identityzone: "sap-provisioning"
+
   - name: approuter
     type: html5
     path: approuter
@@ -64,11 +66,13 @@ modules:
           forwardAuthToken: true
     # properties:
     #TENANT_HOST_PATTERN: "^(.*)-dev-alumniportal-ui.cfapps.eu10.hana.ondemand.com"
+
 resources:
   - name: multitenant-alumniportal-sap-db-hdi-container
     type: com.sap.xs.hdi-container
     properties:
       hdi-container-name: "${service-name}"
+
   - name: dev-alumniportal-uaa
     type: org.cloudfoundry.managed-service
     requires:
@@ -82,11 +86,13 @@ resources:
       xsuaa-app: ${space}-~{AppRouter/application}
       config:
         xsappname: ${xsuaa-app}
+
   - name: dev-alumniportal-sm
     type: org.cloudfoundry.managed-service
     parameters:
       service: service-manager
       service-plan: container
+
   - name: dev-alumniportal-saas-registry
     type: org.cloudfoundry.managed-service
     requires:
@@ -104,6 +110,7 @@ resources:
         appUrls:
           onSubscription: https://${org}-${space}-express-api-server.${default-domain}/callback/v1.0/tenants/{tenantId}
           getDependencies: https://${org}-${space}-express-api-server.${default-domain}/callback/v1.0/dependencies
+
   - name: dev-alumniportal-dest
     type: org.cloudfoundry.managed-service
     parameters:
