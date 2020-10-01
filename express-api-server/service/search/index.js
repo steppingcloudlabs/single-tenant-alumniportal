@@ -59,7 +59,7 @@ module.exports = () => {
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
-					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" WHERE CONTAINS (*, '${payload.query}', FUZZY(0.6)) limit ${limit} offset ${offset}`
+					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" WHERE CONTAINS (*, '${payload.query}', FUZZY(0.4)) limit ${limit} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -80,10 +80,8 @@ module.exports = () => {
 				})
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
-				const query =
-					`SELECT ID, REQUISITION_ID,POSTING_END_DATE,POSTING_START_DATE,TITLE,JOB_ROLE,JOB_DETAILS,COUNTRY_OF_RESIDENCE,CITY FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS ((REQUISITION_ID,TITLE,JOB_ROLE,JOB_DETAILS,COUNTRY_OF_RESIDENCE,CITY), '${payload.query}', FUZZY(0.6)) ORDER BY "POSTING_START_DATE" desc limit ${limit} offset ${offset}`
+				const query = 	`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS ((REQUISITION_ID,TITLE,JOB_ROLE,JOB_DETAILS,COUNTRY_OF_RESIDENCE,CITY),'${payload.query}', FUZZY(0.4)) limit ${limit} offset ${offset}`
 				console.log(query)
-				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
