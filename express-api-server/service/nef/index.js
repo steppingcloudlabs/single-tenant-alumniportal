@@ -1,5 +1,5 @@
 const uuid = require("uuid");
-const currentSchema = require("../../utils/database/index.js")();
+const utils = require("../../utils/database/index.js")();
 module.exports = () => {
 	/*
 	SERVICE FUNCTIONS FOR NEWS 
@@ -12,7 +12,9 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+						db
+					})
 					// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
@@ -34,7 +36,9 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -45,17 +49,17 @@ module.exports = () => {
 				const statement = await db.preparePromisified(
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" VALUES(
 						'${id}',
-						'${payload.title}',
-						'${payload.content}',
-						'${payload.author}',
-						'${payload.tag}',
+						'${payload.payload.title}',
+						'${payload.payload.content}',
+						'${payload.payload.author}',
+						'${payload.payload.tag}',
 						'${date}',
-						'${payload.photo}',
+						'${payload.payload.photo}',
 						'${createdat}',
 						'${createdby}',
 						'${modifiedat}',
 						'${modifiedby}',
-						'${payload.photoname}')`
+						'${payload.payload.photoname}')`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 
@@ -72,7 +76,9 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -132,7 +138,9 @@ where
 				/*console.log(
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
 				)*/
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const statement = await db.preparePromisified(
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
 				)
@@ -161,7 +169,9 @@ where
 				// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				console.log(schema)
 				const statement = await db.preparePromisified(
 					`SELECT "ID","QUESTION","ANSWER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" rows limit ${limit} offset ${offset}`
@@ -181,7 +191,9 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const createdat = new Date().toISOString().split('T')[0];
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -189,7 +201,7 @@ where
 				const id = uuid();
 				console.log(schema);
 				const statement = await db.preparePromisified(
-					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${id}', '${payload.question}', '${payload.answer}')`
+					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${id}', '${payload.payload.question}', '${payload.payload.answer}')`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -205,18 +217,20 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const statement = await db.preparePromisified(
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ"
 					SET "QUESTION" = CASE 
-					WHEN '${payload.question}' != 'undefined' THEN '${payload.question}'
-					ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+					WHEN '${payload.paylaod.question}' != 'undefined' THEN '${payload.payload.question}'
+					ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
 					END,
 					"ANSWER" = CASE
-					WHEN '${payload.answer}' != 'undefined' THEN '${payload.answer}'
-					ELSE (select "CONTENT" FROM "${schame}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+					WHEN '${payload.payload.answer}' != 'undefined' THEN '${payload.payload.answer}'
+					ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
 					end,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
@@ -237,9 +251,11 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const statement = await db.preparePromisified(
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE ID = '${payload.id}'`
+					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE ID = '${payload.payload.id}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
@@ -261,7 +277,9 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 
 				// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
@@ -285,7 +303,9 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = utils.currentSchema({
+					db
+				})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -321,7 +341,9 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -379,7 +401,9 @@ where
 				/*console.log(
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
 				)*/
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({
+					db
+				})
 				const statement = await db.preparePromisified(
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"  WHERE ID = '${payload.id}'`
 				)

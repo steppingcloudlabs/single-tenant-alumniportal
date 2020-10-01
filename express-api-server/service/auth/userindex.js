@@ -7,17 +7,42 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				console.log("hello world")
-				// const schema = await utils.currentSchema({db})
-				// 	// TODO: add pagination using [to, from] clauses in statement.
+			const schema = await utils.currentSchema({db});
+				const {email,password}=payload;
+				
+				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${email}'`
+				
+				 const statement = await db.preparePromisified(query)
 			
-				// const limit = payload.limit == undefined ? 10 : payload.limit
-				// const offset = payload.offset == undefined ? 0 : payload.offset
-				// const statement = await db.preparePromisified(
-				// 	`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows limit ${limit} offset ${offset}`
-				// )
-				// const results = await db.statementExecPromisified(statement, [])
-				// resolve(results);
+				 const result = await db.statementExecPromisified(statement, [])
+				 if(result.length==0){
+				 	resolve("incorrectuser")
+				 }
+				 else{
+				 	const query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where PASSWORD='${password}'`
+				
+				 const statement2 = await db.preparePromisified(query2)
+			
+				 const result2 = await db.statementExecPromisified(statement2, [])
+				 if(result2.length==0){
+				 		resolve("incorrectpassword")
+				 }
+				 else{
+				 	const query3 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where PASSWORD='${password}' AND USERNAME='${email}'`
+				
+				 const statement3 = await db.preparePromisified(query3)
+			
+				 const result3 = await db.statementExecPromisified(statement3, [])
+				 const userid=result3[0].USERID;
+				 const query4 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" where USER_ID='${userid}' `
+				
+				 const statement4 = await db.preparePromisified(query4)
+			
+				 const result4 = await db.statementExecPromisified(statement4, [])
+				 	resolve(result4)
+				 }
+				 }
+				 
 
 			} catch (error) {
 				reject(error);
@@ -31,44 +56,55 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const {date_of_relieving,user_id,date_of_resignation,last_working_day_as_per_notice_period,personal_email_id,first_name_personal_information,last_name_personal_information,middle_name_personal_information,nationality_personal_information,salutation_personal_information,city_addresses,phone_number_phone_information,manager_job_information,designation_job_information,skill,gender,date_of_birth}=payload.payload;
-				//console.log(date_of_relieving,user_id,date_of_resignation,last_working_day_as_per_notice_period,personal_email_id,first_name_personal_information,middle_name_personal_information,nationality_personal_information,salutation_personal_information,city_addresses,phone_number_phone_information,manager_job_information,designation_job_information,skill,gender,date_of_birth)
+				
 				const schema = await utils.currentSchema({db});
-				console.log(schema)
-				const createdat = new Date().toISOString();
-				const createdby = "admin";
-				const modifiedby = "admin";
-				const modifiedat = new Date().toISOString();
-				const date = new Date().toISOString();
-				const id = uuid()
-				const query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" VALUES(	
-				        '${createdat}',
-						'${createdby}',
-						'${modifiedat}',
-						'${modifiedby}',
-						'${id}',
-						'${user_id}',
-						'${gender}',
-						'${date_of_birth}',
-						'${date_of_resignation}',
-						'${last_working_day_as_per_notice_period}',
-						'${personal_email_id}',
-					    '${first_name_personal_information}',
-						'${last_name_personal_information}',
-						'${middle_name_personal_information}',
-						'${nationality_personal_information}',
-						'${salutation_personal_information}',
-						'${city_addresses}',
-						'${phone_number_phone_information}',
-						'${manager_job_information}',
-						'${designation_job_information}')`
-				console.log(query);
+				const {email,password,companyname,userType,userid}=payload;
+				
+				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${email}'`
 				
 				 const statement = await db.preparePromisified(query)
 			
-				 const results = await db.statementExecPromisified(statement, [])
-                
-				 resolve(results);
+				 const result = await db.statementExecPromisified(statement, [])
+				 
+                	if(result.length==0){
+                			const query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERID='${userid}'`
+                			const statement2 = await db.preparePromisified(query2)
+							const result2 = await db.statementExecPromisified(statement2, [])
+							if(result2.length==0){
+								const query3 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" where USER_ID='${userid}'`
+                			const statement3 = await db.preparePromisified(query3)
+							const result3 = await db.statementExecPromisified(statement3, [])
+							if(result3.length==0){
+								resolve("notalumni")
+							}
+							else{
+								const createdat = new Date().toISOString();
+								const createdby = "admin";
+								const modifiedby = "admin";
+								const modifiedat = new Date().toISOString();
+								const id = uuid()
+								const query4 = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" VALUES(
+									'${createdat}',
+									'${createdby}',
+									'${modifiedat}',
+									'${modifiedby}',
+									'${id}',
+									'${userid}',
+									'${email}',
+									'${password}'
+									)`
+                			const statement4 = await db.preparePromisified(query4)
+							const result4 = await db.statementExecPromisified(statement4, [])
+							resolve(result4)
+							}
+							}
+							else{
+								resolve("founduserid")
+							}
+                	}
+                	else{
+				 resolve("foundemail");
+                	}
 			} catch (error) {
 				reject(error);
 			}

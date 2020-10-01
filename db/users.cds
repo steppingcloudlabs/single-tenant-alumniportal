@@ -7,9 +7,9 @@ entity users: managed{
 	key ID: UUID @odata.Type:'Edm.String';
 	user_id : String not null;
 	gender: String ;
-	date_of_birth : Date;
-	date_of_resignation : Date;
-	last_working_day_as_per_notice_period : Date;
+	date_of_birth : String;
+	date_of_resignation : String;
+	last_working_day_as_per_notice_period : String;
 	personal_email_id : String;
 	first_name_personal_information : String;
 	last_name_personal_information : String;
@@ -20,9 +20,6 @@ entity users: managed{
 	phone_number_phone_information : String;
 	manager_job_information : String;
 	designation_job_information : String;
-	skills : String;
-	login_email: String;
+	skills : Association to skill;
 	linkedin: String;
-	facebook: String;
-	google: String;
 };

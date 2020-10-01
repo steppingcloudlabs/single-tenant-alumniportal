@@ -14,9 +14,9 @@ module.exports = () => {
 					// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
-				const statement = await db.preparePromisified(
-					`SELECT "ID", "REQUISITION_ID", "POSTING_END_DATE", "POSTING_START_DATE", "JOB_POSTING_STATUS", "TITLE", "JOB_ROLE","JOB_DETAILS","COUNTRY_OF_RESIDENCE","CITY" FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" rows limit ${limit} offset ${offset}`
-				)
+				const query =
+					`SELECT "ID", "REQUISITION_ID", "POSTING_END_DATE", "POSTING_START_DATE", "JOB_POSTING_STATUS", "TITLE", "JOB_ROLE","JOB_DETAILS","COUNTRY_OF_RESIDENCE","CITY" FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  limit ${limit} offset ${offset}`
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 
@@ -168,7 +168,8 @@ module.exports = () => {
 					const job_details = payload.payload[i].job_details;
 					const country_of_residence = payload.payload[i].country_of_residence;
 					const city = payload.payload[i].city;
-					const query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" VALUES(
+					const query =
+						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" VALUES(
 						             '${createdat}',
 						             '${createdby}',
 						             '${modifiedat}',

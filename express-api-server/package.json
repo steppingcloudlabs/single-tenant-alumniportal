@@ -18,7 +18,8 @@
 		"passport": "^0.4.1",
 		"sap-hdbext-promisfied": "^2.202004.1",
 		"nodemon": "",
-		"joi": "^14.3.1"
+		"joi": "^14.3.1",
+		"jsonwebtoken":""
 	},
 	"files": [],
 	"main": "server.js",

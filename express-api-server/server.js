@@ -7,7 +7,7 @@
   const xsenv = require("@sap/xsenv");
   const xssec = require("@sap/xssec");
   const xsHDBConn = require("@sap/hdbext");
-
+ const JWTtoken=require("./middleware/JWTtoken/tokenchecks")()
   const passport = require("passport");
   const port = process.env.PORT || 3000;
 
@@ -20,6 +20,7 @@
   		limit: "200mb"
   	})
   );
+ 
   const logging = require("@sap/logging");
   const appContext = logging.createAppContext();
 
@@ -100,7 +101,11 @@
   // app.get("/env", (req, res) => {
   // 	return res.type("application/json").status(200).send(JSON.stringify(process.env));
   // });
-
+   //user authorization routes
+  const userauthRoutes = require("./router/auth/userindex.js");
+  app.use("/user/auth", userauthRoutes);
+  //tokenization: tokens check middleware
+ app.use(JWTtoken)
   // ROUTES
   //skills
   const adminskillsRoutes = require("./router/skills");
@@ -136,9 +141,7 @@
   app.use("/user/action", useractionRoutes);
 
   // TODO Maazzzz
-  //user authorization routes
-  const userauthRoutes = require("./router/auth/userindex.js");
-  app.use("/user/auth", userauthRoutes);
+ 
 
   // TODO PD
   // ADDITIONAL SERVICES 
