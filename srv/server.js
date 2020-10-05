@@ -188,25 +188,44 @@ app.get('/srv/destinations', function (req, res) {
   }
 });
 
+const environment = process.env.NODE_ENV || 'production';
+/**
+ * {RED COLOR} DO NO SKIP THIS {RED COLOR}:
+ * 
+ * While working in development environment, you need to create a HDI container which will be connected to this server, if its already created then attach that container to your deployed server. Based on the environment varibable 
+ * the applcation will connect with either service-manager(multi-tenant) or a single container. 
+ */
+if (environment == 'production') {
+  app.use(function (req, res, next) {
+    if (req.authInfo.checkScope('$XSAPPNAME.User')) {
+      lib.getSMInstance(services.sm, services.registry.appName + '-' + req.authInfo.identityZone).then(
+        function (serviceBinding) {
+          if (!serviceBinding.hasOwnProperty('error')) {
+            let hanaOptions = serviceBinding.credentials;
+            hanaOptions.hana.pooling = true;
+            xsHDBConn.middleware(hanaOptions.hana)
+            next()
+          } else {
+            res.status(500).send(serviceBinding);
+          }
+        })
+    } else {
+      res.status(403).send('Forbidden');
+    }
 
-app.use(function (req, res, next) {
-  if (req.authInfo.checkScope('$XSAPPNAME.User')) {
-    lib.getSMInstance(services.sm, services.registry.appName + '-' + req.authInfo.identityZone).then(
-      function (serviceBinding) {
-        if (!serviceBinding.hasOwnProperty('error')) {
-          let hanaOptions = serviceBinding.credentials;
-          hanaOptions.hana.pooling = true;
-          xsHDBConn.middleware(hanaOptions.hana)
-          next()
-        } else {
-          res.status(500).send(serviceBinding);
-        }
-      })
-  } else {
-    res.status(403).send('Forbidden');
-  }
+  })
+} else {
+  let hanaOptions = xsenv.getServices({
+    hana: {
+      tag: "hana"
+    }
+  });
+  hanaOptions.hana.pooling = true;
+  app.use(
+    xsHDBConn.middleware(hanaOptions.hana)
+  );
+}
 
-})
 // Agency portal application routes    
 //user authorization routes
 const userauthRoutes = require("./router/auth/userindex.js");

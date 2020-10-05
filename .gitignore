@@ -41,3 +41,4 @@ APIExternalProducer.js
 .*/APIExternalProducer.js
 preview.json
 cp.project.properties.json
+srv/.env
