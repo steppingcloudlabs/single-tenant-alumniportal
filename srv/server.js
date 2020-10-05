@@ -1,4 +1,5 @@
 const express = require("express");
+require('dotenv').config()
 const app = express();
 const xsHDBConn = require("@sap/hdbext");
 const JWTtoken = require("./middleware/JWTtoken/tokenchecks")()
@@ -189,6 +190,7 @@ app.get('/srv/destinations', function (req, res) {
 });
 
 const environment = process.env.NODE_ENV || 'production';
+console.log(environment)
 /**
  * {RED COLOR} DO NO SKIP THIS {RED COLOR}:
  * 
