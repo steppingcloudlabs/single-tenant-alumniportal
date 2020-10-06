@@ -1,4 +1,4 @@
 {
-  "name": "",
-  "subfolder": "ignore"
+    "name": "dev-alumniportal.db",
+    "subfolder": "append"
 }
