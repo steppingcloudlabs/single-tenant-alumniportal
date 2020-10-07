@@ -105,7 +105,7 @@
   const userauthRoutes = require("./router/auth/userindex.js");
   app.use("/user/auth", userauthRoutes);
   //tokenization: tokens check middleware
- app.use(JWTtoken)
+//  app.use(JWTtoken)
   // ROUTES
   //skills
   const adminskillsRoutes = require("./router/skills");

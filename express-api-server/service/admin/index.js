@@ -53,7 +53,7 @@ module.exports = () => {
 					skill,
 					gender,
 					date_of_birth
-				} = payload;
+				} = payload.payload;
 				
 				// console.log(expirytimefromtoken)
 				//console.log(date_of_relieving,user_id,date_of_resignation,last_working_day_as_per_notice_period,personal_email_id,first_name_personal_information,middle_name_personal_information,nationality_personal_information,salutation_personal_information,city_addresses,phone_number_phone_information,manager_job_information,designation_job_information,skill,gender,date_of_birth)
