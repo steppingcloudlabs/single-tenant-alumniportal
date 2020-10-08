@@ -7,13 +7,11 @@ const {JWT_SECRET}=require("../../config")
 		login: async(req, res) => {
 			try {
 				const payload = req.body;
-			
 				let db = new dbClass(req.db);
 				const response = await authserivce.login({
 					payload,
 					db
 				});
-		
 				if(response=="incorrectuser"){
 					res.type("application/json").status(200).send({
 						status: "200",
