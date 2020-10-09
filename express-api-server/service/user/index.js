@@ -45,7 +45,9 @@ module.exports = () => {
 							results.SKILL = a;
 						} 
 						else {
+                            a[0]=obj[0].SKILL;
 							results = obj[0];
+							results.SKILL = a;
 						}
 						resolve(results);
 					}
