@@ -34,12 +34,10 @@ module.exports = () => {
 							LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
 							ON A1.SKILLS_ID = A2.ID where A1.USER_ID = '${userid}';`
 							)
-						const o = await db.statementExecPromisified(statement, [])
-						const obj = o;
+						const obj = await db.statementExecPromisified(statement, [])
 						var results = {};
 						const a = [];
 						if (1 < obj.length) {
-							results.SKILL = {};
 							for (var i = 0; i < obj.length; i++) {
 								a[i]= obj[i].SKILL;
 							}
