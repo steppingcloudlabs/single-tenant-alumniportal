@@ -1905,14 +1905,26 @@
         "designation_job_information": {
           "type": "cds.String"
         },
+        "skill_id": {
+          "type": "cds.UUID"
+        },
         "skills": {
           "type": "cds.Association",
+          "cardinality": {
+            "max": "*"
+          },
           "target": "sclabs.alumniportal.skills.skills",
           "on": [
             {
               "ref": [
                 "skills",
                 "ID"
+              ]
+            },
+            "=",
+            {
+              "ref": [
+                "skill_id"
               ]
             }
           ]

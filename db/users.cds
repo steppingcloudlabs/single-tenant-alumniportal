@@ -20,6 +20,7 @@ entity users: managed{
 	phone_number_phone_information : String;
 	manager_job_information : String;
 	designation_job_information : String;
-	skills : Association to skill on skills.ID;
+	skill_id: UUID;
+	skills : Association[*] to skill on skills.ID=skill_id;
 	linkedin: String;
 };
