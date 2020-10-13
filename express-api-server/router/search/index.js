@@ -3,7 +3,7 @@ const searchContoller = require("../../controller/search/index");
 
 // User search Router
 expressrouter
-	.route("/user")
+	.route("/userprofile")
 	.get((req, res, next) => searchContoller.user(req, res, next));
 
 // Skill Search Router

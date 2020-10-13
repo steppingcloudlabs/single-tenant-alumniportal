@@ -37,16 +37,15 @@ module.exports = () => {
 						const obj = await db.statementExecPromisified(statement, [])
 						var results = {};
 						const a = [];
+						results = obj[0];
 						if (1 < obj.length) {
 							for (var i = 0; i < obj.length; i++) {
 								a[i]= obj[i].SKILL;
 							}
-							results = obj[0];
 							results.SKILL = a;
 						} 
 						else {
                             a[0]=obj[0].SKILL;
-							results = obj[0];
 							results.SKILL = a;
 						}
 						resolve(results);
@@ -68,27 +67,27 @@ module.exports = () => {
 						})
 						const statement = await db.preparePromisified(
 							`SELECT 
-				    A1."ID",
-				    A1."USER_ID",
-					A1."GENDER",
-					A1."DATE_OF_BIRTH",
-					A1."DATE_OF_RESIGNATION",
-					A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
-					A1."PERSONAL_EMAIL_ID",
-					A1."FIRST_NAME_PERSONAL_INFORMATION",
-					A1."LAST_NAME_PERSONAL_INFORMATION",
-					A1."MIDDLE_NAME_PERSONAL_INFORMATION",
-					A1."NATIONALITY_PERSONAL_INFORMATION",
-				    A1."SALUTATION_PERSONAL_INFORMATION",
-			        A1."CITY_ADDRESSES",
-					A1."PHONE_NUMBER_PHONE_INFORMATION",
-					A1."MANAGER_JOB_INFORMATION",
-					A1."DESIGNATION_JOB_INFORMATION",
-			        A1."LINKEDIN",
-					A2."SKILL" as skill
-			        FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
-					LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
-					ON A1.SKILLS_ID = A2.ID where A1.USER_ID = '${userid}';`
+						    A1."ID",
+						    A1."USER_ID",
+							A1."GENDER",
+							A1."DATE_OF_BIRTH",
+							A1."DATE_OF_RESIGNATION",
+							A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
+							A1."PERSONAL_EMAIL_ID",
+							A1."FIRST_NAME_PERSONAL_INFORMATION",
+							A1."LAST_NAME_PERSONAL_INFORMATION",
+							A1."MIDDLE_NAME_PERSONAL_INFORMATION",
+							A1."NATIONALITY_PERSONAL_INFORMATION",
+						    A1."SALUTATION_PERSONAL_INFORMATION",
+					        A1."CITY_ADDRESSES",
+							A1."PHONE_NUMBER_PHONE_INFORMATION",
+							A1."MANAGER_JOB_INFORMATION",
+							A1."DESIGNATION_JOB_INFORMATION",
+					        A1."LINKEDIN",
+							A2."SKILL" as skill
+					        FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
+							LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
+							ON A1.SKILLS_ID = A2.ID where A1.USER_ID = '${userid}';`
 						)
 						const results = await db.statementExecPromisified(statement, [])
 						resolve(results);
@@ -130,7 +129,6 @@ module.exports = () => {
 				getprofile,
 				updateprofile,
 				deleteprofile
-
 			};
 
 		};
