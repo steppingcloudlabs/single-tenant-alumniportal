@@ -7,7 +7,7 @@
   const xsenv = require("@sap/xsenv");
   const xssec = require("@sap/xssec");
   const xsHDBConn = require("@sap/hdbext");
- const JWTtoken=require("./middleware/JWTtoken/tokenchecks")()
+  const JWTtoken = require("./middleware/JWTtoken/tokenchecks")()
   const passport = require("passport");
   const port = process.env.PORT || 3000;
 
@@ -20,7 +20,7 @@
   		limit: "200mb"
   	})
   );
- 
+
   const logging = require("@sap/logging");
   const appContext = logging.createAppContext();
 
@@ -96,63 +96,38 @@
   		return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
   	}
   });
-  //  TESTING STUFF 
 
-  // app.get("/env", (req, res) => {
-  // 	return res.type("application/json").status(200).send(JSON.stringify(process.env));
-  // });
-   //user authorization routes
-  const userauthRoutes = require("./router/auth/userindex.js");
-  app.use("/user/auth", userauthRoutes);
-  //tokenization: tokens check middleware
-//  app.use(JWTtoken)
-  // ROUTES
-  //skills
+  // ADMIN ROUTES 
   const adminskillsRoutes = require("./router/skills");
-  const userskillsRoutes = require("./router/skills/userindex.js");
-  app.use("/admin/action", adminskillsRoutes);
-  app.use("/user/action", userskillsRoutes);
-  //jobs
   const adminjobRoutes = require("./router/job");
-  const userjobRoutes = require("./router/job/userindex.js");
-  app.use("/admin/action", adminjobRoutes);
-  app.use("/user/action", userjobRoutes);
-  // news, events, faq routes
   const adminnefRoutes = require("./router/nef");
-  const usernefRoutes = require("./router/nef");
-  app.use("/admin/action", adminnefRoutes);
-  app.use("/user/action", usernefRoutes);
-
-  // documents 
   const admindocumentRoutes = require("./router/documents");
-  const userdocumentRoutes = require("./router/documents/userindex.js");
-  app.use("/admin/action", admindocumentRoutes);
-  app.use("/user/action", userdocumentRoutes);
-  //----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
-  // TODO SANA
-  // admin 
   const adminactionRoutes = require("./router/admin");
-  app.use("/admin/action", adminactionRoutes);
-
-  // TODO Maazzzzz
-  // user
-  //const adminuseractionRoutes = require("./router/users");
-  const useractionRoutes = require("./router/users/index.js");
-  app.use("/user/action", useractionRoutes);
-
-  // TODO Maazzzz
- 
-
-  // TODO PD
-  // ADDITIONAL SERVICES 
-
-  //usersearch
+  const adminuseractionRoutes = require("./router/users");
   const searchRoutes = require("./router/search");
+  app.use("/admin/action", adminactionRoutes);
+  app.use("/admin/action", adminskillsRoutes);
+  app.use("/admin/action", adminjobRoutes);
+  app.use("/admin/action", adminnefRoutes);
+  app.use("/admin/action", admindocumentRoutes);
   app.use("/search", searchRoutes);
 
-  // ASKHR
-  //NEED TO BE BUILD AS A SAPERATE PRODUCT.
-  //skills
+  //USER ROUTES
+
+  //app.use(JWTtoken)     // express middleware for usertoken verfication
+  const userauthRoutes = require("./router/auth/userindex.js");
+  const userskillsRoutes = require("./router/skills/userindex.js");
+  const userjobRoutes = require("./router/job/userindex.js");
+  const userdocumentRoutes = require("./router/documents/userindex.js");
+  const useractionRoutes = require("./router/users/index.js");
+  const usernefRoutes = require("./router/nef");
+
+  app.use("/user/auth", userauthRoutes);
+  app.use("/user/action", userskillsRoutes);
+  app.use("/user/action", userjobRoutes);
+  app.use("/user/action", usernefRoutes);
+  app.use("/user/action", userdocumentRoutes);
+  app.use("/user/action", useractionRoutes);
 
   app.listen(port, () => {
   	console.log(`Server listening on port: ${port}`);
