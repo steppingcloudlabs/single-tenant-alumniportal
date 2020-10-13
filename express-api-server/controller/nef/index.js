@@ -169,7 +169,7 @@
 
 		},
 		updatefaq: async(req, res) => {
-			const payload = req.params;
+			const payload = req.body;
 			let db = new dbClass(req.db);
 			const response = await nefserivce.updatefaq({
 				payload,

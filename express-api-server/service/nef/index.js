@@ -220,25 +220,25 @@ where
 				const schema = await utils.currentSchema({
 					db
 				})
+				console.log(payload.payload);
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
-				const statement = await db.preparePromisified(
+				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ"
 					SET "QUESTION" = CASE 
-					WHEN '${payload.paylaod.question}' != 'undefined' THEN '${payload.payload.question}'
-					ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
+					WHEN '${payload.payload.question}' != 'undefined' THEN '${payload.payload.question}'
 					END,
 					"ANSWER" = CASE
 					WHEN '${payload.payload.answer}' != 'undefined' THEN '${payload.payload.answer}'
-					ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
-					end,
+					END,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
     				where
-    				"ID" = '${payload.id}'`
-				)
+    				"ID" = '${payload.payload.id}'`
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
+				console
 			} catch (error) {
 				reject(error);
 			}
