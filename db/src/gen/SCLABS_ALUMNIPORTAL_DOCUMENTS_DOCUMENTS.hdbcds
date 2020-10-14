@@ -8,4 +8,5 @@ entity SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS {
   DOCUMENT : String(5000);
   FILENAME : String(5000);
   FILE : LargeBinary;
+  USERID : String(5000);
 };

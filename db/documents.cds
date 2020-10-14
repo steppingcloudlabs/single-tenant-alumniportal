@@ -6,6 +6,8 @@ entity documents:managed{
 	document: doctype;
 	filename: String;
 	file: LargeBinary;
+	userid: String;
+	
 }
 
 type doctype : String enum {
