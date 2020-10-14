@@ -169,7 +169,7 @@
 
 		},
 		updatefaq: async(req, res) => {
-			const payload = req.params;
+			const payload = req.body;
 			let db = new dbClass(req.db);
 			const response = await nefserivce.updatefaq({
 				payload,
@@ -190,6 +190,8 @@
 		deletefaq: async(req, res) => {
 			try {
 				const payload = req.body;
+				console.log(payload)
+				console.log("inside controller")
 				let db = new dbClass(req.db);
 				const response = await nefserivce.deletefaq({
 					payload,
@@ -219,6 +221,8 @@
 					payload,
 					db
 				});
+				console.log("here")
+				console.log(response)
 
 				if (response) {
 					res.status(200).send({
@@ -241,12 +245,14 @@
 
 		createevent: async(req, res) => {
 			try {
+				console.log("inside")
 				const payload = req.body;
 				let db = new dbClass(req.db);
 				const response = await nefserivce.createevent({
 					payload,
 					db
 				});
+				console.log(response)
 				if (response) {
 					res.type("application/json").status(200).send({
 						status: "200",
@@ -276,6 +282,7 @@
 					payload,
 					db
 				});
+			    console.log(response)
 				if (response) {
 					res.type("application/json").status(200).send({
 						status: "200",

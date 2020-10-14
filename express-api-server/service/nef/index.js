@@ -36,31 +36,29 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-					db
-				})
+				const schema = await utils.currentSchema({db})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
 				const id = uuid();
-
-				const statement = await db.preparePromisified(
+				const query =
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" VALUES(
-						'${id}',
-						'${payload.payload.title}',
-						'${payload.payload.content}',
-						'${payload.payload.author}',
-						'${payload.payload.tag}',
-						'${date}',
-						'${payload.payload.photo}',
 						'${createdat}',
 						'${createdby}',
 						'${modifiedat}',
 						'${modifiedby}',
-						'${payload.payload.photoname}')`
-				)
+						'${id}',
+						'${payload.title}',
+						'${payload.content}',
+						'${payload.author}',
+						'${payload.tags}',
+						'${date}',
+						'${payload.photo}',
+						'${payload.photoname}')`
+				console.log(query)
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 
 				resolve(results);
@@ -76,9 +74,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-					db
-				})
+				const schema = await utils.currentSchema({db})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -87,38 +83,39 @@ module.exports = () => {
 				const id = uuid();
 				const statement = await db.preparePromisified(
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"
-SET "TITLE" = CASE
-			WHEN '${payload.title}' != 'undefined' THEN '${payload.title}'
-			ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
-			END,
-   "CONTENT" = CASE
-			WHEN '${payload.content}' != 'undefined' THEN '${payload.content}'
-			ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
-			END,
-	"AUTHOR" = case
-			WHEN '${payload.author}' != 'undefined' THEN '${payload.author}'
-			ELSE (select "AUTHOR" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
-			END,
-	"TAGS" = case
-			WHEN '${payload.tag}' != 'undefined' THEN '${payload.tag}'
-			ELSE (select "TAGS" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
-			END,
-	"DATE" = '${date}',
-	"PHOTO" = case
-			WHEN '${payload.photo}' != 'undefined' THEN '${payload.photo}'
-			ELSE (select "PHOTO" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
-			end,
-	"PHOTONAME" = case
-			WHEN '${payload.photoname}' != 'undefined' THEN '${payload.photoname}'
-			ELSE (select "PHOTONAME" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
-			end,
-	"CREATEDAT" = '${createdat}', 
-	"CREATEDBY" = '${createdby}',
-	"MODIFIEDBY" = '${modifiedby}',
-    "MODIFIEDAT" = '${modifiedat}'
-where
-"ID" = '${payload.id}'`
+					SET "TITLE" = CASE
+								WHEN '${payload.title}' != 'undefined' THEN '${payload.title}'
+								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+								END,
+					   "CONTENT" = CASE
+								WHEN '${payload.content}' != 'undefined' THEN '${payload.content}'
+								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+								END,
+						"AUTHOR" = case
+								WHEN '${payload.author}' != 'undefined' THEN '${payload.author}'
+								ELSE (select "AUTHOR" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+								END,
+						"TAGS" = case
+								WHEN '${payload.tag}' != 'undefined' THEN '${payload.tag}'
+								ELSE (select "TAGS" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+								END,
+						"DATE" = '${date}',
+						"PHOTO" = case
+								WHEN '${payload.photo}' != 'undefined' THEN '${payload.photo}'
+								ELSE (select "PHOTO" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+								end,
+						"PHOTONAME" = case
+								WHEN '${payload.photoname}' != 'undefined' THEN '${payload.photoname}'
+								ELSE (select "PHOTONAME" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
+								end,
+						"CREATEDAT" = '${createdat}', 
+						"CREATEDBY" = '${createdby}',
+						"MODIFIEDBY" = '${modifiedby}',
+					    "MODIFIEDAT" = '${modifiedat}'
+					where
+					"ID" = '${payload.id}'`
 				)
+				console.log(statement)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
 
@@ -138,12 +135,10 @@ where
 				/*console.log(
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
 				)*/
-				const schema = await utils.currentSchema({
-					db
-				})
-				const statement = await db.preparePromisified(
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
-				)
+				const schema = await utils.currentSchema({db})
+				const query =`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
+				console.log(query)
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 
@@ -169,13 +164,10 @@ where
 				// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
-				const schema = await utils.currentSchema({
-					db
-				})
-				console.log(schema)
-				const statement = await db.preparePromisified(
+				const schema = await utils.currentSchema({db})
+				const query =
 					`SELECT "ID","QUESTION","ANSWER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" rows limit ${limit} offset ${offset}`
-				)
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 
@@ -191,18 +183,15 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-					db
-				})
+				const schema = await utils.currentSchema({db})
 				const createdat = new Date().toISOString().split('T')[0];
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString().split('T')[0];
 				const id = uuid();
-				console.log(schema);
-				const statement = await db.preparePromisified(
+				const query =
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${id}', '${payload.payload.question}', '${payload.payload.answer}')`
-				)
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
@@ -217,26 +206,24 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-					db
-				})
+				const schema = await utils.currentSchema({db})
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
-				const statement = await db.preparePromisified(
+				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ"
 					SET "QUESTION" = CASE 
-					WHEN '${payload.paylaod.question}' != 'undefined' THEN '${payload.payload.question}'
-					ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
-					END,
+				    	WHEN '${payload.payload.question}' != 'undefined' THEN '${payload.payload.question}'
+					    ELSE (select "QUESTION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
+					    END,
 					"ANSWER" = CASE
-					WHEN '${payload.payload.answer}' != 'undefined' THEN '${payload.payload.answer}'
-					ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
-					end,
+				         WHEN '${payload.payload.answer}' != 'undefined' THEN '${payload.payload.answer}'
+					     ELSE (select "ANSWER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.id}')
+					     end,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
     				where
-    				"ID" = '${payload.id}'`
-				)
+    				"ID" = '${payload.payload.id}'`
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
 			} catch (error) {
@@ -251,12 +238,10 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-					db
-				})
-				const statement = await db.preparePromisified(
+				const schema = await utils.currentSchema({db})
+				const query = 
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE ID = '${payload.payload.id}'`
-				)
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
 			} catch (error) {
@@ -277,17 +262,13 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-					db
-				})
-
+				const schema = await utils.currentSchema({db})
 				// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
 					`SELECT "ID","TITLE","CONTENT","AUTHOR","TAGS","DATE","PHOTO","PHOTO","CREATEDAT","CREATEDBY","MODIFIEDAT","MODIFIEDBY" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" rows limit ${limit} offset ${offset}`
 				)
-
 				const results = await db.statementExecPromisified(statement, [])
 				console.log(results);
 				resolve(results);
@@ -303,32 +284,27 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = utils.currentSchema({
-					db
-				})
+				const schema = await utils.currentSchema({db})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
 				const id = uuid();
-
-				const statement = await db.preparePromisified(
-					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" VALUES(
+				const query=`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" VALUES(
+						'${createdat}',
+						'${createdby}',
+						'${modifiedat}',
+						'${modifiedby}',
 						'${id}',
 						'${payload.title}',
 						'${payload.content}',
 						'${payload.author}',
-						'${payload.tag}',
+						'${payload.tags}',
 						'${date}',
-						'${payload.photo}',
-						'${createdat}',
-						'${createdby}',
-						'${modifiedat}',
-						'${modifiedby}')`
-				)
+						'${payload.photo}')`
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				console.log(results);
 				resolve(results);
 			} catch (error) {
 				reject(error);
@@ -341,47 +317,43 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-					db
-				})
+				const schema = await utils.currentSchema({db})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
 				const id = uuid();
-				const statement = await db.preparePromisified(
-					`UPDATE "${schema} "."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"
-				SET "TITLE" = CASE
-							WHEN '${payload.title}' != 'undefined' THEN '${payload.title}'
-							ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
-							END,
-				   "CONTENT" = CASE
-							WHEN '${payload.content}' != 'undefined' THEN '${payload.content}'
-							ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
-							END,
-					"AUTHOR" = case
-							WHEN '${payload.author}' != 'undefined' THEN '${payload.author}'
-							ELSE (select "AUTHOR" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
-							END,
-					"TAGS" = case
-							WHEN '${payload.tag}' != 'undefined' THEN '${payload.tag}'
-							ELSE (select "TAGS" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
-							END,
-					"DATE" = '${date}',
-					"PHOTO" = case
-							WHEN '${payload.photo}' != 'undefined' THEN '${payload.photo}'
-							ELSE (select "PHOTO" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
-							end,
-					
-					"CREATEDAT" = '${createdat}', 
-					"CREATEDBY" = '${createdby}',
-					"MODIFIEDBY" = '${modifiedby}',
-				    "MODIFIEDAT" = '${modifiedat}'
-				where
-				"ID" = '${payload.id}'`
-				)
-
+				const query = 
+			        `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"
+					SET "TITLE" = CASE
+								WHEN '${payload.title}' != 'undefined' THEN '${payload.title}'
+								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
+								END,
+					   "CONTENT" = CASE
+								WHEN '${payload.content}' != 'undefined' THEN '${payload.content}'
+								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
+								END,
+						"AUTHOR" = case
+								WHEN '${payload.author}' != 'undefined' THEN '${payload.author}'
+								ELSE (select "AUTHOR" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
+								END,
+						"TAGS" = case
+								WHEN '${payload.tags}' != 'undefined' THEN '${payload.tags}'
+								ELSE (select "TAGS" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
+								END,
+						"DATE" = '${date}',
+						"PHOTO" = case
+								WHEN '${payload.photo}' != 'undefined' THEN '${payload.photo}'
+								ELSE (select "PHOTO" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.id}')
+								end,
+						"CREATEDAT" = '${createdat}', 
+						"CREATEDBY" = '${createdby}',
+						"MODIFIEDBY" = '${modifiedby}',
+					    "MODIFIEDAT" = '${modifiedat}'
+					where
+					"ID" = '${payload.id}'`
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
 
@@ -397,16 +369,9 @@ where
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-
-				/*console.log(
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
-				)*/
-				const schema = await utils.currentSchema({
-					db
-				})
-				const statement = await db.preparePromisified(
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"  WHERE ID = '${payload.id}'`
-				)
+				const schema = await utils.currentSchema({db})
+				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"  WHERE ID = '${payload.id}'`
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 
