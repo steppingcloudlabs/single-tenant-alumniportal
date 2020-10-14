@@ -16,10 +16,12 @@
 		"helmet": "^3.22.0",
 		"morgan": "^1.10.0",
 		"passport": "^0.4.1",
+		"@sap/cloud-sdk-core": "latest",
 		"sap-hdbext-promisfied": "^2.202004.1",
+		"@sap/cloud-sdk-generator": "latest",
 		"nodemon": "",
 		"joi": "^14.3.1",
-		"jsonwebtoken":""
+		"jsonwebtoken": ""
 	},
 	"files": [],
 	"main": "server.js",
