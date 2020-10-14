@@ -1,6 +1,6 @@
 const adminserivce = require("../../service/admin")();
 const dbClass = require("sap-hdbext-promisfied");
-
+const adminadminserivce = require("../../service/admin/indexadmin.js")();
 module.exports = {
 	createuser: async(req, res) => {
 		try {
@@ -122,7 +122,7 @@ module.exports = {
 			const payload = req.body;
 
 			let db = new dbClass(req.db);
-			const response = await adminserivce.createadmin({
+			const response = await adminadminserivce.createadmin({
 				payload,
 				db
 			});
@@ -151,7 +151,7 @@ module.exports = {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await adminserivce.updateadmin({
+			const response = await adminadminserivce.updateadmin({
 				payload,
 				db
 			});
@@ -180,7 +180,7 @@ module.exports = {
 			const payload = req.params;
 
 			let db = new dbClass(req.db);
-			const response = await adminserivce.getadmin({
+			const response = await adminadminserivce.getadmin({
 				payload,
 
 				db
@@ -209,7 +209,7 @@ module.exports = {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await adminserivce.deleteadmin({
+			const response = await adminadminserivce.deleteadmin({
 				payload,
 				db
 			});
