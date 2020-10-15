@@ -1,8 +1,8 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 const {
-	Candidate
-} = require("./generated/sfo-data-service");
+	PerPersonal,
+} = require("../../generated/sfo-data-service");
 module.exports = () => {
 
 	const getuser = ({
@@ -11,12 +11,13 @@ module.exports = () => {
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				Candidate.requestBuilder()
+				const result = await PerPersonal.requestBuilder()
 					.getAll()
-					.select(Candidate.FIRST_NAME, Candidate.LAST_NAME, Candidate.USER_ID)
-					.execute({
-						url: "https://sandbox.api.sap.com/successfactors"
-					});
+					.select(PerPersonal.FIRST_NAME, PerPersonal.LAST_NAME, PerPersonal.DISPLAY_NAME, PerPersonal.PERSON_NAV)
+					.top(payload.payload.limit)
+					.skip(payload.payload.offset)
+					.execute();
+				resolve(result);
 			} catch (error) {
 				reject(error);
 			}
