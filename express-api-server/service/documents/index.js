@@ -75,7 +75,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({db})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -109,12 +109,9 @@ module.exports = () => {
 		return new Promise(async(resolve, reject) => {
 			try {
 
-				/*console.log(
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
-				)*/
-				const schema = currentSchema(db)
+				const schema = await utils.currentSchema({db})
 				const statement = await db.preparePromisified(
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"  WHERE ID = '${payload.id}'`
+					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"  WHERE ID = '${payload.payload.id}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
