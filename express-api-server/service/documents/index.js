@@ -14,11 +14,12 @@ module.exports = () => {
 		return new Promise(async(resolve, reject) => {
 			try {
 					const schema = await utils.currentSchema({db})
+					
 					// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
-					`SELECT "ID", "DOCUMENT", "FILENAME", "FILE", "CREATEDAT", "MODIFIEDAT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" rows limit ${limit} offset ${offset}`
+					`SELECT "CREATEDAT","CREATEDBY", "MODIFIEDAT","MODIFIEDBY","ID", "DOCUMENT", "FILENAME", "FILE","USERID"  FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" rows limit ${limit} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
