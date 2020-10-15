@@ -102,7 +102,6 @@ module.exports = () => {
     				"MODIFIEDAT" = '${modifiedat}'
     				where
     				"ID" = '${payload.payload.id}'`
-
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
@@ -122,9 +121,7 @@ module.exports = () => {
 				/*console.log(
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
 				)*/
-				const schema = await utils.currentSchema({
-					db
-				})
+				const schema = await utils.currentSchema({db})
 				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  WHERE ID = '${payload.payload.id}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
@@ -149,9 +146,7 @@ module.exports = () => {
 					// obj.payload = payload.payload[i];
 					// var jsonString = JSON.stringify(obj);
 					// console.log(jsonString);
-					const schema = await utils.currentSchema({
-						db
-					});
+					const schema = await utils.currentSchema({db});
 					const createdat = new Date().toISOString();
 					const createdby = "admin";
 					const modifiedby = "admin";
