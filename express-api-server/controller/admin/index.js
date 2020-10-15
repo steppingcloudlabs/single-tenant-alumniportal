@@ -11,8 +11,7 @@ module.exports = {
 				payload,
 				db
 			});
-		
-					if (response=="userexists") {
+		    if (response=="userexists") {
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: "User Id already exists"
@@ -42,6 +41,7 @@ module.exports = {
 				payload,
 				db
 			});
+			console.log(response)
 			if (response) {
 				res.type("application/json").status(200).send({
 					status: "200",

@@ -53,11 +53,10 @@ module.exports = () => {
 						'${payload.title}',
 						'${payload.content}',
 						'${payload.author}',
-						'${payload.tags}',
+						'${payload.tag}',
 						'${date}',
 						'${payload.photo}',
 						'${payload.photoname}')`
-				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 
@@ -75,13 +74,10 @@ module.exports = () => {
 		return new Promise(async(resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({db})
-				const createdat = new Date().toISOString();
-				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
-				const id = uuid();
-				const statement = await db.preparePromisified(
+				const query = 
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"
 					SET "TITLE" = CASE
 								WHEN '${payload.title}' != 'undefined' THEN '${payload.title}'
@@ -108,14 +104,11 @@ module.exports = () => {
 								WHEN '${payload.photoname}' != 'undefined' THEN '${payload.photoname}'
 								ELSE (select "PHOTONAME" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.id}')
 								end,
-						"CREATEDAT" = '${createdat}', 
-						"CREATEDBY" = '${createdby}',
 						"MODIFIEDBY" = '${modifiedby}',
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
 					"ID" = '${payload.id}'`
-				)
-				console.log(statement)
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
 
@@ -137,7 +130,6 @@ module.exports = () => {
 				)*/
 				const schema = await utils.currentSchema({db})
 				const query =`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
-				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);

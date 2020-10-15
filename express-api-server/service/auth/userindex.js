@@ -7,9 +7,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-					db
-				});
+				const schema = await utils.currentSchema({db});
 				const {
 					email,
 					password

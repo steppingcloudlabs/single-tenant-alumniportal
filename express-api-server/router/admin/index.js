@@ -6,7 +6,7 @@ expressrouter
 	.post((req, res, next) => admincontroller.createuser(req, res, next));
 expressrouter
 	.route("/user/update")
-	.post((req, res, next) => admincontroller.deleteuser(req, res, next));
+	.post((req, res, next) => admincontroller.updateuser(req, res, next));
 expressrouter
 	.route("/user/get")
 	.get((req, res, next) => admincontroller.getuser(req, res, next));
