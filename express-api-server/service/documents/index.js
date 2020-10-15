@@ -1,4 +1,6 @@
 const uuid = require("uuid");
+const util=require("../../utils/index.js")
+const utils = require("../../utils/database/index.js")();
 module.exports = () => {
 	/*
 	SERVICE FUNCTIONS FOR NEWS 
@@ -33,17 +35,17 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+				
+				const schema = await utils.currentSchema({db})
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
-				const date = new Date().toISOString();
 				const id = uuid();
-				const userid = paylod.payload.userid;
-				const filename = payload.payload.filename;
-				const file = payload.paylaod.stream;
-				
+				const document_=util[payload.filename];
+				const file_name = util[payload.filename];
+				const file_=payload.file;
+				const userid=payload.userid
 				const statement = await db.preparePromisified(
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" VALUES(
 						'${createdat}',
@@ -51,10 +53,12 @@ module.exports = () => {
 						'${modifiedat}',
 						'${modifiedby}',
 						'${id}',
-						'${file}'
-						'${userid}',
-						'${filename}'`
+						'${document_}',
+						'${file_name}',
+						'${file_}',
+						'${userid}')`
 				)
+				
 				const results = await db.statementExecPromisified(statement, [])
 
 				resolve(results);
