@@ -6,5 +6,8 @@ expressrouter
 expressrouter
 	.route("/faq/get")
 	.get((req, res, next) => nefcontroller.getfaq(req, res, next));
+expressrouter
+	.route("/event/get")
+	.get((req, res, next) =>  nefcontroller.getevent(req, res, next));
 
 module.exports = expressrouter;
