@@ -1125,6 +1125,9 @@
         },
         "file": {
           "type": "cds.LargeBinary"
+        },
+        "userid": {
+          "type": "cds.String"
         }
       }
     },

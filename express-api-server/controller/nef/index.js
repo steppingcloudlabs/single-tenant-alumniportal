@@ -169,29 +169,37 @@
 
 		},
 		updatefaq: async(req, res) => {
-			const payload = req.body;
-			let db = new dbClass(req.db);
-			const response = await nefserivce.updatefaq({
-				payload,
-				db
-			});
-			if (response) {
-				res.status(200).send({
-					status: "200",
-					result: response,
+			try{
+				const payload = req.body;
+				let db = new dbClass(req.db);
+				const response = await nefserivce.updatefaq({
+					payload,
+					db
 				});
-			} else {
-				res.status(400).send({
+				console.log(response)
+				if (response) {
+					res.status(200).send({
+						status: "200",
+						result: response,
+					});
+				} else {
+					res.status(400).send({
+						status: "400",
+						result: `${e.toString()}`
+					});
+				}
+			}
+			catch (error) {
+				res.status(200).send({
 					status: "400",
-					result: `${e.toString()}`
+					result: error
 				});
 			}
+
 		},
 		deletefaq: async(req, res) => {
 			try {
 				const payload = req.body;
-				console.log(payload)
-				console.log("inside controller")
 				let db = new dbClass(req.db);
 				const response = await nefserivce.deletefaq({
 					payload,
@@ -245,7 +253,6 @@
 
 		createevent: async(req, res) => {
 			try {
-				console.log("inside")
 				const payload = req.body;
 				let db = new dbClass(req.db);
 				const response = await nefserivce.createevent({

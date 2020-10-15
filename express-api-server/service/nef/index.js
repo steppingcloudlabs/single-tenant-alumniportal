@@ -169,6 +169,7 @@ module.exports = () => {
 					`SELECT "ID","QUESTION","ANSWER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" rows limit ${limit} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
+				console.log(results)
 				resolve(results);
 
 			} catch (error) {
@@ -226,6 +227,7 @@ module.exports = () => {
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
+
 			} catch (error) {
 				reject(error);
 			}

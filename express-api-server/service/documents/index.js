@@ -40,8 +40,10 @@ module.exports = () => {
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
 				const id = uuid();
-				const document_ = payload.document;
-				const file_name = payload.filename;
+				const userid = paylod.payload.userid;
+				const filename = payload.payload.filename;
+				const file = payload.paylaod.stream;
+				
 				const statement = await db.preparePromisified(
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" VALUES(
 						'${createdat}',
@@ -49,9 +51,9 @@ module.exports = () => {
 						'${modifiedat}',
 						'${modifiedby}',
 						'${id}',
-						'${document_}',
-						'${file_name}',
-						'${payload.file}')`
+						'${file}'
+						'${userid}',
+						'${filename}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 
