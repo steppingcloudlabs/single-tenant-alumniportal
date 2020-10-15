@@ -84,15 +84,16 @@ module.exports = () => {
 				const id = uuid();
 				const statement = await db.preparePromisified(
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"
-					SET "DOCUMENT" = CASE 
-					WHEN '${payload.document}' != 'undefined' THEN '${payload.document}'
-					ELSE (select "DOCUMENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "ID"='${payload.id}')
+					SET "FILE" = CASE 
+					WHEN '${payload.payload.file}' != 'undefined' THEN '${payload.payload.file}'
+					ELSE (select "FILE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "USERID"='${payload.payload.userid}')
 					END,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
     				where
-    				"ID" = '${payload.id}'`
+    				"USERID" = '${payload.payload.userid}'`
 				)
+				
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
 
