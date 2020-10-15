@@ -34,5 +34,5 @@ function changeset() {
 }
 exports.changeset = changeset;
 exports.defaultSfoDataServicePath = '/sap/opu/odata/sap/SFOData';
-var map = { 'EmpEmployment': index_1.EmpEmployment, 'EmpEmploymentTermination': index_1.EmpEmploymentTermination, 'EmpWorkPermit': index_1.EmpWorkPermit, 'EmpJobRelationships': index_1.EmpJobRelationships, 'EmpJob': index_1.EmpJob, 'PersonEmpTerminationInfo': index_1.PersonEmpTerminationInfo };
+var map = { 'PerEmergencyContacts': index_1.PerEmergencyContacts, 'PerPhone': index_1.PerPhone, 'PersonKey': index_1.PersonKey, 'PerPersonal': index_1.PerPersonal, 'PerSocialAccount': index_1.PerSocialAccount, 'PerPerson': index_1.PerPerson, 'PerPersonRelationship': index_1.PerPersonRelationship, 'PerEmail': index_1.PerEmail, 'HrisEmergencyContactAddressDEFLT': index_1.HrisEmergencyContactAddressDeflt, 'PerNationalId': index_1.PerNationalId, 'PerAddressDEFLT': index_1.PerAddressDeflt };
 //# sourceMappingURL=BatchRequest.js.map
