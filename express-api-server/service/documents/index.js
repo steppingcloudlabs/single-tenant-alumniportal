@@ -13,7 +13,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = currentSchema(db)
+					const schema = await utils.currentSchema({db})
 					// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
@@ -42,10 +42,10 @@ module.exports = () => {
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const id = uuid();
-				const document_=util[payload.filename];
-				const file_name = util[payload.filename];
-				const file_=payload.file;
-				const userid=payload.userid
+				const document_=util[payload.payload.filename];
+				const file_name = util[payload.payload.filename];
+				const file_=payload.payload.file;
+				const userid=payload.payload.userid
 				const statement = await db.preparePromisified(
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" VALUES(
 						'${createdat}',
