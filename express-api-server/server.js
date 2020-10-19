@@ -1,5 +1,6 @@
   /*eslint no-console: 0*/
   "use strict";
+  require('dotenv').config()
   const express = require("express");
   const morgan = require("morgan");
   const bodyParser = require("body-parser");
@@ -23,7 +24,6 @@
 
   const logging = require("@sap/logging");
   const appContext = logging.createAppContext();
-
   const helmet = require("helmet");
   // ...
   app.use(helmet());
@@ -57,9 +57,6 @@
   });
   hanaOptions.hana.pooling = true;
   app.use(
-  	// 	passport.authenticate("JWT", {
-  	// 		session: false
-  	// 	}),
   	xsHDBConn.middleware(hanaOptions.hana)
   );
 
@@ -105,12 +102,14 @@
   const adminactionRoutes = require("./router/admin");
   const adminuseractionRoutes = require("./router/users");
   const searchRoutes = require("./router/search");
+  const successfactorsRoutes = require("./router/successfactors/index.js");
   app.use("/admin/action", adminactionRoutes);
   app.use("/admin/action", adminskillsRoutes);
   app.use("/admin/action", adminjobRoutes);
   app.use("/admin/action", adminnefRoutes);
   app.use("/admin/action", admindocumentRoutes);
   app.use("/search", searchRoutes);
+  app.use("/admin/action", successfactorsRoutes)
 
   //USER ROUTES
 

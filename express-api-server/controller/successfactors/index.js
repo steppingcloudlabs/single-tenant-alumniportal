@@ -4,7 +4,7 @@ const dbClass = require("sap-hdbext-promisfied");
 module.exports = {
 	getuser: async(req, res) => {
 		try {
-			const payload = req.body;
+			const payload = req.query;
 			let db = new dbClass(req.db);
 			const response = await successfactorsservice.getuser({
 				payload,
@@ -20,7 +20,6 @@ module.exports = {
 				res.type("application/json").status(200).send({
 					status: "500",
 					result: "Error"
-
 				});
 			}
 
