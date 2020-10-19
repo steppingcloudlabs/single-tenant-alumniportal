@@ -102,7 +102,7 @@
   const adminactionRoutes = require("./router/admin");
   const adminuseractionRoutes = require("./router/users");
   const searchRoutes = require("./router/search");
-  const successfactorsRoutes = require("./router/successfactors/index.js");
+  const successfactorsRoutes = require("./router/successfactors");
   app.use("/admin/action", adminactionRoutes);
   app.use("/admin/action", adminskillsRoutes);
   app.use("/admin/action", adminjobRoutes);

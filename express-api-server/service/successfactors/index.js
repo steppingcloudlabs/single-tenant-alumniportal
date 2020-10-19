@@ -12,6 +12,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
+				console.log(payload.query)
 				const result = PerPersonal.requestBuilder()
 					.getAll()
 					.select(
@@ -19,10 +20,9 @@ module.exports = () => {
 						PerPersonal.LAST_NAME,
 						PerPersonal.PERSON_NAV
 						.select(
-							PerPerson.DATE_OF_BIRTH,
 							PerPerson.PERSON_ID)).filter(
 						PerPersonal.PERSON_NAV.filter(
-							PerPerson.PERSON_ID.equals(payload.userid)
+							PerPerson.PERSON_ID.equals(payload.query)
 						)
 					)
 					.execute({
