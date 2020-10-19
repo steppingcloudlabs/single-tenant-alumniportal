@@ -6,6 +6,7 @@ module.exports = {
 	user: async(req, res) => {
 		try {
 			const payload = req.query;
+			console.log(payload)
 			let db = new dbClass(req.db);
 			const response = await searchService.searchUser({
 				payload,

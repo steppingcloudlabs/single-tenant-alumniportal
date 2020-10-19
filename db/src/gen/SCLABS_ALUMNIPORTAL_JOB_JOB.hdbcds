@@ -14,4 +14,10 @@ entity SCLABS_ALUMNIPORTAL_JOB_JOB {
   JOB_DETAILS : String(5000);
   COUNTRY_OF_RESIDENCE : String(5000);
   CITY : String(5000);
+}
+technical configuration{
+  fulltext index FTI_REQUISITION_ID on (REQUISITION_ID);
+  fulltext index FTI_TITLE on (TITLE);
+  fulltext index FTI_JOB_ROLE on (JOB_ROLE);
+  fulltext index FTI_JOB_DETAILS  on (JOB_DETAILS);
 };

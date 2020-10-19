@@ -6,4 +6,7 @@ entity SCLABS_ALUMNIPORTAL_SKILLS_SKILLS {
   MODIFIEDBY : String(255);
   key ID : String(36);
   SKILL : String(5000);
+}
+technical configuration{
+  fulltext index FTI_SKILL on (SKILL);
 };
