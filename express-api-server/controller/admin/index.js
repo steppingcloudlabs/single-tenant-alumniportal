@@ -2,20 +2,20 @@ const adminserivce = require("../../service/admin")();
 const dbClass = require("sap-hdbext-promisfied");
 const adminadminserivce = require("../../service/admin/indexadmin.js")();
 module.exports = {
-	createuser: async(req, res) => {
+	createadmin: async(req, res) => {
 		try {
 			const payload = req.body;
 
 			let db = new dbClass(req.db);
-			const response = await adminserivce.createuser({
+			const response = await adminserivce.createadmin({
 				payload,
 				db
 			});
 
-			if (response == "userexists") {
+			if (response == "adminexists") {
 				res.type("application/json").status(200).send({
 					status: "200",
-					result: "User Id already exists"
+					result: "admin Id already exists"
 				});
 			} else {
 				res.type("application/json").status(200).send({
@@ -32,11 +32,11 @@ module.exports = {
 		}
 
 	},
-	updateuser: async(req, res) => {
+	updateadmin: async(req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await adminserivce.updateuser({
+			const response = await adminserivce.updateadmin({
 				payload,
 				db
 			});
@@ -60,12 +60,12 @@ module.exports = {
 			});
 		}
 	},
-	getuser: async(req, res) => {
+	getadmin: async(req, res) => {
 		try {
 			const payload = req.params;
 
 			let db = new dbClass(req.db);
-			const response = await adminserivce.getuser({
+			const response = await adminserivce.getadmin({
 				payload,
 
 				db
@@ -90,11 +90,11 @@ module.exports = {
 		}
 
 	},
-	deleteuser: async(req, res) => {
+	deleteadmin: async(req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await adminserivce.deleteuser({
+			const response = await adminserivce.deleteadmin({
 				payload,
 				db
 			});
@@ -127,10 +127,10 @@ module.exports = {
 				db
 			});
 
-			if (response == "userexists") {
+			if (response == "adminexists") {
 				res.type("application/json").status(200).send({
 					status: "200",
-					result: "User Id already exists"
+					result: "admin Id already exists"
 				});
 			} else {
 				res.type("application/json").status(200).send({
