@@ -112,25 +112,27 @@ const {JWT_SECRET}=require("../../config")
         },
         forgetpassword: async(req, res) => {
 			try {
+				
 				const payload = req.body;
 				let db = new dbClass(req.db);
 				const response = await authserivce.forgetpassword({
 					payload,
 					db
 				});
-				console.log(response)
+				
 			
 				if (response == "tokensent") {
-        res.status(200).send({
-          status: 200,
-          result: "Reset Token sent to your email",
-        });
-      } else if (response == "notfounduser") {
-        res.status(200).send({
-          status: 400,
-          result: "user not found",
-        });
-      }
+		        res.status(200).send({
+		          status: 200,
+		          result: "Reset Token sent to your email",
+		        });
+		      }
+			      if (response == "notfounduser") {
+			        res.status(200).send({
+			          status: 400,
+			          result: "user not found",
+			        });
+			      }
 				 else {
 					res.type("text/plain").status(200).send({
 						status: "500",

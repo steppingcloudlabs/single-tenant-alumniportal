@@ -167,19 +167,20 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-
+				const schema = await utils.currentSchema({
+					db
+				});
 				const {email} = payload.payload;
-				
-					const query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERID='${userid}'`
-					const statement2 = await db.preparePromisified(query2)
-					const result2 = await db.statementExecPromisified(statement2, [])
-        const finduser = await users.findOne({email});
-        if (finduser) {
-          // creating a token for password reset based on its email
+				 
+					const query1 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${email}'`
+					const statement1 = await db.preparePromisified(query1)
+					const result1 = await db.statementExecPromisified(statement1, [])
+        
+        if (result1.length!=0) {
           const token = JWT.sign(
               {
                 iss: 'steppingcloudforpasswordreset',
-                sub: payload.email,
+                sub: email,
                 jwtKey: 'steppingcloudsecret',
                 algorithm: 'HS256',
                 iat: new Date().getTime(),
@@ -221,13 +222,13 @@ module.exports = () => {
           // Handle promise's fulfilled/rejected states
           sendPromise
               .then(function(data) {
-                resolve('tokensent');
+                resolve("tokensent");
               })
               .catch(function(err) {
                 reject(err.stack);
               });
         } else {
-          resolve('notfounduser');
+          resolve("notfounduser");
         }
 			} catch (error) {
 				reject(error);
@@ -314,6 +315,7 @@ module.exports = () => {
 	return {
 		login,
 		signup,
+		forgetpassword
 
 	};
 
