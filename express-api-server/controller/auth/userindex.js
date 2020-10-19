@@ -120,13 +120,17 @@ const {JWT_SECRET}=require("../../config")
 				});
 				console.log(response)
 			
-				if(response) {
-				 
-					res.type("application/json").status(200).send({
-						status: "200",
-						result: response
-					});
-				}
+				if (response == "tokensent") {
+        res.status(200).send({
+          status: 200,
+          result: "Reset Token sent to your email",
+        });
+      } else if (response == "notfounduser") {
+        res.status(200).send({
+          status: 400,
+          result: "user not found",
+        });
+      }
 				 else {
 					res.type("text/plain").status(200).send({
 						status: "500",

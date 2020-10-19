@@ -19,7 +19,8 @@
 		"sap-hdbext-promisfied": "^2.202004.1",
 		"nodemon": "",
 		"joi": "^14.3.1",
-		"jsonwebtoken":""
+		"jsonwebtoken":"",
+		"aws-sdk": "^2.573.0"
 	},
 	"files": [],
 	"main": "server.js",
