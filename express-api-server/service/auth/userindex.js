@@ -1,6 +1,7 @@
 const uuid = require("uuid");
 const AWS = require('aws-sdk');
 const {JWT_SECRET} = require('../../config');
+const JWT = require('jsonwebtoken');
 const config = require('../../config');
 const utils = require("../../utils/database/index.js")();
 module.exports = () => {
@@ -177,6 +178,7 @@ module.exports = () => {
 					const result1 = await db.statementExecPromisified(statement1, [])
         
         if (result1.length!=0) {
+        	
           const token = JWT.sign(
               {
                 iss: 'steppingcloudforpasswordreset',
@@ -188,6 +190,7 @@ module.exports = () => {
               },
               JWT_SECRET
           );
+          
           // email sent and sending the token to reset the token
           const params = {
             Source: config['from_adderess'],
@@ -202,7 +205,7 @@ module.exports = () => {
                   Data:
                     'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
                     'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-                    'http://18.190.14.5:4000/user/reset/' +
+                    'https://45chqdynx28slt2nxpress-api-server.cfapps.eu10.hana.ondemand.com/user/auth/reset/' +
                     token +
                     '\n\n' +
                     'If you did not request this, please ignore this email and your password will remain unchanged.\n' +
@@ -236,6 +239,84 @@ module.exports = () => {
 		});
 	};
 	
+		const resetpassword = ({
+		payload,
+		resettoken,
+		db
+	}) => {
+		return new Promise(async(resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				});
+				const {newpassword} = payload.payload;
+				const decoderesettoken = JWT.verify(resettoken, JWT_SECRET);
+				 
+					const query1 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${email}'`
+					const statement1 = await db.preparePromisified(query1)
+					const result1 = await db.statementExecPromisified(statement1, [])
+        
+        if (result1.length!=0) {
+        	
+          const token = JWT.sign(
+              {
+                iss: 'steppingcloudforpasswordreset',
+                sub: email,
+                jwtKey: 'steppingcloudsecret',
+                algorithm: 'HS256',
+                iat: new Date().getTime(),
+                exp: new Date().setDate(new Date().getDate() + 1),
+              },
+              JWT_SECRET
+          );
+          
+          // email sent and sending the token to reset the token
+          const params = {
+            Source: config['from_adderess'],
+            Destination: {
+              ToAddresses: [email],
+            },
+            ReplyToAddresses: [config['from_adderess']],
+            Message: {
+              Body: {
+                Text: {
+                  Charset: 'UTF-8',
+                  Data:
+                    'You are receiving this because you (or someone else) have requested the reset of the password for your account.\n\n' +
+                    'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
+                    'https://45chqdynx28slt2nxpress-api-server.cfapps.eu10.hana.ondemand.com/user/auth/reset/' +
+                    token +
+                    '\n\n' +
+                    'If you did not request this, please ignore this email and your password will remain unchanged.\n' +
+                    'Please note that the token will get expired in 24hrs',
+                },
+              },
+              Subject: {
+                Charset: 'UTF-8',
+                Data: 'Password Reset',
+              },
+            },
+          };
+          // Create the promise and SES service object
+          const sendPromise = new AWS.SES({apiVersion: '2010-12-01'})
+              .sendEmail(params)
+              .promise();
+          // Handle promise's fulfilled/rejected states
+          sendPromise
+              .then(function(data) {
+                resolve("tokensent");
+              })
+              .catch(function(err) {
+                reject(err.stack);
+              });
+        } else {
+          resolve("notfounduser");
+        }
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
 	
 	
 	

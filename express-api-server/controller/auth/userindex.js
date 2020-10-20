@@ -127,7 +127,49 @@ const {JWT_SECRET}=require("../../config")
 		          result: "Reset Token sent to your email",
 		        });
 		      }
-			      if (response == "notfounduser") {
+			     else if (response == "notfounduser") {
+			        res.status(200).send({
+			          status: 400,
+			          result: "user not found",
+			        });
+			      }
+				 else {
+					res.type("text/plain").status(200).send({
+						status: "500",
+						result: "Error"
+					});
+
+				 }
+
+			} catch (error) {
+				res.type("text/plain").status(500).send({
+					status: "500",
+					error: error
+				});
+			}
+        },
+         resetpassword: async(req, res) => {
+			try {
+				console.log("hello")
+				const payload = req.body;
+				const resettoken=req.params;
+				console.log(payload)
+				console.log(resettoken)
+				let db = new dbClass(req.db);
+				const response = await authserivce.resetpassword({
+					payload,
+					resettoken,
+					db
+				});
+				
+			
+				if (response == "tokensent") {
+		        res.status(200).send({
+		          status: 200,
+		          result: "Reset Token sent to your email",
+		        });
+		      }
+			     else if (response == "notfounduser") {
 			        res.status(200).send({
 			          status: 400,
 			          result: "user not found",
