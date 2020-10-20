@@ -99,19 +99,19 @@
   const adminjobRoutes = require("./router/job");
   const adminnefRoutes = require("./router/nef");
   const admindocumentRoutes = require("./router/documents");
-  const adminactionRoutes = require("./router/admin");
-  const adminuseractionRoutes = require("./router/users");
+  const adminactionRoutes = require("./router/admin/indexadmin.js");
+  const adminuseractionRoutes = require("./router/admin/");
   const searchRoutes = require("./router/search");
   const successfactorsRoutes = require("./router/successfactors");
-   
+
   app.use("/admin/action", adminactionRoutes);
   app.use("/admin/action", adminskillsRoutes);
   app.use("/admin/action", adminjobRoutes);
   app.use("/admin/action", adminnefRoutes);
+  app.use("/admin/action", adminuseractionRoutes)
   app.use("/admin/action", admindocumentRoutes);
   app.use("/search", searchRoutes);
   app.use("/admin/action", successfactorsRoutes)
-  
 
   //USER ROUTES
 

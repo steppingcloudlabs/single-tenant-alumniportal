@@ -5,9 +5,6 @@ expressrouter
 	.route("/admin/create")
 	.post((req, res, next) => admincontroller.createadmin(req, res, next));
 expressrouter
-	.route("/admin/update")
-	.post((req, res, next) => admincontroller.deleteadmin(req, res, next));
-expressrouter
 	.route("/admin/get")
 	.get((req, res, next) => admincontroller.getadmin(req, res, next));
 expressrouter
