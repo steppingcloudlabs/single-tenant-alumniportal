@@ -52,9 +52,9 @@ module.exports = () => {
 								}
 								l = l - 1;
 								obj.length = l;
-								results[i].SKILL = a;
 							}
 						}
+						results[i].SKILL = a;
 						g = 0;
 						a = [];
 					}
@@ -63,7 +63,6 @@ module.exports = () => {
 					a[0] = obj[0].SKILL;
 					results.SKILL = a
 				} 
-				console.log(results)
 				resolve(results);
 			} catch (error) {
 				reject(error);

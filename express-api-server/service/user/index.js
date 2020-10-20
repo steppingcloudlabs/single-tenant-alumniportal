@@ -9,39 +9,35 @@ module.exports = () => {
 		return new Promise(async(resolve, reject) => {
 			try {
 				const userid = payload.userid
-				const schema = await utils.currentSchema({
-					db
-				})
+				const schema = await utils.currentSchema({db})
 				const query =
 					`SELECT 
-						    A1."ID",
-						    A1."USER_ID",
-							A1."GENDER",
-							A1."DATE_OF_BIRTH",
-							A1."DATE_OF_RESIGNATION",
-							A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
-							A1."PERSONAL_EMAIL_ID",
-							A1."FIRST_NAME_PERSONAL_INFORMATION",
-							A1."LAST_NAME_PERSONAL_INFORMATION",
-							A1."MIDDLE_NAME_PERSONAL_INFORMATION",
-							A1."NATIONALITY_PERSONAL_INFORMATION",
-						    A1."SALUTATION_PERSONAL_INFORMATION",
-					        A1."CITY_ADDRESSES",
-							A1."PHONE_NUMBER_PHONE_INFORMATION",
-							A1."MANAGER_JOB_INFORMATION",
-							A1."DESIGNATION_JOB_INFORMATION",
-					        A1."LINKEDIN",
-							A2."SKILL" as skill
-					        FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
-							LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
-							ON A1."SKILL_ID" = A2."ID" where A1."USER_ID" = '${userid}';`
-				console.log(query)
+				    A1."ID",
+				    A1."USER_ID",
+					A1."GENDER",
+					A1."DATE_OF_BIRTH",
+					A1."DATE_OF_RESIGNATION",
+					A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
+					A1."PERSONAL_EMAIL_ID",
+					A1."FIRST_NAME_PERSONAL_INFORMATION",
+					A1."LAST_NAME_PERSONAL_INFORMATION",
+					A1."MIDDLE_NAME_PERSONAL_INFORMATION",
+					A1."NATIONALITY_PERSONAL_INFORMATION",
+					A1."SALUTATION_PERSONAL_INFORMATION",
+					A1."CITY_ADDRESSES",
+					A1."PHONE_NUMBER_PHONE_INFORMATION",
+					A1."MANAGER_JOB_INFORMATION",
+					A1."DESIGNATION_JOB_INFORMATION",
+					A1."LINKEDIN",
+					A2."SKILL" as skill
+					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
+					LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
+					ON A1."SKILL_ID" = A2."ID" where A1."USER_ID" = '${userid}';`
 				const statement = await db.preparePromisified(query)
 				const obj = await db.statementExecPromisified(statement, [])
 				var results= [];
 				var a = [];
 				results = obj[0];
-				console.log(obj.length)
 				if (1 < obj.length) {
 					for (var i = 0; i < obj.length; i++) {
 						a[i] = obj[i].SKILL;
@@ -62,37 +58,31 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const userid = Payload.userid
-				const schema = await utils.currentSchema({
-					db
-				})
-				const statement = await db.preparePromisified(
-					`SELECT 
-				    A1."ID",
-				    A1."USER_ID",
-					A1."GENDER",
-					A1."DATE_OF_BIRTH",
-					A1."DATE_OF_RESIGNATION",
-					A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
-					A1."PERSONAL_EMAIL_ID",
-					A1."FIRST_NAME_PERSONAL_INFORMATION",
-					A1."LAST_NAME_PERSONAL_INFORMATION",
-					A1."MIDDLE_NAME_PERSONAL_INFORMATION",
-					A1."NATIONALITY_PERSONAL_INFORMATION",
-				    A1."SALUTATION_PERSONAL_INFORMATION",
-			        A1."CITY_ADDRESSES",
-					A1."PHONE_NUMBER_PHONE_INFORMATION",
-					A1."MANAGER_JOB_INFORMATION",
-					A1."DESIGNATION_JOB_INFORMATION",
-			        A1."LINKEDIN",
-					A2."SKILL" as skill
-			        FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
-					LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
-					ON A1.SKILLS_ID = A2.ID where A1.USER_ID = '${userid}';`
-				)
+				const schema = await utils.currentSchema({db})
+				const modifiedby = "admin";
+				const modifiedat = new Date().toISOString();
+				const date = new Date().toISOString();
+				const query = 
+					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS"
+                    SET "PHONE_NUMBER_PHONE_INFORMATION" = CASE
+								WHEN '${payload.phone_number_phone_information}' != 'undefined' THEN '${payload.phone_number_phone_information}'
+								ELSE (select "PHONE_NUMBER_PHONE_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.userid}')
+								END,
+						"CITY_ADDRESSES" = case
+								WHEN '${payload.city_addresses}' != 'undefined' THEN '${payload.city_addresses}'
+								ELSE (select "CITY_ADDRESSES" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.userid}')
+								END,
+						"LINKEDIN" = case
+								WHEN '${payload.linkedin}' != 'undefined' THEN '${payload.linkedin}'
+								ELSE (select "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.userid}')
+								END,
+					    "MODIFIEDBY" = '${modifiedby}',
+					    "MODIFIEDAT" = '${modifiedat}'
+					where
+					"USER_ID" = '${payload.userid}'`
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
-
 			} catch (error) {
 				reject(error);
 			}
@@ -104,10 +94,8 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const userid = payload.payload.user_id
-				const schema = await utils.currentSchema({
-					db
-				})
+				const userid = payload.userid
+				const schema = await utils.currentSchema({db})
 				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"  WHERE USERID ='${userid}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])

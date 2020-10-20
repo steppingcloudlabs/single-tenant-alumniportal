@@ -7,12 +7,10 @@ module.exports = {
 			try{
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			// console.log(db)
 			const response = await userservice.getprofile({
 				payload,
 				db
 			});
-			console.log(response)
 			if (response) {
 				res.status(200).send({
 					status: "200",
@@ -36,7 +34,6 @@ module.exports = {
 			try{
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			// console.log(db)
 			const response = await userservice.updateprofile({
 				payload,
 				db
@@ -64,7 +61,6 @@ module.exports = {
 			try{
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			// console.log(db)
 			const response = await userservice.deleteprofile({
 				payload,
 				db

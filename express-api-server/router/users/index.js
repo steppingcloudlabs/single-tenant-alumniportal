@@ -10,7 +10,4 @@ expressrouter
 expressrouter
 	.route("/userprofile/delete")
 	.post((req, res, next) => usercontroller.deleteprofile(req, res, next));
-expressrouter
-	.route("/userprofile/search")
-	.post((req, res, next) => usercontroller.searchprofile(req, res, next));
 module.exports = expressrouter;
