@@ -150,11 +150,10 @@ const {JWT_SECRET}=require("../../config")
         },
          resetpassword: async(req, res) => {
 			try {
-				console.log("hello")
+				
 				const payload = req.body;
 				const resettoken=req.params;
-				console.log(payload)
-				console.log(resettoken)
+				
 				let db = new dbClass(req.db);
 				const response = await authserivce.resetpassword({
 					payload,
@@ -163,25 +162,22 @@ const {JWT_SECRET}=require("../../config")
 				});
 				
 			
-				if (response == "tokensent") {
-		        res.status(200).send({
-		          status: 200,
-		          result: "Reset Token sent to your email",
-		        });
-		      }
-			     else if (response == "notfounduser") {
-			        res.status(200).send({
-			          status: 400,
-			          result: "user not found",
-			        });
-			      }
-				 else {
-					res.type("text/plain").status(200).send({
-						status: "500",
-						result: "Error"
-					});
-
-				 }
+			if (response == "ResetTokenExpired") {
+        res.status(200).send({
+          status: 400,
+          result: "Reset Token Expired",
+        });
+      } else if ("updated") {
+        res.status(200).send({
+          status: 200,
+          result: "New password updated successfully",
+        });
+      } else {
+        res.status(200).send({
+          status: 200,
+          result: response,
+        });
+      }
 
 			} catch (error) {
 				res.type("text/plain").status(500).send({

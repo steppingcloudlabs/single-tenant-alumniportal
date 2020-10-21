@@ -20,7 +20,8 @@
 		"nodemon": "",
 		"joi": "^14.3.1",
 		"jsonwebtoken":"",
-		"aws-sdk": "^2.573.0"
+		"aws-sdk": "^2.573.0",
+		"bcryptjs": "^2.4.3"
 	},
 	"files": [],
 	"main": "server.js",
