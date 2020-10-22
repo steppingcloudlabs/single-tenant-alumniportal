@@ -5,6 +5,7 @@ module.exports = {
 	createuser: async(req, res) => {
 		try {
 			const payload = req.body;
+            console.log(payload);
 		    let db = new dbClass(req.db);
 			const response = await adminserivce.createuser({
 				payload,

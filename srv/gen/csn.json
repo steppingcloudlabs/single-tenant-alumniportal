@@ -1674,32 +1674,15 @@
           "key": true,
           "type": "cds.UUID"
         },
-        "usertype": {
-          "type": "sclabs.alumniportal.personalinformation.userType"
-        },
-        "salutation": {
-          "type": "cds.String"
-        },
         "firstname": {
           "type": "cds.String"
         },
-        "middlename": {
+        "lastname": {
           "type": "cds.String"
         },
-        "last_name": {
-          "type": "cds.String"
-        },
-        "email": {
+        "userid": {
           "type": "cds.String"
         }
-      }
-    },
-    "sclabs.alumniportal.personalinformation.userType": {
-      "kind": "type",
-      "type": "cds.String",
-      "enum": {
-        "admin": {},
-        "hr": {}
       }
     },
     "sclabs.alumniportal.skills.skills": {
