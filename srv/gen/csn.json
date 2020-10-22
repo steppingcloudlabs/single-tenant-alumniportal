@@ -1036,16 +1036,6 @@
         }
       }
     },
-    "sclabs.alumniportal.documents.doctype": {
-      "kind": "type",
-      "type": "cds.String",
-      "enum": {
-        "form16": {},
-        "salarycurrent": {},
-        "salaryprevious": {},
-        "salarylast": {}
-      }
-    },
     "sclabs.alumniportal.documents.documents": {
       "kind": "entity",
       "includes": [
@@ -1117,16 +1107,13 @@
           "key": true,
           "type": "cds.UUID"
         },
-        "document": {
-          "type": "sclabs.alumniportal.documents.doctype"
-        },
-        "filename": {
-          "type": "cds.String"
-        },
-        "file": {
+        "stream": {
           "type": "cds.LargeBinary"
         },
         "userid": {
+          "type": "cds.String"
+        },
+        "filename": {
           "type": "cds.String"
         }
       }

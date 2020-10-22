@@ -8,14 +8,13 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-						db
-					})
+				const schema = await utils.currentSchema({db});
 					// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const query =
 					`SELECT "ID", "REQUISITION_ID", "POSTING_END_DATE", "POSTING_START_DATE", "JOB_POSTING_STATUS", "TITLE", "JOB_ROLE","JOB_DETAILS","COUNTRY_OF_RESIDENCE","CITY" FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  limit ${limit} offset ${offset}`
+				console.log(query);
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -32,9 +31,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({
-					db
-				});
+				const schema = await utils.currentSchema({db});
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
@@ -66,6 +63,7 @@ module.exports = () => {
 					    '${job_details}',
 						'${country_of_residence}',
 						'${city}')`
+				console.log(query);
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -102,7 +100,8 @@ module.exports = () => {
     				"MODIFIEDAT" = '${modifiedat}'
     				where
     				"ID" = '${payload.payload.id}'`
-				const statement = await db.preparePromisified(query)
+    			console.log(query);
+    			const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
 
@@ -123,6 +122,7 @@ module.exports = () => {
 				)*/
 				const schema = await utils.currentSchema({db})
 				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  WHERE ID = '${payload.payload.id}'`
+				console.log(query);
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);

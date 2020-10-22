@@ -5,8 +5,7 @@ module.exports = {
 	createuser: async(req, res) => {
 		try {
 			const payload = req.body;
-		
-			let db = new dbClass(req.db);
+		    let db = new dbClass(req.db);
 			const response = await adminserivce.createuser({
 				payload,
 				db
@@ -65,12 +64,9 @@ module.exports = {
 	getuser: async(req, res) => {
 		try {
 			const payload = req.params;
-		
-			
 			let db = new dbClass(req.db);
 			const response = await adminserivce.getuser({
 				payload,
-			
 				db
 			});
 		
