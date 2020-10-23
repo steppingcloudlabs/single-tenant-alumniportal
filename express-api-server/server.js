@@ -96,7 +96,7 @@
   		return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
   	}
   });
-  
+
   // ADMIN ROUTES 
   const adminskillsRoutes = require("./router/skills");
   const adminjobRoutes = require("./router/job");
@@ -106,6 +106,7 @@
   const adminuseractionRoutes = require("./router/admin/");
   const searchRoutes = require("./router/search");
   const successfactorsRoutes = require("./router/successfactors");
+  const askhradminroutes = require("./router/askhr")
 
   app.use("/admin/action", adminactionRoutes);
   app.use("/admin/action", adminskillsRoutes);
@@ -115,8 +116,8 @@
   app.use("/admin/action", admindocumentRoutes);
   app.use("/search", searchRoutes);
   app.use("/admin/action", successfactorsRoutes)
-
-  //USER ROUTES
+  app.use("/askhr", askhradminroutes)
+  	//USER ROUTES
 
   //app.use(JWTtoken)     // express middleware for usertoken verfication
   const userauthRoutes = require("./router/auth/userindex.js");
