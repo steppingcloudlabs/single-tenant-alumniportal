@@ -116,7 +116,7 @@
   app.use("/admin/action", admindocumentRoutes);
   app.use("/search", searchRoutes);
   app.use("/admin/action", successfactorsRoutes)
-  app.use("/askhr", askhradminroutes)
+  app.use("admin/action/askhr", askhradminroutes)
   	//USER ROUTES
 
   //app.use(JWTtoken)     // express middleware for usertoken verfication
@@ -133,7 +133,7 @@
   app.use("/user/action", usernefRoutes);
   app.use("/user/action", userdocumentRoutes);
   app.use("/user/action", useractionRoutes);
-  app.use("/user/action", askhruserroutes);
+  app.use("/user/action/askhr", askhruserroutes);
   app.listen(port, () => {
   	console.log(`Server listening on port: ${port}`);
   });

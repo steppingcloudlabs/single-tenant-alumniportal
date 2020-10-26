@@ -25,3 +25,15 @@ expressrouter
 expressrouter
 	.route("/ticket/message/delete")
 	.post((req, res, next) => askhradmincontroller.deletemessage(req, res, next));
+expressrouter
+	.route("/manager/create")
+	.post((req, res, next) => askhradmincontroller.createmanager(req, res, next));
+expressrouter
+	.route("/manager/update")
+	.post((req, res, next) => askhradmincontroller.updatemanager(req, res, next));
+expressrouter
+	.route("/manager/get")
+	.post((req, res, next) => askhradmincontroller.getmanager(req, res, next));
+expressrouter
+	.route("/manager/delete")
+	.post((req, res, next) => askhradmincontroller.deletemanager(req, res, next));

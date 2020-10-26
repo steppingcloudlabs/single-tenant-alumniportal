@@ -102,6 +102,57 @@ module.exports = () => {
 			}
 		});
 	};
+
+	const createmanager = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async(resolve, reject) => {
+			try {
+				console.log("Things need to be done");
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
+	const getmanager = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async(resolve, reject) => {
+			try {
+				console.log("Things need to be done");
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
+
+	const updatemanager = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async(resolve, reject) => {
+			try {
+				console.log("Things need to be done");
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
+
+	const deletemanager = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async(resolve, reject) => {
+			try {
+				console.log("Things need to be done");
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
 	return {
 		createticket,
 		updateticket,
@@ -111,5 +162,9 @@ module.exports = () => {
 		updatemessage,
 		getmessage,
 		deletemessage,
+		createmanager,
+		updatemanager,
+		getmanager,
+		deletemanager,
 	};
 }
