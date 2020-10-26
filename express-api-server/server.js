@@ -126,14 +126,14 @@
   const userdocumentRoutes = require("./router/documents/userindex.js");
   const useractionRoutes = require("./router/users/index.js");
   const usernefRoutes = require("./router/nef");
-
+  const askhruserroutes = require("./router/askhr/indexuser.js")
   app.use("/user/auth", userauthRoutes);
   app.use("/user/action", userskillsRoutes);
   app.use("/user/action", userjobRoutes);
   app.use("/user/action", usernefRoutes);
   app.use("/user/action", userdocumentRoutes);
   app.use("/user/action", useractionRoutes);
-
+  app.use("/user/action", askhruserroutes);
   app.listen(port, () => {
   	console.log(`Server listening on port: ${port}`);
   });
