@@ -122,6 +122,7 @@ module.exports = {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
+			console.log(payload)
 			const response = await ticketserivce.createmessage({
 				payload,
 				db

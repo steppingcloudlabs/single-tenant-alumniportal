@@ -64,6 +64,7 @@ module.exports = () => {
 					ticketid,
 					usertype
 				} = payload.payload;
+				console.log(payload.payload)
 				const schema = await utils.currentSchema({
 					db
 				})
@@ -97,7 +98,23 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				console.log("Things need to be done");
+				const {
+					ticketid,
+					limit,
+					offset
+				} = payload;
+				const schema = await utils.currentSchema({
+					db
+				})
+				const createdat = new Date().toISOString();
+				const createdby = usertype;
+				const modifiedby = usertype;
+				const modifiedat = new Date().toISOString();
+				const id = uuid();
+				const query = `SELECT * FROM ${Schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID == ${ticketid} ORDERBY CREATEDAT ASC`
+				const statement = await db.preparePromisified(query);
+				const result = await db.statementExecPromisified(statement, []);
+				resolve(result);
 			} catch (error) {
 				reject(error);
 			}
@@ -110,7 +127,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				console.log("Things need to be done");
+				resolve("FUNCTIONALITY NOT AVAILABLE");
 			} catch (error) {
 				reject(error);
 			}
@@ -123,7 +140,21 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				console.log("Things need to be done");
+				const {
+					messageid
+				} = payload.paylaod;
+				const createdat = new Date().toISOString();
+				const createdby = usertype;
+				const modifiedby = usertype;
+				const modifiedat = new Date().toISOString();
+				const id = uuid();
+				const schema = await utils.currentSchema({
+					db
+				})
+				const query = `DELETE FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE ID == ${messageid} `
+				const statement = await db.preparePromisified(query);
+				const result = await db.statementExecPromisified(statement, []);
+				resolve(result);
 			} catch (error) {
 				reject(error);
 			}

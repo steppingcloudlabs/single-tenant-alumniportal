@@ -17,7 +17,7 @@ expressrouter
 	.route("/ticket/message/get")
 	.get((req, res, next) => askhrusercontroller.getmessage(req, res, next));
 expressrouter
-	.route("/ticket/message/create")
+	.route("/ticket/message/create")=]
 	.post((req, res, next) => askhrusercontroller.createmessage(req, res, next));
 expressrouter
 	.route("/ticket/message/update")
