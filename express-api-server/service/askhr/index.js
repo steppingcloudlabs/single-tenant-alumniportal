@@ -1,4 +1,5 @@
 const uuid = require("uuid");
+const util = require("../../utils/index.js")
 const utils = require("../../utils/database/index.js")();
 module.exports = () => {
 	const createticket = ({
@@ -58,7 +59,33 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				console.log("Things need to be done");
+				const {
+					message,
+					ticketid,
+					usertype
+				} = payload.payload;
+				const schema = await utils.currentSchema({
+					db
+				})
+				const createdat = new Date().toISOString();
+				const createdby = "user";
+				const modifiedby = usertype;
+				const modifiedat = new Date().toISOString();
+				const id = uuid();
+				const query =
+					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" VALUES(
+	'${createdat}'/*CREATEDAT <TIMESTAMP>*/,
+	'${createdby}'/*CREATEDBY <NVARCHAR(255)>*/,
+	'${modifiedat}'/*MODIFIEDAT <TIMESTAMP>*/,
+	'${modifiedby}'/*MODIFIEDBY <NVARCHAR(255)>*/,
+	'${id}'/*ID <NVARCHAR(36)>*/,
+	'${usertype}'/*USERTYPE <NVARCHAR(5000)>*/,
+	'${message}'/*MESSAGE <NVARCHAR(5000)>*/,
+	'${ticketid}'/*TICKETID <NVARCHAR(36)>*/
+)`
+				const statement = await db.preparePromisified(query)
+				const results = await db.statementExecPromisified(statement, [])
+				resolve(results);
 			} catch (error) {
 				reject(error);
 			}

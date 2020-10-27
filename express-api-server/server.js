@@ -102,7 +102,7 @@
   const adminjobRoutes = require("./router/job");
   const adminnefRoutes = require("./router/nef");
   const admindocumentRoutes = require("./router/documents");
-  const adminactionRoutes = require("./router/admin/indexadmin.js");
+  const adminactionRoutes = require("./router/admin/");
   const adminuseractionRoutes = require("./router/admin/");
   const searchRoutes = require("./router/search");
   const successfactorsRoutes = require("./router/successfactors");

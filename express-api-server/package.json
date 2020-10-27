@@ -19,9 +19,10 @@
 		"sap-hdbext-promisfied": "^2.202004.1",
 		"nodemon": "",
 		"joi": "^14.3.1",
-		"jsonwebtoken":"",
+		"jsonwebtoken": "",
 		"aws-sdk": "^2.573.0",
-		"bcryptjs": "^2.4.3"
+		"bcryptjs": "^2.4.3",
+		"@sap/cloud-sdk-core": "latest"
 	},
 	"files": [],
 	"main": "server.js",

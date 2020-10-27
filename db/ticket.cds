@@ -5,7 +5,6 @@ entity ticket:managed{
 	key ID: UUID @odata.Type:'Edm.String';
 	userid: String;
 	title: String;
-	message: String;
 	esclation: Boolean;
 	resolved: Boolean;
 	esclatationmanager: String;
