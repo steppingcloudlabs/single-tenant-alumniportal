@@ -1,5 +1,5 @@
 const expressrouter = require("express").Router();
-const askhradmincontroller = require("../../controller/auth/userindex.js");
+const askhradmincontroller = require("../../controller/askhr/index.js");
 
 expressrouter
 	.route("/ticket/create")
@@ -37,3 +37,5 @@ expressrouter
 expressrouter
 	.route("/manager/delete")
 	.post((req, res, next) => askhradmincontroller.deletemanager(req, res, next));
+	
+	module.exports = expressrouter;	

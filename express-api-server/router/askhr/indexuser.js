@@ -1,5 +1,5 @@
 const expressrouter = require("express").Router();
-const askhrusercontroller = require("../../controller/auth/userindex.js");
+const askhrusercontroller = require("../../controller/askhr/index.js");
 
 expressrouter
 	.route("/ticket/create")
@@ -25,3 +25,4 @@ expressrouter
 expressrouter
 	.route("/ticket/message/delete")
 	.post((req, res, next) => askhrusercontroller.deletemessage(req, res, next));
+module.exports = expressrouter;	
