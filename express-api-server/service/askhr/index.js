@@ -99,23 +99,21 @@ module.exports = () => {
 		return new Promise(async(resolve, reject) => {
 			try {
 				const {
-					ticketid,
-					limit,
-					offset
+					ticketid
 				} = payload;
 				const schema = await utils.currentSchema({
 					db
 				})
-				const createdat = new Date().toISOString();
-				const createdby = usertype;
-				const modifiedby = usertype;
-				const modifiedat = new Date().toISOString();
-				const id = uuid();
-				const query = `SELECT * FROM ${Schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID == ${ticketid} ORDERBY CREATEDAT ASC`
-				const statement = await db.preparePromisified(query);
-				const result = await db.statementExecPromisified(statement, []);
-				resolve(result);
+				const limit = payload.limit == undefined ? 10 : payload.limit
+				const offset = payload.offset == undefined ? 0 : payload.offset
+				const query =
+					`SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID = '${ticketid}' ORDER BY MODIFIEDAT DESC limit ${limit} offset ${offset}`
+				console.log(query)
+				const statement = await db.preparePromisified(query)
+				const results = await db.statementExecPromisified(statement, [])
+				resolve(results);
 			} catch (error) {
+				console.log(error)
 				reject(error);
 			}
 		});

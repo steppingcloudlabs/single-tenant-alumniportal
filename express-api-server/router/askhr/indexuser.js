@@ -17,7 +17,7 @@ expressrouter
 	.route("/ticket/message/get")
 	.get((req, res, next) => askhrusercontroller.getmessage(req, res, next));
 expressrouter
-	.route("/ticket/message/create")=]
+	.route("/ticket/message/create")
 	.post((req, res, next) => askhrusercontroller.createmessage(req, res, next));
 expressrouter
 	.route("/ticket/message/update")
@@ -25,4 +25,4 @@ expressrouter
 expressrouter
 	.route("/ticket/message/delete")
 	.post((req, res, next) => askhrusercontroller.deletemessage(req, res, next));
-module.exports = expressrouter;	
+module.exports = expressrouter;

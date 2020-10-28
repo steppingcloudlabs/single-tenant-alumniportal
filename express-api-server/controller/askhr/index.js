@@ -135,8 +135,8 @@ module.exports = {
 				});
 			} else {
 				res.type("application/json").status(200).send({
-					status: "500",
-					result: "Error"
+					status: "400",
+					result: response
 
 				});
 			}
@@ -163,8 +163,8 @@ module.exports = {
 				});
 			} else {
 				res.type("application/json").status(200).send({
-					status: "500",
-					result: "Error"
+					status: "400",
+					result: response
 				});
 
 			}
@@ -178,32 +178,33 @@ module.exports = {
 	},
 	getmessage: async(req, res) => {
 
-		try {
+		// try {
 
-			const payload = req.query;
-			let db = new dbClass(req.db);
-			const response = await ticketserivce.getmessage({
-				payload,
-				db
+		const payload = req.query;
+		let db = new dbClass(req.db);
+		console.log(payload)
+		const response = await ticketserivce.getmessage({
+			payload,
+			db
+		});
+		if (response) {
+			res.type("application/json").status(200).send({
+				status: "200",
+				result: response,
 			});
-			if (response) {
-				res.type("application/json").status(200).send({
-					status: "200",
-					result: response,
-				});
-			} else {
-				res.status(400).send({
-					status: "400",
-					result: response
-				});
-			}
-
-		} catch (error) {
+		} else {
 			res.status(400).send({
 				status: "400",
-				result: error
+				result: response
 			});
 		}
+
+		// } catch (error) {
+		// 	res.type("application/json").status(500).send({
+		// 		status: "500",
+		// 		result: error
+		// 	});
+		// }
 
 	},
 	deletemessage: async(req, res) => {
