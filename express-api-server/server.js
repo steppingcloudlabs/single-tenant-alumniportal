@@ -116,7 +116,7 @@
   app.use("/admin/action", admindocumentRoutes);
   app.use("/search", searchRoutes);
   app.use("/admin/action", successfactorsRoutes)
-  app.use("admin/action/askhr", askhradminroutes)
+  app.use("/admin/action/askhr", askhradminroutes)
   	//USER ROUTES
 
   //app.use(JWTtoken)     // express middleware for usertoken verfication
