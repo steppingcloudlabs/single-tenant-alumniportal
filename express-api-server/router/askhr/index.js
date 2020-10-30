@@ -12,7 +12,7 @@ expressrouter
 	.get((req, res, next) => askhradmincontroller.getticket(req, res, next));
 expressrouter
 	.route("/ticket/delete")
-	.post((req, res, next) => askhradmincontroller.updateticket(req, res, next));
+	.post((req, res, next) => askhradmincontroller.deleteticket(req, res, next));
 expressrouter
 	.route("/ticket/message/get")
 	.get((req, res, next) => askhradmincontroller.getmessage(req, res, next));

@@ -62,7 +62,6 @@ module.exports = {
 	getticket: async(req, res) => {
 
 		try {
-
 			const payload = req.query;
 		let db = new dbClass(req.db);
 			const response = await ticketserivce.getticket({
@@ -92,12 +91,15 @@ module.exports = {
 	},
 	deleteticket: async(req, res) => {
 		try {
+			
 			const payload = req.body;
 			let db = new dbClass(req.db);
+		
 			const response = await ticketserivce.deleteticket({
 				payload,
 				db
 			});
+			
 			if (response) {
 				res.type("application/json").status(200).send({
 					status: "200",

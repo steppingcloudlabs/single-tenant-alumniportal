@@ -91,7 +91,19 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				console.log("Things need to be done");
+				const {
+					ticketid
+				} = payload.payload;
+				
+				
+				const schema = await utils.currentSchema({
+					db
+				})
+				const query = `DELETE FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE ID = '${ticketid}' `
+				
+				const statement = await db.preparePromisified(query);
+				const result = await db.statementExecPromisified(statement, []);
+				resolve(result);
 			} catch (error) {
 				reject(error);
 			}
@@ -184,7 +196,7 @@ module.exports = () => {
 		return new Promise(async(resolve, reject) => {
 			try {
 				const {
-					messageid
+					ticketid
 				} = payload.paylaod;
 				const createdat = new Date().toISOString();
 				const createdby = usertype;
@@ -194,7 +206,7 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query = `DELETE FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE ID == ${messageid} `
+				const query = `DELETE FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE ID == ${ticketid} `
 				const statement = await db.preparePromisified(query);
 				const result = await db.statementExecPromisified(statement, []);
 				resolve(result);
