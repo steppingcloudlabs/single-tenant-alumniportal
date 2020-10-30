@@ -34,8 +34,8 @@ module.exports = () => {
 					'${id}'/*ID <NVARCHAR(36)>*/,
 					'${userid}'/*USERID <NVARCHAR(5000)>*/,
 					'${title}'/*TITLE <NVARCHAR(5000)>*/,
-					'${escalation}'/*ESCLATION <BOOLEAN>*/,
-					'${resolved}'/*RESOLVED <BOOLEAN>*/,
+					${escalation}/*ESCLATION <BOOLEAN>*/,
+					${resolved}/*RESOLVED <BOOLEAN>*/,
 					'${escalationmanager}'/*ESCLATATIONMANAGER <NVARCHAR(5000)>*/
 						)`
 				const statement = await db.preparePromisified(query)
