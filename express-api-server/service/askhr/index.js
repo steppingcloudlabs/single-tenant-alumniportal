@@ -15,7 +15,7 @@ module.exports = () => {
 					resolved,
 					escalationmanager
 				} = payload.payload;
-				console.log(payload.payload)
+				
 				const schema = await utils.currentSchema({
 					db
 				})
@@ -52,7 +52,20 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				console.log("Things need to be done");
+				const {
+					ticketid
+				} = payload;
+				const schema = await utils.currentSchema({
+					db
+				})
+				const limit = payload.limit == undefined ? 10 : payload.limit
+				const offset = payload.offset == undefined ? 0 : payload.offset
+				const query =
+					`SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE ID = '${ticketid}' ORDER BY MODIFIEDAT DESC limit ${limit} offset ${offset}`
+				console.log(query)
+				const statement = await db.preparePromisified(query)
+				const results = await db.statementExecPromisified(statement, [])
+				resolve(results);
 			} catch (error) {
 				reject(error);
 			}

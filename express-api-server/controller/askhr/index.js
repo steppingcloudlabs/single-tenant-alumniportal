@@ -63,12 +63,13 @@ module.exports = {
 
 		try {
 
-			const payload = req.params;
-			let db = new dbClass(req.db);
+			const payload = req.query;
+		let db = new dbClass(req.db);
 			const response = await ticketserivce.getticket({
 				payload,
 				db
 			});
+			console.log("hello")
 			if (response) {
 				res.type("application/json").status(200).send({
 					status: "200",
