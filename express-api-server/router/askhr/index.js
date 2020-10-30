@@ -33,7 +33,7 @@ expressrouter
 	.post((req, res, next) => askhradmincontroller.updatemanager(req, res, next));
 expressrouter
 	.route("/manager/get")
-	.post((req, res, next) => askhradmincontroller.getmanager(req, res, next));
+	.get((req, res, next) => askhradmincontroller.getmanager(req, res, next));
 expressrouter
 	.route("/manager/delete")
 	.post((req, res, next) => askhradmincontroller.deletemanager(req, res, next));

@@ -1,4 +1,4 @@
-namespace sclabs.alumniportal.askhr;
+namespace sclabs.alumniportal.manager;
 using { managed, sap } from '@sap/cds/common';
 
 entity manager : managed{
