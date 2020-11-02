@@ -78,45 +78,40 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-					const {
-					userid,
-					escalationmanager
-				} = payload.payload;
+					
 				
 				const schema = await utils.currentSchema({
 					db
 				})
-				console.log(escalationmanager)
+					
+			
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
-				
-				console.log(title)
-				console.log(escalation)
-				console.log(resolved)
+			
 				
 				const query = 
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET"
 					SET "TITLE" = CASE
-								WHEN '${title}' != 'undefined' THEN '${title}'
-								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "USERID"='${userid}')
+								WHEN '${payload.payload.title}'!= 'undefined' THEN '${payload.payload.title}'
+								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.id}')
 								END,
 					   "ESCLATION" = CASE
-								WHEN  ${escalation} != 'undefined' THEN  ${escalation}
-								ELSE (select "ESCLATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "USERID"='${userid}')
+								WHEN  ${payload.payload.escalation}!= 'undefined' THEN  ${payload.payload.escalation}
+								ELSE (select "ESCLATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.id}')
 								END,
 						"RESOLVED" = case
-								WHEN ${resolved} != 'undefined' THEN ${resolved}
-								ELSE (select "RESOLVED" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "USERID"='${userid}')
+								WHEN ${payload.payload.resolved}!= 'undefined' THEN ${payload.payload.resolved}
+								ELSE (select "RESOLVED" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.id}')
 								END,
 						"ESCLATATIONMANAGER" = case
-								WHEN '${escalationmanager}' != 'undefined' THEN '${escalationmanager}'
-								ELSE (select "ESCLATATIONMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "USERID"='${userid}')
+								WHEN '${payload.payload.escalationmanager}'!= 'undefined' THEN '${payload.payload.escalationmanager}'
+								ELSE (select "ESCLATATIONMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.id}')
 								END,
 						
 						"MODIFIEDBY" = '${modifiedby}',
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
-					"USERID" = '${userid}'`
+					"ID" = '${payload.payload.id}'`
 					console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
