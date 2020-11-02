@@ -78,7 +78,51 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				console.log("Things need to be done");
+					const {
+					userid,
+					escalationmanager
+				} = payload.payload;
+				
+				const schema = await utils.currentSchema({
+					db
+				})
+				console.log(escalationmanager)
+				const modifiedby = "admin";
+				const modifiedat = new Date().toISOString();
+				
+				console.log(title)
+				console.log(escalation)
+				console.log(resolved)
+				
+				const query = 
+					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET"
+					SET "TITLE" = CASE
+								WHEN '${title}' != 'undefined' THEN '${title}'
+								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "USERID"='${userid}')
+								END,
+					   "ESCLATION" = CASE
+								WHEN  ${escalation} != 'undefined' THEN  ${escalation}
+								ELSE (select "ESCLATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "USERID"='${userid}')
+								END,
+						"RESOLVED" = case
+								WHEN ${resolved} != 'undefined' THEN ${resolved}
+								ELSE (select "RESOLVED" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "USERID"='${userid}')
+								END,
+						"ESCLATATIONMANAGER" = case
+								WHEN '${escalationmanager}' != 'undefined' THEN '${escalationmanager}'
+								ELSE (select "ESCLATATIONMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "USERID"='${userid}')
+								END,
+						
+						"MODIFIEDBY" = '${modifiedby}',
+					    "MODIFIEDAT" = '${modifiedat}'
+					where
+					"USERID" = '${userid}'`
+					console.log(query)
+				const statement = await db.preparePromisified(query)
+				const results = await db.statementExecPromisified(statement, [])
+				resolve(results)
+				
+				
 			} catch (error) {
 				reject(error);
 			}
