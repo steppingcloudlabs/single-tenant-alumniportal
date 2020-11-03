@@ -1556,6 +1556,9 @@
         "date_of_birth": {
           "type": "cds.String"
         },
+        "date_of_relieving": {
+          "type": "cds.String"
+        },
         "date_of_resignation": {
           "type": "cds.String"
         },

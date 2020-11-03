@@ -103,7 +103,7 @@
   const adminnefRoutes = require("./router/nef");
   const admindocumentRoutes = require("./router/documents");
   const adminactionRoutes = require("./router/admin/");
-  const adminuseractionRoutes = require("./router/admin/");
+  const adminuseractionRoutes = require("./router/admin/indexuser.js");
   const searchRoutes = require("./router/search");
   const successfactorsRoutes = require("./router/successfactors");
   const askhradminroutes = require("./router/askhr")
@@ -114,7 +114,7 @@
   app.use("/admin/action", adminnefRoutes);
   app.use("/admin/action", adminuseractionRoutes)
   app.use("/admin/action", admindocumentRoutes);
-  app.use("/search", searchRoutes);
+  app.use("/admin/action/search", searchRoutes);
   app.use("/admin/action", successfactorsRoutes)
   app.use("/admin/action/askhr", askhradminroutes)
   	//USER ROUTES
@@ -134,6 +134,7 @@
   app.use("/user/action", userdocumentRoutes);
   app.use("/user/action", useractionRoutes);
   app.use("/user/action/askhr", askhruserroutes);
+  app.use("/user/action/search", searchRoutes);
   app.listen(port, () => {
   	console.log(`Server listening on port: ${port}`);
   });

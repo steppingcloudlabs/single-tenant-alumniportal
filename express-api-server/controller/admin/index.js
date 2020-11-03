@@ -5,26 +5,24 @@ module.exports = {
 	createuser: async(req, res) => {
 		try {
 			const payload = req.body;
-            console.log(payload);
-		    let db = new dbClass(req.db);
+
+			let db = new dbClass(req.db);
 			const response = await adminserivce.createuser({
 				payload,
 				db
 			});
-		    if (response=="userexists") {
+			if (response == "userexists") {
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: "User Id already exists"
 				});
-			}
-			else {
+			} else {
 				res.type("application/json").status(200).send({
-					status: "200",
+					status: "400",
 					result: response
 				});
 			}
-		
-		
+
 		} catch (error) {
 			res.type("application/json").status(500).send({
 				status: "500",
@@ -44,7 +42,7 @@ module.exports = {
 			console.log(response)
 			if (response) {
 				res.type("application/json").status(200).send({
-					status: "200",
+					status: "400",
 					result: response
 				});
 			} else {
@@ -70,7 +68,7 @@ module.exports = {
 				payload,
 				db
 			});
-		
+
 			if (response) {
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -105,7 +103,7 @@ module.exports = {
 				});
 			} else {
 				res.type("application/json").status(200).send({
-					status: "404",
+					status: "400",
 					result: response
 				});
 

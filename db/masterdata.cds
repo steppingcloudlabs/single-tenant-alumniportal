@@ -7,6 +7,7 @@ entity MasterData : managed{
   user_id : String not null;
   gender: String ;
   date_of_birth : String;
+  date_of_relieving: String;
   date_of_resignation : String;
   last_working_day_as_per_notice_period : String;
   personal_email_id : String;
