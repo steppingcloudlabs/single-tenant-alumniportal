@@ -14,21 +14,21 @@
 					
 				});
 				if (response) {
-					res.status(200).send({
+					res.type("application/json").status(200).send({
 						status: "200",
 						result: response,
 					});
 				} else {
-					res.status(400).send({
+					res.type("application/json").status(400).send({
 						status: "400",
 						result: response
 					});
 				}
 
 			} catch (error) {
-				res.status(400).send({
-					status: "400",
-					result: error
+					res.type("application/json").status(500).send({
+					status: "500",
+					error: error
 				});
 			}
 
@@ -48,14 +48,14 @@
 						result: response
 					});
 				} else {
-					res.type("text/plain").status(200).send({
+					res.type("application/json").status(200).send({
 						status: "500",
 						result: "Error"
 					});
 
 				}
 			} catch (error) {
-				res.type("text/plain").status(500).send({
+				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
 				});
@@ -77,7 +77,7 @@
 						result: response
 					});
 				} else {
-					res.type("text/plain").status(200).send({
+					res.type("application/json").status(200).send({
 						status: "500",
 						result: "Error"
 					});
@@ -85,7 +85,7 @@
 				}
 
 			} catch (error) {
-				res.type("text/plain").status(500).send({
+				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
 				});
@@ -110,14 +110,14 @@
 						result: response
 					});
 				} else {
-					res.type("text/plain").status(200).send({
+					res.type("application/json").status(200).send({
 						status: "500",
 						result: "Error"
 					});
 
 				}
 			} catch (error) {
-				res.status(200).send({
+				res.type("application/json").status(200).send({
 					status: "400",
 					result: "Element Not Found"
 				});

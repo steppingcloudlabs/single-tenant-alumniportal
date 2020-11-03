@@ -3,7 +3,7 @@ using { managed, sap } from '@sap/cds/common';
 
 entity documents:managed{
 	key ID: UUID @odata.Type:'Edm.String';
-	stream: LargeBinary;
+	stream: LargeString;
 	userid: String;
 	filename: String;
 	

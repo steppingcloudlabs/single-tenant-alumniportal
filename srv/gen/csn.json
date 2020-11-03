@@ -1108,7 +1108,7 @@
           "type": "cds.UUID"
         },
         "stream": {
-          "type": "cds.LargeBinary"
+          "type": "cds.LargeString"
         },
         "userid": {
           "type": "cds.String"

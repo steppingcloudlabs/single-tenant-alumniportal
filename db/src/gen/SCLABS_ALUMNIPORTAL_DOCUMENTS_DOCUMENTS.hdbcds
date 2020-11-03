@@ -5,7 +5,7 @@ entity SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS {
   MODIFIEDAT : UTCTimestamp;
   MODIFIEDBY : String(255);
   key ID : String(36);
-  STREAM : LargeBinary;
+  STREAM : LargeString;
   USERID : String(5000);
   FILENAME : String(5000);
 };

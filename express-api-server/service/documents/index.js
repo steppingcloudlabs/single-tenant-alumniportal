@@ -19,7 +19,7 @@ module.exports = () => {
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
-					`SELECT "CREATEDAT","CREATEDBY", "MODIFIEDAT","MODIFIEDBY","ID", "DOCUMENT", "FILENAME", "FILE","USERID"  FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" rows limit ${limit} offset ${offset}`
+					`SELECT "CREATEDAT","CREATEDBY", "MODIFIEDAT","MODIFIEDBY","ID", "STREAM", "USERID","FILENAME"  FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" rows limit ${limit} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -45,7 +45,7 @@ module.exports = () => {
 				const id = uuid();
 				const document_=util[payload.payload.filename];
 				const file_name = util[payload.payload.filename];
-				const file_=payload.payload.file;
+				const stream=payload.payload.file;
 				const userid=payload.payload.userid
 				const statement = await db.preparePromisified(
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" VALUES(
@@ -54,11 +54,9 @@ module.exports = () => {
 						'${modifiedat}',
 						'${modifiedby}',
 						'${id}',
-						'${document_}',
-						'${file_name}',
-						'${file_}',
-						'${userid}')`
-				)
+						'${stream}',
+						'${userid}',
+						'${file_name}')`)
 				
 				const results = await db.statementExecPromisified(statement, [])
 
@@ -84,9 +82,9 @@ module.exports = () => {
 				const id = uuid();
 				const statement = await db.preparePromisified(
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"
-					SET "FILE" = CASE 
+					SET "STREAM" = CASE 
 					WHEN '${payload.payload.file}' != 'undefined' THEN '${payload.payload.file}'
-					ELSE (select "FILE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "USERID"='${payload.payload.userid}')
+					ELSE (select "STREAM" FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "USERID"='${payload.payload.userid}')
 					END,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
