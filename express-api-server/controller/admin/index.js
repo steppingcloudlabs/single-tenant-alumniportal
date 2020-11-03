@@ -1,11 +1,10 @@
-const adminserivce = require("../../service/admin")();
+const adminserivce = require("../../service/admin/index.js")();
 const dbClass = require("sap-hdbext-promisfied");
 
 module.exports = {
 	createuser: async(req, res) => {
 		try {
 			const payload = req.body;
-
 			let db = new dbClass(req.db);
 			const response = await adminserivce.createuser({
 				payload,
@@ -13,12 +12,12 @@ module.exports = {
 			});
 			if (response == "userexists") {
 				res.type("application/json").status(200).send({
-					status: "200",
+					status: "201",
 					result: "User Id already exists"
 				});
 			} else {
 				res.type("application/json").status(200).send({
-					status: "400",
+					status: "200",
 					result: response
 				});
 			}
