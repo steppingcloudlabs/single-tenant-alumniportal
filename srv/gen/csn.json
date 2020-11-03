@@ -1195,9 +1195,6 @@
         "content": {
           "type": "cds.String"
         },
-        "tags": {
-          "type": "cds.String"
-        },
         "photo": {
           "type": "cds.LargeString"
         }
@@ -1751,20 +1748,8 @@
         "content": {
           "type": "cds.String"
         },
-        "author": {
-          "type": "cds.String"
-        },
-        "tags": {
-          "type": "cds.String"
-        },
-        "date": {
-          "type": "cds.Date"
-        },
         "photo": {
           "type": "cds.LargeString"
-        },
-        "photoname": {
-          "type": "cds.String"
         }
       }
     },

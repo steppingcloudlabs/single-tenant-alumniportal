@@ -38,8 +38,8 @@
 					});
 				} else {
 					res.type("application/json").status(200).send({
-						status: "500",
-						result: "Error"
+						status: "400",
+						result: response
 					});
 
 				}

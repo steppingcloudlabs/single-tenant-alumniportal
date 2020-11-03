@@ -6,9 +6,6 @@ entity news : managed{
 	key ID:  UUID @odata.Type:'Edm.String';
 	title : String;
 	content : String;
-	author : String;
-	tags : String;
-	date : Date;
 	photo : LargeString;
-	photoname: String;
+	
 }

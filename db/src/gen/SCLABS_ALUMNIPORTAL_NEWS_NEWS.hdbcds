@@ -7,9 +7,5 @@ entity SCLABS_ALUMNIPORTAL_NEWS_NEWS {
   key ID : String(36);
   TITLE : String(5000);
   CONTENT : String(5000);
-  AUTHOR : String(5000);
-  TAGS : String(5000);
-  DATE : LocalDate;
   PHOTO : LargeString;
-  PHOTONAME : String(5000);
 };

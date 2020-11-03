@@ -19,12 +19,12 @@ module.exports = () => {
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const statement = await db.preparePromisified(
-					`SELECT "ID","TITLE","CONTENT","AUTHOR","TAGS","DATE","PHOTO","PHOTONAME","CREATEDAT","CREATEDBY","MODIFIEDAT","MODIFIEDBY" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" rows limit ${limit} offset ${offset}`
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" rows limit ${limit} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
-
 			} catch (error) {
+				console.log(error)
 				reject(error);
 			}
 		});
@@ -54,9 +54,8 @@ module.exports = () => {
 						'${id}',
 						'${payload.payload.title}',
 						'${payload.payload.content}',
-						
 						'${payload.payload.photo}'
-						'${payload.photoname}')`
+						)`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 
@@ -88,11 +87,11 @@ module.exports = () => {
 					   "CONTENT" = CASE
 								WHEN '${payload.payload.content}' != 'undefined' THEN '${payload.content}'
 								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.id}')
-								END
+								END,
 						"PHOTO" = case
 								WHEN '${payload.payload.photo}' != 'undefined' THEN '${payload.photo}'
 								ELSE (select "PHOTO" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.id}')
-								end
+								end,
 						"MODIFIEDBY" = '${modifiedby}',
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
@@ -102,6 +101,7 @@ module.exports = () => {
 				resolve(results)
 
 			} catch (error) {
+				console.log(error)
 				reject(error);
 			}
 		});
@@ -120,7 +120,7 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
+				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.payload.id}'`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
