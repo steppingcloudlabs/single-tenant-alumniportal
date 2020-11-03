@@ -37,14 +37,14 @@
 						result: response
 					});
 				} else {
-					res.type("text/plain").status(200).send({
+					res.type("application/json").status(200).send({
 						status: "500",
 						result: "Error"
 					});
 
 				}
 			} catch (error) {
-				res.type("text/plain").status(500).send({
+				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
 				});
@@ -66,17 +66,17 @@
 						result: response
 					});
 				} else {
-					res.type("text/plain").status(200).send({
-						status: "500",
-						result: "Error"
+					res.type("application/json").status(200).send({
+						status: "400",
+						result: response
 					});
 
 				}
 
 			} catch (error) {
-				res.type("text/plain").status(500).send({
+				res.type("application/json").status(200).send({
 					status: "500",
-					error: error
+					result: error
 				});
 			}
 
@@ -98,7 +98,7 @@
 						result: response
 					});
 				} else {
-					res.type("text/plain").status(200).send({
+					res.type("application/json").status(200).send({
 						status: "500",
 						result: "Error"
 					});
@@ -169,7 +169,7 @@
 
 		},
 		updatefaq: async(req, res) => {
-			try{
+			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
 				const response = await nefserivce.updatefaq({
@@ -188,8 +188,7 @@
 						result: `${e.toString()}`
 					});
 				}
-			}
-			catch (error) {
+			} catch (error) {
 				res.status(200).send({
 					status: "400",
 					result: error
@@ -223,30 +222,27 @@
 		getevent: async(req, res) => {
 			try {
 
-				const payload = req.params;
+				const payload = req.query;
 				let db = new dbClass(req.db);
 				const response = await nefserivce.getevent({
 					payload,
 					db
 				});
-				console.log("here")
-				console.log(response)
-
 				if (response) {
-					res.status(200).send({
+					res.type("application/json").status(200).send({
 						status: "200",
 						result: response,
 					});
 				} else {
-					res.status(400).send({
+					res.type("application/json").status(400).send({
 						status: "400",
-						result: `${e.toString()}`
+						result: response
 					});
 				}
-			} catch {
-				res.status(400).send({
+			} catch (error) {
+				res.type("application/json").status(400).send({
 					status: "400",
-					result: "Error"
+					result: error
 				});
 			}
 		},
@@ -266,14 +262,14 @@
 						result: response
 					});
 				} else {
-					res.type("text/plain").status(200).send({
+					res.type("application/json").status(200).send({
 						status: "500",
 						result: "Error"
 					});
 
 				}
 			} catch (error) {
-				res.type("text/plain").status(200).send({
+				res.type("application/json").status(200).send({
 					status: "500",
 					result: error
 				});
@@ -289,22 +285,22 @@
 					payload,
 					db
 				});
-			    console.log(response)
+				console.log(response)
 				if (response) {
 					res.type("application/json").status(200).send({
 						status: "200",
 						result: response
 					});
 				} else {
-					res.type("text/plain").status(200).send({
-						status: "500",
-						result: "Error"
+					res.type("application/json").status(200).send({
+						status: "400",
+						result: response
 					});
 
 				}
 
 			} catch (error) {
-				res.type("text/plain").status(500).send({
+				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
 				});

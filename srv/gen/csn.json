@@ -1195,17 +1195,11 @@
         "content": {
           "type": "cds.String"
         },
-        "author": {
-          "type": "cds.String"
-        },
         "tags": {
           "type": "cds.String"
         },
-        "date": {
-          "type": "cds.Date"
-        },
         "photo": {
-          "type": "cds.LargeBinary"
+          "type": "cds.LargeString"
         }
       }
     },
@@ -1767,7 +1761,7 @@
           "type": "cds.Date"
         },
         "photo": {
-          "type": "cds.LargeBinary"
+          "type": "cds.LargeString"
         },
         "photoname": {
           "type": "cds.String"

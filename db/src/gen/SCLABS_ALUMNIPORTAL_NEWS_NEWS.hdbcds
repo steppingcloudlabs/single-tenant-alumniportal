@@ -10,6 +10,6 @@ entity SCLABS_ALUMNIPORTAL_NEWS_NEWS {
   AUTHOR : String(5000);
   TAGS : String(5000);
   DATE : LocalDate;
-  PHOTO : LargeBinary;
+  PHOTO : LargeString;
   PHOTONAME : String(5000);
 };

@@ -9,6 +9,6 @@ entity news : managed{
 	author : String;
 	tags : String;
 	date : Date;
-	photo : LargeBinary;
+	photo : LargeString;
 	photoname: String;
 }

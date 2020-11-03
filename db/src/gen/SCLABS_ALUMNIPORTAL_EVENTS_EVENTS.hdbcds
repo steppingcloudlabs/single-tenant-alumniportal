@@ -7,8 +7,6 @@ entity SCLABS_ALUMNIPORTAL_EVENTS_EVENTS {
   key ID : String(36);
   TITLE : String(5000);
   CONTENT : String(5000);
-  AUTHOR : String(5000);
   TAGS : String(5000);
-  DATE : LocalDate;
-  PHOTO : LargeBinary;
+  PHOTO : LargeString;
 };
