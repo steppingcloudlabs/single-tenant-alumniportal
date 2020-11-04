@@ -80,9 +80,12 @@ module.exports = () => {
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
 					"USER_ID" = '${payload.userid}'`
+				console.log(query);
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				if(results>=1){
+					resolve(1);
+				}
 			} catch (error) {
 				reject(error);
 			}
@@ -105,9 +108,10 @@ module.exports = () => {
 					const query1 = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS"  WHERE USER_ID = '${userid}'`
 					const statement1 = await db.preparePromisified(query1);
 					const results1 = await db.statementExecPromisified(statement1, [])
-					resolve(results1);
+					if(results1>=1){
+					    resolve(1);
+					}
 				}
-
 			} catch (error) {
 				reject(error);
 			}
