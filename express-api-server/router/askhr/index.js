@@ -35,7 +35,10 @@ expressrouter
 	.route("/manager/get")
 	.get((req, res, next) => askhradmincontroller.getmanager(req, res, next));
 expressrouter
+	.route("/manager/profile/get")
+	.get((req, res, next) => askhradmincontroller.getmanagerprofile(req, res, next));
+expressrouter
 	.route("/manager/delete")
 	.post((req, res, next) => askhradmincontroller.deletemanager(req, res, next));
-	
-	module.exports = expressrouter;	
+
+module.exports = expressrouter;

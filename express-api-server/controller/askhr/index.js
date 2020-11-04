@@ -63,7 +63,7 @@ module.exports = {
 
 		try {
 			const payload = req.query;
-		let db = new dbClass(req.db);
+			let db = new dbClass(req.db);
 			const response = await ticketserivce.getticket({
 				payload,
 				db
@@ -91,15 +91,15 @@ module.exports = {
 	},
 	deleteticket: async(req, res) => {
 		try {
-			
+
 			const payload = req.body;
 			let db = new dbClass(req.db);
-		
+
 			const response = await ticketserivce.deleteticket({
 				payload,
 				db
 			});
-			
+
 			if (response) {
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -304,6 +304,36 @@ module.exports = {
 			const payload = req.query;
 			let db = new dbClass(req.db);
 			const response = await ticketserivce.getmanager({
+				payload,
+				db
+			});
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response,
+				});
+			} else {
+				res.status(400).send({
+					status: "400",
+					result: response
+				});
+			}
+
+		} catch (error) {
+			res.status(400).send({
+				status: "400",
+				result: error
+			});
+		}
+
+	},
+	getmanagerprofile: async(req, res) => {
+
+		try {
+
+			const payload = req.query;
+			let db = new dbClass(req.db);
+			const response = await ticketserivce.getmanagerprofile({
 				payload,
 				db
 			});

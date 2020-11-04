@@ -39,17 +39,17 @@
   	policy: "no-referrer"
   }));
 
-  // passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
-  // 	uaa: {
-  // 		tag: "xsuaa"
-  // 	}
-  // }).uaa));
+  passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
+  	uaa: {
+  		tag: "xsuaa"
+  	}
+  }).uaa));
 
   app.use(logging.middleware({
   	appContext: appContext,
   	logNetwork: true
   }));
-  // app.use(passport.initialize());
+  app.use(passport.initialize());
   var hanaOptions = xsenv.getServices({
   	hana: {
   		tag: "hana"
@@ -57,9 +57,9 @@
   });
   hanaOptions.hana.pooling = true;
   app.use(
-  	// 	passport.authenticate("JWT", {
-  	// 		session: false
-  	// 	}),
+  	passport.authenticate("JWT", {
+  		session: false
+  	}),
   	xsHDBConn.middleware(hanaOptions.hana)
   );
 
@@ -94,6 +94,30 @@
   		return res.type("application/json").status(200).send(result)
   	} catch (e) {
   		return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
+  	}
+  });
+
+  app.get("/admin/action/info", async(req, res) => {
+
+  	let info = {
+  		'userInfo': req.authInfo.userInfo,
+  		'subdomain': req.authInfo.subdomain,
+  		'tenantId': req.authInfo.identityZone
+  	};
+  	res.status(200).json(info);
+
+  });
+
+  app.get("/user/action/info", async(req, res) => {
+  	if (req.authInfo.checkScope('$XSAPPNAME.Administrator')) {
+  		let info = {
+  			'userInfo': req.authInfo.userInfo,
+  			'subdomain': req.authInfo.subdomain,
+  			'tenantId': req.authInfo.identityZone
+  		};
+  		res.status(200).json(info);
+  	} else {
+  		res.status(403).send('Forbidden');
   	}
   });
 

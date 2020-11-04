@@ -36,6 +36,23 @@ modules:
     parameters:
       memory: 150M
       disk-quota: 800M
+      
+  - name: app
+    type: html5
+    path: app
+    requires:
+      - name: multitenant-alumniportal-sap-uaa
+      - name: express-api-server_api
+        group: destinations
+        properties:
+          name: express-api-server
+          url: ~{url}
+          forwardAuthToken: true
+    provides:
+      - name: app_api
+        properties:
+          url: ${default-url}
+          application: ${app-name}
 resources:
   - name: multitenant-alumniportal-sap-db-hdi-container
     type: com.sap.xs.hdi-container
@@ -49,3 +66,8 @@ resources:
       config:
         xsappname: 'multitenant-alumniportal-sap-${space}'
         tenant-mode: dedicated
+  - name: multitenant-alumniportal-sap-dest
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service: destination
+      service-plan: lite

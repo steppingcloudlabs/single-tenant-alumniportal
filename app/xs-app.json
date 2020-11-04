@@ -1,0 +1,19 @@
+{
+	"welcomeFile": "index.html",
+	"authenticationMethod": "route",
+	"routes": [{
+		"source": "^/user/(.*)$",
+		"authenticationType": "xsuaa",
+		"scope": "$XSAPPNAME.User",
+		"destination": "express-api-server"
+	}, {
+		"source": "^/admin/(.*)$",
+		"authenticationType": "xsuaa",
+		"scope": ["$XSAPPNAME.Administrator", "$XSAPPNAME.Manager"],
+		"destination": "express-api-server"
+	}, {
+		"source": "^/(.*)",
+		"authenticationType": "none",
+		"localDir": "resource"
+	}]
+}

@@ -8,18 +8,18 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-			const {
+				const {
 					userid,
 					title,
 					escalation,
 					resolved,
 					escalationmanager
 				} = payload.payload;
-				
+
 				const schema = await utils.currentSchema({
 					db
 				})
-				
+
 				const createdat = new Date().toISOString();
 				const createdby = "user";
 				const modifiedby = "user";
@@ -78,18 +78,15 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-					
-				
+
 				const schema = await utils.currentSchema({
 					db
 				})
-					
-			
+
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
-			
-				
-				const query = 
+
+				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET"
 					SET "TITLE" = CASE
 								WHEN '${payload.payload.title}'!= 'undefined' THEN '${payload.payload.title}'
@@ -112,12 +109,11 @@ module.exports = () => {
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
 					"ID" = '${payload.payload.id}'`
-					console.log(query)
+				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
-				
-				
+
 			} catch (error) {
 				reject(error);
 			}
@@ -133,13 +129,12 @@ module.exports = () => {
 				const {
 					ticketid
 				} = payload.payload;
-				
-				
+
 				const schema = await utils.currentSchema({
 					db
 				})
 				const query = `DELETE FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE ID = '${ticketid}' `
-				
+
 				const statement = await db.preparePromisified(query);
 				const result = await db.statementExecPromisified(statement, []);
 				resolve(result);
@@ -261,22 +256,24 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({db});
+				const schema = await utils.currentSchema({
+					db
+				});
 				const createdat = new Date().toISOString();
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();;
 				const id = uuid();
 				const firstname = payload.firstname;
-		        const lastname= payload.lastname;
-			    const userid = payload.userid;
-			    const levelmanager = payload.levelmanager;
-			    const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE USERID ='${userid}'`
+				const lastname = payload.lastname;
+				const userid = payload.userid;
+				const levelmanager = payload.levelmanager;
+				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE USERID ='${userid}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				if (results.length == 0) {
-				const query1 =
-					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" VALUES(
+					const query1 =
+						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" VALUES(
 					'${createdat}',
 					'${createdby}',
 					'${modifiedat}',
@@ -287,13 +284,12 @@ module.exports = () => {
 					'${userid}',
 					'${levelmanager}'
 				)`
-				const statement1 = await db.preparePromisified(query1)
-				const results1 = await db.statementExecPromisified(statement1, [])
-				resolve(results1);
-			    }
-			    else{
-			    	resolve("userid exists")
-			    }
+					const statement1 = await db.preparePromisified(query1)
+					const results1 = await db.statementExecPromisified(statement1, [])
+					resolve(results1);
+				} else {
+					resolve("userid exists")
+				}
 			} catch (error) {
 				reject(error);
 			}
@@ -305,12 +301,14 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({db})
+				const schema = await utils.currentSchema({
+					db
+				})
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
-				const query = 
-					`SELECT "CREATEDAT", "CREATEDBY","MODIFIEDAT","MODIFIEDBY","ID","FIRSTNAME","LASTNAME","USERID","LEVELMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" rows limit ${limit} offset ${offset}`
-			    const statement = await db.preparePromisified(query)
+				const query =
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" rows limit ${limit} offset ${offset}`
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
@@ -318,17 +316,50 @@ module.exports = () => {
 			}
 		});
 	};
+	const getmanagerprofile = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async(resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const limit = payload.limit == undefined ? 10 : payload.limit
+				const offset = payload.offset == undefined ? 0 : payload.offset
+				const query =
+					`SELECT 
+					A1.ID,
+					A1.FIRSTNAME, 
+					A1.LASTNAME,
+					A1.USERID,
+					A1.LEVELMANAGER,
+					A2.ID as TICKETID
+					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" as A1
+					LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" as A2 
+					ON A1."TICKETID" = A2."ID" where A1."USERID" = '${userid}'
+					rows limit ${limit} offset ${offset}`
+				const statement = await db.preparePromisified(query)
+				const results = await db.statementExecPromisified(statement, [])
 
+				resolve(results);
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
 	const updatemanager = ({
 		payload,
 		db
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({db});
+				const schema = await utils.currentSchema({
+					db
+				});
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
-				const query = 
+				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"
 				     SET "LEVELMANAGER" = CASE 
 					     WHEN '${payload.levelmanager}' != 'undefined' THEN '${payload.levelmanager}'
@@ -342,7 +373,7 @@ module.exports = () => {
 				const results = await db.statementExecPromisified(statement, [])
 				console.log(results);
 				resolve(results)
-	
+
 			} catch (error) {
 				reject(error);
 			}
@@ -355,7 +386,9 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({db})
+				const schema = await utils.currentSchema({
+					db
+				})
 				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE USERID = '${payload.userid}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
@@ -378,5 +411,6 @@ module.exports = () => {
 		updatemanager,
 		getmanager,
 		deletemanager,
+		getmanagerprofile
 	};
 }
