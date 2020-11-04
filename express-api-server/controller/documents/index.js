@@ -5,7 +5,7 @@
 		// News Controllers
 		getdocuments: async(req, res) => {
 			try {
-				const payload = req.params;
+				const payload = req.query;
 				let db = new dbClass(req.db);
 				const response = await documentserivce.viewdocuments({
 					payload,
@@ -122,5 +122,35 @@
 					result: "Element Not Found"
 				});
 			}
-		}
+		},
+		statusdocuments: async(req, res) => {
+			try {
+				const payload = req.params;
+				let db = new dbClass(req.db);
+				const response = await documentserivce.statusdocuments({
+					payload,
+					db
+					
+					
+				});
+				if (response) {
+					res.type("application/json").status(200).send({
+						status: "200",
+						result: response,
+					});
+				} else {
+					res.type("application/json").status(400).send({
+						status: "400",
+						result: response
+					});
+				}
+
+			} catch (error) {
+					res.type("application/json").status(500).send({
+					status: "500",
+					error: error
+				});
+			}
+
+		},
 	}

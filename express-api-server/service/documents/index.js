@@ -18,8 +18,9 @@ module.exports = () => {
 					// TODO: add pagination using [to, from] clauses in statement.
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
+				console.log(payload.userid)
 				const statement = await db.preparePromisified(
-					`SELECT "CREATEDAT","CREATEDBY", "MODIFIEDAT","MODIFIEDBY","ID", "STREAM", "USERID","FILENAME"  FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" rows limit ${limit} offset ${offset}`
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "USERID"='${payload.userid}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -102,6 +103,25 @@ module.exports = () => {
 	};
 
 	const deletedocuments = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async(resolve, reject) => {
+			try {
+
+				const schema = await utils.currentSchema({db})
+				const statement = await db.preparePromisified(
+					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"  WHERE ID = '${payload.payload.id}'`
+				)
+				const results = await db.statementExecPromisified(statement, [])
+				resolve(results);
+
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
+	const statusdocuments = ({
 		payload,
 		db
 	}) => {
