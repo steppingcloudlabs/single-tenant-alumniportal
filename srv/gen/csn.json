@@ -1457,35 +1457,11 @@
         "lastname": {
           "type": "cds.String"
         },
-        "userid": {
+        "email": {
           "type": "cds.String"
         },
         "levelmanager": {
           "type": "cds.String"
-        },
-        "ticketid": {
-          "type": "cds.UUID"
-        },
-        "ticket": {
-          "type": "cds.Association",
-          "cardinality": {
-            "max": "*"
-          },
-          "target": "sclabs.alumniportal.ticket.ticket",
-          "on": [
-            {
-              "ref": [
-                "ticket",
-                "ID"
-              ]
-            },
-            "=",
-            {
-              "ref": [
-                "ticketid"
-              ]
-            }
-          ]
         }
       }
     },

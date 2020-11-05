@@ -264,11 +264,11 @@ module.exports = () => {
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();;
 				const id = uuid();
-				const firstname = payload.firstname;
-				const lastname = payload.lastname;
-				const userid = payload.userid;
-				const levelmanager = payload.levelmanager;
-				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE USERID ='${userid}'`
+				const firstname = payload.payload.firstname;
+				const lastname = payload.payload.lastname;
+				const email = payload.payload.email;
+				const levelmanager = payload.payload.levelmanager;
+				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE USERID ='${email}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				if (results.length == 0) {
@@ -281,7 +281,7 @@ module.exports = () => {
 					'${id}',	
 					'${firstname}',
 					'${lastname}',
-					'${userid}',
+					'${email}',
 					'${levelmanager}'
 				)`
 					const statement1 = await db.preparePromisified(query1)

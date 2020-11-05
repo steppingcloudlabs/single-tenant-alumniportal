@@ -5,6 +5,6 @@ entity manager : managed{
 	key ID: UUID @odata.Type:'Edm.String';
 	firstname: String;
 	lastname: String;
-	userid: String;
+	email: String;
 	levelmanager: String;
 };
