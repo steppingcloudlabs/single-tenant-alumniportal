@@ -14,7 +14,7 @@ module.exports = () => {
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const query =
-					`SELECT "CREATEDAT", "CREATEDBY","MODIFIEDAT","MODIFIEDBY","ID","FIRSTNAME","LASTNAME","USERID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" rows limit ${limit} offset ${offset}`
+					`SELECT "CREATEDAT", "CREATEDBY","MODIFIEDAT","MODIFIEDBY","ID","FIRSTNAME","LASTNAME","EMAIL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" rows limit ${limit} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -40,9 +40,9 @@ module.exports = () => {
 				const id = uuid();
 				const firstname = payload.payload.firstname;
 				const lastname = payload.payload.lastname;
-				const userid = payload.payload.userid;
+				const email = payload.payload.email;
 				const query =
-					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"  WHERE USERID ='${userid}'`
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"  WHERE EMAIL ='${email}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				if (results.length == 0) {
@@ -55,7 +55,7 @@ module.exports = () => {
 					'${id}',	
 					'${firstname}',
 					'${lastname}',
-					'${userid}'
+					'${email}'
 				)`
 					const statement1 = await db.preparePromisified(query1)
 					const results1 = await db.statementExecPromisified(statement1, [])
@@ -80,7 +80,7 @@ module.exports = () => {
 					db
 				})
 				const query =
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"  WHERE USERID = '${payload.payload.userid}'`
+					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"  WHERE EMAIL = '${payload.payload.email}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);

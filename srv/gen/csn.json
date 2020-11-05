@@ -1830,7 +1830,7 @@
         "lastname": {
           "type": "cds.String"
         },
-        "userid": {
+        "email": {
           "type": "cds.String"
         }
       }
