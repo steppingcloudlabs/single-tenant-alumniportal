@@ -13,13 +13,10 @@
 
   //Initialize Express App for XS UAA and HDBEXT Middleware
   const app = express();
-  //logging
-  app.use(morgan("dev"));
-  app.use(
-  	bodyParser.json({
-  		limit: "200mb"
-  	})
-  );
+  app.use(bodyParser.urlencoded({
+  	extended: false
+  }));
+  app.use(bodyParser.json());
 
   const logging = require("@sap/logging");
   const appContext = logging.createAppContext();
@@ -39,17 +36,17 @@
   	policy: "no-referrer"
   }));
 
-  passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
-  	uaa: {
-  		tag: "xsuaa"
-  	}
-  }).uaa));
+  //passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
+  //	uaa: {
+  //		tag: "xsuaa"
+  //	}
+  //}).uaa));
 
   app.use(logging.middleware({
   	appContext: appContext,
   	logNetwork: true
   }));
-  app.use(passport.initialize());
+  //app.use(passport.initialize());
   var hanaOptions = xsenv.getServices({
   	hana: {
   		tag: "hana"
@@ -57,9 +54,9 @@
   });
   hanaOptions.hana.pooling = true;
   app.use(
-  	passport.authenticate("JWT", {
-  		session: false
-  	}),
+  	// passport.authenticate("JWT", {
+  	// 	session: false
+  	// }),
   	xsHDBConn.middleware(hanaOptions.hana)
   );
 

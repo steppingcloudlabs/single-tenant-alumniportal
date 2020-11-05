@@ -7,6 +7,4 @@ entity manager : managed{
 	lastname: String;
 	userid: String;
 	levelmanager: String;
-	ticketid: UUID;
-	ticket: Association[*] to ticket on ticket.ID = ticketid;
 };

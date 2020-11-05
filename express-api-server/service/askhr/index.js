@@ -307,7 +307,7 @@ module.exports = () => {
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const query =
-					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" rows limit ${limit} offset ${offset}`
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" rows limit ${limit} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -328,17 +328,7 @@ module.exports = () => {
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const query =
-					`SELECT 
-					A1.ID,
-					A1.FIRSTNAME, 
-					A1.LASTNAME,
-					A1.USERID,
-					A1.LEVELMANAGER,
-					A2.ID as TICKETID
-					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" as A1
-					LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" as A2 
-					ON A1."TICKETID" = A2."ID" where A1."USERID" = '${userid}'
-					rows limit ${limit} offset ${offset}`
+					`SELECT * from ${schema}.SCLABS_ALUMNIPORTAL_TICKET_TICKET "EMAIL" = '${payload.email}' ORDER BY CREATEDAT DESC rows limit ${limit} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 
