@@ -268,7 +268,7 @@ module.exports = () => {
 				const lastname = payload.payload.lastname;
 				const email = payload.payload.email;
 				const levelmanager = payload.payload.levelmanager;
-				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE USERID ='${email}'`
+				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE EMAIL ='${email}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				if (results.length == 0) {
@@ -328,7 +328,7 @@ module.exports = () => {
 				const limit = payload.limit == undefined ? 10 : payload.limit
 				const offset = payload.offset == undefined ? 0 : payload.offset
 				const query =
-					`SELECT * from ${schema}.SCLABS_ALUMNIPORTAL_TICKET_TICKET "EMAIL" = '${payload.email}' ORDER BY CREATEDAT DESC rows limit ${limit} offset ${offset}`
+					`SELECT * from ${schema}.SCLABS_ALUMNIPORTAL_TICKET_TICKET WHERE EMAIL = '${payload.email}' ORDER BY CREATEDAT DESC rows limit ${limit} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 
@@ -352,16 +352,16 @@ module.exports = () => {
 				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"
 				     SET "LEVELMANAGER" = CASE 
-					     WHEN '${payload.levelmanager}' != 'undefined' THEN '${payload.levelmanager}'
-				      	 ELSE (select "LEVELMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" where "USERID"='${payload.userid}')
+					     WHEN '${payload.payload.levelmanager}' != 'undefined' THEN '${payload.payload.levelmanager}'
+				      	 ELSE (select "LEVELMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" where EMAIL = '${payload.payload.email}')
 					     END,
 					     "MODIFIEDBY" = '${modifiedby}',
     				     "MODIFIEDAT" = '${modifiedat}'
     				where
-    				"USERID" = '${payload.userid}'`
+    				"EMAIL" = '${payload.payload.email}'`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				console.log(results);
+
 				resolve(results)
 
 			} catch (error) {
@@ -379,7 +379,7 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE USERID = '${payload.userid}'`
+				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE EMAIL = '${payload.payload.email}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
