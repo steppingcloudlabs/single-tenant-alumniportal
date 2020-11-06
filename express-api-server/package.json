@@ -1,9 +1,5 @@
 {
-	"dependencies": {},
-	"description": "my description",
-	"devDependencies": {
-		"jest": "^23.6.0",
-		"jest-junit": "^5.2.0",
+	"dependencies": {
 		"@sap/hdbext": "^6.2.1",
 		"@sap/logging": "^5.3.0",
 		"@sap/xsenv": "^2.2.0",
@@ -23,6 +19,12 @@
 		"aws-sdk": "^2.573.0",
 		"bcryptjs": "^2.4.3",
 		"@sap/cloud-sdk-core": "latest"
+	},
+	"description": "my description",
+	"devDependencies": {
+		"jest": "^23.6.0",
+		"jest-junit": "^5.2.0"
+
 	},
 	"files": [],
 	"main": "server.js",
