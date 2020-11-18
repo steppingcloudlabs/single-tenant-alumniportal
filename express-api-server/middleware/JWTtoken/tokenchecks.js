@@ -1,13 +1,18 @@
 const {
 	JWT_SECRET
 } = require('../../config');
-const utils = require("../../utils/database/index.js")();
 const JWT = require('jsonwebtoken');
 module.exports = () => {
 	function tokenchecks(req, res, next) {
+		if (!req.headers.authorization) {
+			return res.status(403).json({
+				status: "400",
+				result: "Rejected Request, Token Required"
+			});
+		}
 		const {
 			token
-		} = req.body;
+		} = req.header.authorization.split(" ")[1];
 		if (token) {
 			const tokendetails = JWT.verify(token, JWT_SECRET);
 			const expirytimefromtoken = tokendetails.exp;
@@ -26,6 +31,9 @@ module.exports = () => {
 			});
 		}
 	}
-	return tokenchecks;
+
+	return {
+		tokenchecks
+	};
 
 };
