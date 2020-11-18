@@ -1350,33 +1350,39 @@
           "key": true,
           "type": "cds.UUID"
         },
-        "requisition_id": {
+        "boardId": {
           "type": "cds.String",
           "notNull": true
         },
-        "posting_end_date": {
+        "country": {
+          "type": "cds.String"
+        },
+        "department": {
+          "type": "cds.String"
+        },
+        "jobDescription": {
+          "type": "cds.String"
+        },
+        "jobPostingId": {
+          "type": "cds.String"
+        },
+        "jobReqId": {
+          "type": "cds.String"
+        },
+        "jobTitle": {
+          "type": "cds.String"
+        },
+        "location": {
+          "type": "cds.String"
+        },
+        "postingStatus": {
+          "type": "cds.String"
+        },
+        "postingstartdate": {
           "type": "cds.Date"
         },
-        "posting_start_date": {
+        "postingenddate": {
           "type": "cds.Date"
-        },
-        "job_posting_status": {
-          "type": "cds.String"
-        },
-        "title": {
-          "type": "cds.String"
-        },
-        "job_role": {
-          "type": "cds.String"
-        },
-        "job_details": {
-          "type": "cds.String"
-        },
-        "country_of_residence": {
-          "type": "cds.String"
-        },
-        "city": {
-          "type": "cds.String"
         }
       }
     },

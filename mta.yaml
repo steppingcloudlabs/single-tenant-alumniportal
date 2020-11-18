@@ -1,28 +1,17 @@
-ID: multitenant-alumniportal-sap
-_schema-version: '2.1'
+ID: single-tenant-alumniportal-sap
+_schema-version: '3.1'
 version: 0.0.1
 modules:
-  - name: multitenant-alumniportal-sap-db
+# SAP HDI Container
+  - name: single-tenant-alumniportal-sap-db
     type: hdb
     path: db
     parameters:
       memory: 256M
       disk-quota: 512M
     requires:
-      - name: multitenant-alumniportal-sap-db-hdi-container
-  - name: multitenant-alumniportal-sap-srv
-    type: nodejs
-    path: srv
-    parameters:
-      memory: 512M
-      disk-quota: 512M
-    provides:
-      - name: srv_api
-        properties:
-          url: '${default-url}'
-    requires:
-      - name: multitenant-alumniportal-sap-db-hdi-container
-      - name: multitenant-alumniportal-sap-uaa
+      - name: single-tenant-alumniportal-sap-db-hdi-container
+# Nodejs backend
   - name: express-api-server
     type: nodejs
     path: express-api-server
@@ -31,17 +20,20 @@ modules:
         properties:
           url: '${default-url}'
     requires:
-      - name: multitenant-alumniportal-sap-db-hdi-container
-      - name: multitenant-alumniportal-sap-uaa
+      - name: single-tenant-alumniportal-sap-db-hdi-container
+      - name: single-tenant-alumniportal-sap-uaa
+      - name: sfsdkdest
     parameters:
       memory: 150M
       disk-quota: 800M
-      
+    properties:
+      apiDest: 'sfsdkdest'
+# App Router
   - name: app
     type: html5
     path: app
     requires:
-      - name: multitenant-alumniportal-sap-uaa
+      - name: single-tenant-alumniportal-sap-uaa
       - name: express-api-server_api
         group: destinations
         properties:
@@ -54,20 +46,22 @@ modules:
           url: ${default-url}
           application: ${app-name}
 resources:
-  - name: multitenant-alumniportal-sap-db-hdi-container
+  - name: single-tenant-alumniportal-sap-db-hdi-container
     type: com.sap.xs.hdi-container
     properties:
       hdi-container-name: '${service-name}'
-  - name: multitenant-alumniportal-sap-uaa
+  - name: single-tenant-alumniportal-sap-uaa
     type: org.cloudfoundry.managed-service
     parameters:
       service-plan: application
       service: xsuaa
       config:
-        xsappname: 'multitenant-alumniportal-sap-${space}'
+        xsappname: 'single-tenant-alumniportal-sap-${space}'
         tenant-mode: dedicated
-  - name: multitenant-alumniportal-sap-dest
+  - name: sfsdkdest
     type: org.cloudfoundry.managed-service
     parameters:
-      service: destination
       service-plan: lite
+      service: destination
+  - name: sfsdkapi
+    type: org.cloudfoundry.existing-service
