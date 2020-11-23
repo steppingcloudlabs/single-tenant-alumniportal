@@ -12,6 +12,6 @@ entity job:managed{
 	jobTitle: String;
 	location: String;
 	postingStatus: String;
-	postingstartdate:Date;
-	postingenddate:Date;
+	postingstartdate:String;
+	postingenddate:String;
 }
