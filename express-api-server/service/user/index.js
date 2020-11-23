@@ -69,15 +69,15 @@ module.exports = () => {
 				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS"
                     SET "PHONE_NUMBER_PHONE_INFORMATION" = CASE
-								WHEN '${payload.phone_number_phone_information}' != 'undefined' THEN '${payload.payload.phone_number_phone_information}'
+								WHEN '${payload.payload.phone_number_phone_information}' != 'undefined' THEN '${payload.payload.phone_number_phone_information}'
 								ELSE (select "PHONE_NUMBER_PHONE_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.payload.userid}')
 								END,
 						"CITY_ADDRESSES" = case
-								WHEN '${payload.city_addresses}' != 'undefined' THEN '${payload.payload.city_addresses}'
+								WHEN '${payload.payload.city_addresses}' != 'undefined' THEN '${payload.payload.city_addresses}'
 								ELSE (select "CITY_ADDRESSES" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.payload.userid}')
 								END,
 						"LINKEDIN" = case
-								WHEN '${payload.linkedin}' != 'undefined' THEN '${payload.payload.linkedin}'
+								WHEN '${payload.payload.linkedin}' != 'undefined' THEN '${payload.payload.linkedin}'
 								ELSE (select "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.payload.userid}')
 								END,
 					    "MODIFIEDBY" = '${modifiedby}',
