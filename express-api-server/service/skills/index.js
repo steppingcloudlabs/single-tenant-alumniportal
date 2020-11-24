@@ -6,15 +6,17 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({db})
-					// TODO: add pagination using [to, from] clauses in statement.
-				const limit = payload.limit == undefined ? 10 : payload.limit
-				const offset = payload.offset == undefined ? 0 : payload.offset
+				const schema = await utils.currentSchema({
+					db
+				})
+				// TODO: add pagination using [to, from] clauses in statement.
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				console.log("here")
-				const query=
-					`SELECT "ID", "SKILL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" rows limit ${limit} offset ${offset}`
+				const query =
+					`SELECT "ID", "SKILL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" rows LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -29,7 +31,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 
 			try {
 				//const {createdat,createdby,modifiedat,modifiedby,id,skill}=payload.payload;
@@ -40,15 +42,15 @@ module.exports = () => {
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
-				const id = uuid();
-				const skill = payload.payload.skill;
+				const ID = uuid();
+				const skill = payload.payload.SKILL;
 				const query =
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" VALUES(	
 				        '${createdat}',
 						'${createdby}',
 						'${modifiedat}',
 						'${modifiedby}',
-						'${id}',
+						'${ID}',
 						'${skill}')`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
@@ -63,7 +65,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				console.log("before statement");
 				//const {createdat,createdby,modifiedat,modifiedby,id,skill}=payload.payload;
@@ -74,18 +76,18 @@ module.exports = () => {
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
-				const id = uuid();
-				const skill = payload.payload.skill;
-				const query = 
+				const ID = uuid();
+				const skill = payload.payload.SKILL;
+				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS"
 					SET "SKILL" = CASE 
-					WHEN '${payload.payload.skill}' != 'undefined' THEN '${payload.payload.skill}'
-					ELSE (select "SKILL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" where "ID"='${payload.payload.id}')
+					WHEN '${payload.payload.SKILL}' != 'undefined' THEN '${payload.payload.SKILL}'
+					ELSE (select "SKILL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" where "ID"='${payload.payload.ID}')
 					END,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
     				where
-    				"ID" = '${payload.payload.id}'`
+    				"ID" = '${payload.payload.ID}'`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
@@ -100,13 +102,15 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				/*console.log(
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
 				)*/
-				const schema = await utils.currentSchema({db})
-				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS"  WHERE ID = '${payload.payload.id}'`
+				const schema = await utils.currentSchema({
+					db
+				})
+				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS"  WHERE ID = '${payload.payload.ID}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);

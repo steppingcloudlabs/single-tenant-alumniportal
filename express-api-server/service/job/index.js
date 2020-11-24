@@ -6,16 +6,16 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({
 					db
 				});
 				// TODO: add pagination using [to, from] clauses in statement.
-				const limit = payload.limit == undefined ? 10 : payload.limit
-				const offset = payload.offset == undefined ? 0 : payload.offset
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
-					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  limit ${limit} offset ${offset}`
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  LIMIT ${LIMIT} offset ${offset}`
 				console.log(query);
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
@@ -31,7 +31,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({
 					db
@@ -41,25 +41,25 @@ module.exports = () => {
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
-				const id = uuid();
-				const requisition_id = payload.payload.requisitionid;
-				const posting_end_date = payload.payload.postingenddate;
-				const posting_start_date = payload.payload.postingstartdate;
-				const job_posting_status = payload.payload.jobpostingstatus;
-				const department = payload.payload.department;
-				const title = payload.payload.title;
-				const jobdescription = payload.payload.jobdescription;
-				const jobpostingid = payload.payload.jobpostingid;
-				const boardid = payload.payload.boardid;
-				const country = payload.payload.country;
-				const city = payload.payload.city;
+				const ID = uuid();
+				const requisition_id = payload.payload.REQUISITIONID;
+				const posting_end_date = payload.payload.POSTINGENDDATE;
+				const posting_start_date = payload.payload.POSTINGSTARTDATE;
+				const job_posting_status = payload.payload.JOBPOSTINGSTATUS;
+				const department = payload.payload.DEPARTMENT;
+				const title = payload.payload.TITLE;
+				const jobdescription = payload.payload.JOBDESCRIPTION;
+				const jobpostingid = payload.payload.JOBPOSTINGID;
+				const boardid = payload.payload.BOARDID;
+				const country = payload.payload.COUNTRY;
+				const city = payload.payload.CITY;
 				const query =
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" VALUES(
 					'${createdat}'/*CREATEDAT <TIMESTAMP>*/,
 					'${createdby}'/*CREATEDBY <NVARCHAR(255)>*/,
 					'${modifiedat}'/*MODIFIEDAT <TIMESTAMP>*/,
 					'${modifiedby}'/*MODIFIEDBY <NVARCHAR(255)>*/,
-					'${id}'/*ID <NVARCHAR(36)>*/,
+					'${ID}'/*ID <NVARCHAR(36)>*/,
 					'${boardid}'/*BOARDID <NVARCHAR(5000)>*/,
 					'${country}'/*COUNTRY <NVARCHAR(5000)>*/,
 					'${department}'/*DEPARTMENT <NVARCHAR(5000)>*/,
@@ -87,7 +87,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 
 				const schema = await utils.currentSchema({
@@ -98,18 +98,19 @@ module.exports = () => {
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
-				const id = uuid();
-				const job_details = payload.payload.job_details;
+				const ID = uuid();
+				const job_details = payload.payload.JOB_DETAILS;
 				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"
 					SET "JOB_DETAILS" = CASE 
-					WHEN '${payload.payload.job_details}' != 'undefined' THEN '${payload.payload.job_details}'
-					ELSE (select "JOB_DETAILS" FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" where "ID"='${payload.payload.id}')
+					WHEN '${payload.payload.JOB_DETAILS}' != 'undefined'
+					THEN '${payload.payload.JOB_DETAILS}'
+					ELSE (select "JOB_DETAILS" FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" where "ID"='${payload.payload.ID}')
 					END,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
     				where
-    				"ID" = '${payload.payload.id}'`
+    				"ID" = '${payload.payload.ID}'`
 				console.log(query);
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
@@ -125,7 +126,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				/*console.log(
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
@@ -133,7 +134,7 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  WHERE ID = '${payload.payload.id}'`
+				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  WHERE ID = '${payload.payload.ID}'`
 				console.log(query);
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
@@ -148,7 +149,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				res = [];
 
@@ -166,7 +167,7 @@ module.exports = () => {
 					const modifiedby = "admin";
 					const modifiedat = new Date().toISOString();
 					const date = new Date().toISOString();
-					const id = uuid();
+					const ID = uuid();
 					console.log(payload);
 					const requisition_id = payload.payload[i].requisition_id;
 					const posting_end_date = payload.payload[i].posting_end_date;
@@ -183,7 +184,7 @@ module.exports = () => {
 						             '${createdby}',
 						             '${modifiedat}',
 						             '${modifiedby}',
-						             '${id}',
+						             '${ID}',
 						             '${requisition_id}',
 						             '${posting_end_date}',
 						             '${posting_start_date}',

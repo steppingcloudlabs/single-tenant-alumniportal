@@ -11,10 +11,10 @@ module.exports = () => {
 					db
 				})
 				console.log(schema)
-				const limit = payload.limit == undefined ? 10 : payload.limit
-				const offset = payload.offset == undefined ? 0 : payload.offset
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
-					`SELECT "CREATEDAT", "CREATEDBY","MODIFIEDAT","MODIFIEDBY","ID","FIRSTNAME","LASTNAME","EMAIL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" rows limit ${limit} offset ${offset}`
+					`SELECT "CREATEDAT", "CREATEDBY","MODIFIEDAT","MODIFIEDBY","ID","FIRSTNAME","LASTNAME","EMAIL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" rows LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -37,10 +37,10 @@ module.exports = () => {
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();;
-				const id = uuid();
-				const firstname = payload.payload.firstname;
-				const lastname = payload.payload.lastname;
-				const email = payload.payload.email;
+				const ID = uuid();
+				const firstname = payload.payload.FIRSTNAME;
+				const lastname = payload.payload.LASTNAME;
+				const email = payload.payload.EMAIL;
 				const query =
 					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"  WHERE EMAIL ='${email}'`
 				const statement = await db.preparePromisified(query);
@@ -52,7 +52,7 @@ module.exports = () => {
 					'${createdby}',
 					'${modifiedat}',
 					'${modifiedby}',
-					'${id}',	
+					'${ID}',	
 					'${firstname}',
 					'${lastname}',
 					'${email}'
@@ -80,7 +80,7 @@ module.exports = () => {
 					db
 				})
 				const query =
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"  WHERE EMAIL = '${payload.payload.email}'`
+					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"  WHERE EMAIL = '${payload.payload.EMAIL}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);

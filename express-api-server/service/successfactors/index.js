@@ -13,8 +13,8 @@ module.exports = () => {
 	}) => {
 		return new Promise(async(resolve, reject) => {
 			try {
-				const limit = payload.limit == undefined ? 10 : payload.limit
-				const offset = payload.offset == undefined ? 0 : payload.offset
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const result = PerPersonal.requestBuilder()
 					.getAll()
 					.select(
@@ -24,7 +24,7 @@ module.exports = () => {
 							.equals(payload.email))
 
 						// PerPersonal.PERSON_NAV.select(PerPerson.EMAIL_NAV.select(PerEmail.EMAIL_ADDRESS))
-					).top(limit).skip(offset)
+					).top(LIMIT).skip(offset)
 					.execute({
 						destinationName: "sfapi"
 					});

@@ -6,10 +6,12 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
-				const userid = payload.userid
-				const schema = await utils.currentSchema({db})
+				const userid = payload.USERID
+				const schema = await utils.currentSchema({
+					db
+				})
 				const query =
 					`SELECT 
 				    A1."ID",
@@ -35,7 +37,7 @@ module.exports = () => {
 					ON A1."SKILL_ID" = A2."ID" where A1."USER_ID" = '${userid}';`
 				const statement = await db.preparePromisified(query)
 				const obj = await db.statementExecPromisified(statement, [])
-				var results= [];
+				var results = [];
 				var a = [];
 				results = obj[0];
 				if (1 < obj.length) {
@@ -56,34 +58,36 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
-				const schema = await utils.currentSchema({db})
+				const schema = await utils.currentSchema({
+					db
+				})
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
-				const query = 
+				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS"
                     SET "PHONE_NUMBER_PHONE_INFORMATION" = CASE
-								WHEN '${payload.phone_number_phone_information}' != 'undefined' THEN '${payload.phone_number_phone_information}'
-								ELSE (select "PHONE_NUMBER_PHONE_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.userid}')
+								WHEN '${payload.PHONE_NUMBER_PHONE_INFORMATION}' != 'undefined' THEN '${payload.PHONE_NUMBER_PHONE_INFORMATION}'
+								ELSE (select "PHONE_NUMBER_PHONE_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.USERID}')
 								END,
 						"CITY_ADDRESSES" = case
-								WHEN '${payload.city_addresses}' != 'undefined' THEN '${payload.city_addresses}'
-								ELSE (select "CITY_ADDRESSES" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.userid}')
+								WHEN '${payload.CITY_ADDRESSES}' != 'undefined' THEN '${payload.CITY_ADDRESSES}'
+								ELSE (select "CITY_ADDRESSES" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.USERID}')
 								END,
 						"LINKEDIN" = case
-								WHEN '${payload.linkedin}' != 'undefined' THEN '${payload.linkedin}'
-								ELSE (select "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.userid}')
+								WHEN '${PAYLOAD.LINKEDIN}' != 'undefined' THEN '${PAYLOAD.LINKEDIN}'
+								ELSE (select "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.USERID}')
 								END,
 					    "MODIFIEDBY" = '${modifiedby}',
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
-					"USER_ID" = '${payload.userid}'`
+					"USER_ID" = '${payload.USERID}'`
 				console.log(query);
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				if(results>=1){
+				if (results >= 1) {
 					resolve(1);
 				}
 			} catch (error) {
@@ -95,10 +99,12 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
-				const userid = payload.userid
-				const schema = await utils.currentSchema({db})
+				const userid = payload.USERID
+				const schema = await utils.currentSchema({
+					db
+				})
 				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"  WHERE USERID ='${userid}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
@@ -108,8 +114,8 @@ module.exports = () => {
 					const query1 = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS"  WHERE USER_ID = '${userid}'`
 					const statement1 = await db.preparePromisified(query1);
 					const results1 = await db.statementExecPromisified(statement1, [])
-					if(results1>=1){
-					    resolve(1);
+					if (results1 >= 1) {
+						resolve(1);
 					}
 				}
 			} catch (error) {

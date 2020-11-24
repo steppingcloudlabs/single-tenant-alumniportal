@@ -5,18 +5,18 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 
 				const schema = await utils.currentSchema({
-						db
-					})
-					// TODO: add pagination using [to, from] clauses in statement.
+					db
+				})
+				// TODO: add pagination using [to, from] clauses in statement.
 
-				const limit = payload.limit == undefined ? 10 : payload.limit
-				const offset = payload.offset == undefined ? 0 : payload.offset
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const statement = await db.preparePromisified(
-					`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows limit ${limit} offset ${offset}`
+					`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows LIMIT ${LIMIT} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -31,43 +31,43 @@ module.exports = () => {
 
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				var {
 
-					user_id,
-					date_of_relieving,
-					date_of_resignation,
-					last_working_day_as_per_notice_period,
-					personal_email_id,
-					first_name_personal_information,
-					last_name_personal_information,
-					middle_name_personal_information,
-					nationality_personal_information,
-					salutation_personal_information,
-					city_addresses,
-					phone_number_phone_information,
-					manager_job_information,
-					designation_job_information,
-					gender,
-					date_of_birth
+					USER_ID,
+					DATE_OF_RELIEVING,
+					DATE_OF_RESIGNATION,
+					LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD,
+					PERSONAL_EMAIL_ID,
+					FIRST_NAME_PERSONAL_INFORMATION,
+					LAST_NAME_PERSONAL_INFORMATION,
+					MIDDLE_NAME_PERSONAL_INFORMATION,
+					NATIONALITY_PERSONAL_INFORMATION,
+					SALUTATION_PERSONAL_INFORMATION,
+					CITY_ADDRESSES,
+					PHONE_NUMBER_PHONE_INFORMATION,
+					MANAGER_JOB_INFORMATION,
+					DESIGNATION_JOB_INFORMATION,
+					GENDER,
+					DATE_OF_BIRTH
 				} = payload.payload;
-				date_of_relieving == undefined ? " " : date_of_relieving;
-				user_id == undefined ? " " : user_id;
-				date_of_resignation == undefined ? " " : date_of_resignation;
-				last_working_day_as_per_notice_period == undefined ? " " : last_working_day_as_per_notice_period;
-				personal_email_id == undefined ? " " : personal_email_id;
-				first_name_personal_information == undefined ? " " : first_name_personal_information;
-				last_name_personal_information == undefined ? " " : last_name_personal_information;
-				middle_name_personal_information == undefined ? " " : middle_name_personal_information;
-				nationality_personal_information == undefined ? " " : nationality_personal_information;
-				salutation_personal_information == undefined ? " " : salutation_personal_information;
-				city_addresses == undefined ? " " : city_addresses;
-				phone_number_phone_information == undefined ? " " : phone_number_phone_information;
-				manager_job_information == undefined ? " " : manager_job_information;
-				designation_job_information == undefined ? " " : designation_job_information;
-				gender == undefined ? " " : gender;
-				date_of_birth == undefined ? " " : date_of_birth;
+				DATE_OF_RELIEVING == undefined ? " " : DATE_OF_RELIEVING;
+				USER_ID == undefined ? " " : USER_ID;
+				DATE_OF_RESIGNATION == undefined ? " " : DATE_OF_RESIGNATION;
+				LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD == undefined ? " " : LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD;
+				PERSONAL_EMAIL_ID == undefined ? " " : PERSONAL_EMAIL_ID;
+				FIRST_NAME_PERSONAL_INFORMATION == undefined ? " " : FIRST_NAME_PERSONAL_INFORMATION;
+				LAST_NAME_PERSONAL_INFORMATION == undefined ? " " : LAST_NAME_PERSONAL_INFORMATION;
+				MIDDLE_NAME_PERSONAL_INFORMATION == undefined ? " " : MIDDLE_NAME_PERSONAL_INFORMATION;
+				NATIONALITY_PERSONAL_INFORMATION == undefined ? " " : NATIONALITY_PERSONAL_INFORMATION;
+				SALUTATION_PERSONAL_INFORMATION == undefined ? " " : SALUTATION_PERSONAL_INFORMATION;
+				CITY_ADDRESSES == undefined ? " " : CITY_ADDRESSES;
+				PHONE_NUMBER_PHONE_INFORMATION == undefined ? " " : PHONE_NUMBER_PHONE_INFORMATION;
+				MANAGER_JOB_INFORMATION == undefined ? " " : MANAGER_JOB_INFORMATION;
+				DESIGNATION_JOB_INFORMATION == undefined ? " " : DESIGNATION_JOB_INFORMATION;
+				GENDER == undefined ? " " : GENDER;
+				DATE_OF_BIRTH == undefined ? " " : DATE_OF_BIRTH;
 				const schema = await utils.currentSchema({
 					db
 				});
@@ -77,8 +77,8 @@ module.exports = () => {
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
-				const id = uuid()
-				const query1 = `SELECT USER_ID FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" WHERE USER_ID='${user_id}'`
+				const ID = uuid()
+				const query1 = `SELECT USER_ID FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" WHERE USER_ID='${USER_ID}'`
 
 				const statement1 = await db.preparePromisified(query1)
 
@@ -92,23 +92,23 @@ module.exports = () => {
 						'${createdby}',
 						'${modifiedat}',
 						'${modifiedby}',
-						'${id}',
-						'${user_id}',
-						'${gender}',
-						'${date_of_birth}',
-						'${date_of_resignation}',
-						'${last_working_day_as_per_notice_period}',
-						'${personal_email_id}',
-					    '${first_name_personal_information}',
-						'${last_name_personal_information}',
-						'${middle_name_personal_information}',
-						'${nationality_personal_information}',
-						'${salutation_personal_information}',
-						'${city_addresses}',
-						'${phone_number_phone_information}',
-						'${manager_job_information}',
-						'${designation_job_information}',
-						'${date_of_relieving}')`
+						'${ID}',
+						'${USER_ID}',
+						'${GENDER}',
+						'${DATE_OF_BIRTH}',
+						'${DATE_OF_RESIGNATION}',
+						'${LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD}',
+						'${PERSONAL_EMAIL_ID}',
+					    '${FIRST_NAME_PERSONAL_INFORMATION}',
+						'${LAST_NAME_PERSONAL_INFORMATION}',
+						'${MIDDLE_NAME_PERSONAL_INFORMATION}',
+						'${NATIONALITY_PERSONAL_INFORMATION}',
+						'${SALUTATION_PERSONAL_INFORMATION}',
+						'${CITY_ADDRESSES}',
+						'${PHONE_NUMBER_PHONE_INFORMATION}',
+						'${MANAGER_JOB_INFORMATION}',
+						'${DESIGNATION_JOB_INFORMATION}',
+						'${DATE_OF_RELIEVING}')`
 					console.log(query)
 					const statement = await db.preparePromisified(query)
 					let results = await db.statementExecPromisified(statement, [])
@@ -126,7 +126,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = currentSchema(db)
 				const createdat = new Date().toISOString();
@@ -134,32 +134,32 @@ module.exports = () => {
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
-				const id = uuid();
-				const user_id = payload.user_id;
-				const gender = payload._gender;
-				const date_of_birth = payload.date_of_birth
-				const date_of_resignation = payload.date_of_resignation
-				const last_working_day_as_per_notice_period = payload.last_working_day_as_per_notice_period
-				const personal_email_id = payload.personal_email_id
-				const first_name_personal_information = payload.first_name_personal_information
-				const last_name_personal_information = payload.last_name_personal_information
-				const middle_name_personal_information = payload.middle_name_personal_information
-				const nationality_personal_information = payload.nationality_personal_information
-				const salutation_personal_information = payload.salutation_personal_information
-				const city_addresses = payload.city_addresses
-				const phone_number_phone_information = payload.phone_number_phone_information
-				const manager_job_information = payload.manager_job_informatio
-				const designation_job_information = payload.designation_job_information
+				const ID = uuid();
+				const USER_ID = payload.USER_ID;
+				const GENDER = payload._GENDER;
+				const DATE_OF_BIRTH = payload.DATE_OF_BIRTH
+				const DATE_OF_RESIGNATION = payload.DATE_OF_RESIGNATION
+				const LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD = payload.LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD
+				const PERSONAL_EMAIL_ID = payload.PERSONAL_EMAIL_ID
+				const FIRST_NAME_PERSONAL_INFORMATION = payload.FIRST_NAME_PERSONAL_INFORMATION
+				const LAST_NAME_PERSONAL_INFORMATION = payload.LAST_NAME_PERSONAL_INFORMATION
+				const MIDDLE_NAME_PERSONAL_INFORMATION = payload.MIDDLE_NAME_PERSONAL_INFORMATION
+				const NATIONALITY_PERSONAL_INFORMATION = payload.NATIONALITY_PERSONAL_INFORMATION
+				const SALUTATION_PERSONAL_INFORMATION = payload.SALUTATION_PERSONAL_INFORMATION
+				const CITY_ADDRESSES = payload.CITY_ADDRESSES
+				const PHONE_NUMBER_PHONE_INFORMATION = payload.PHONE_NUMBER_PHONE_INFORMATION
+				const MANAGER_JOB_INFORMATION = payload.manager_job_informatio
+				const DESIGNATION_JOB_INFORMATION = payload.DESIGNATION_JOB_INFORMATION
 				const statement = await db.preparePromisified(
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MASTER_MASTER"
 					SET "USER_ID" = CASE 
-					WHEN '${payload.document}' != 'undefined' THEN '${payload.document}'
-					ELSE (select "USER_ID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" where "ID"='${payload.payload.id}')
+					WHEN '${payload.DOCUMENT}' != 'undefined' THEN '${payload.DOCUMENT}'
+					ELSE (select "USER_ID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" where "ID"='${payload.payload.ID}')
 					END,
 					"MODIFIEDBY" = '${modifiedby}',
     				"MODIFIEDAT" = '${modifiedat}'
     				where
-    				"ID" = '${payload.payload.id}'`
+    				"ID" = '${payload.payload.ID}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve("Functionality Not available")
@@ -174,13 +174,13 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"  WHERE ID = '${payload.payload.id}'`
+				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"  WHERE ID = '${payload.payload.ID}'`
 
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
