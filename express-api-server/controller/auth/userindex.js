@@ -38,6 +38,7 @@ module.exports = {
 					},
 					JWT_SECRET
 				);
+				response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,

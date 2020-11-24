@@ -15,14 +15,13 @@ module.exports = {
   },
   signupSchemas: {
     authSchema: joi.object().keys({
-      email: joi
+      EMAIL: joi
         .string()
         .email()
         .required(),
-      password: joi.string().required(),
-      companyname: joi.string().required(),
-      userid: joi.string().required(),
-      userType: joi.string()
+      PASSWORD: joi.string().required(),
+      USERID: joi.string().required()
+
     })
   },
   signinValidateBody: schema => {
@@ -40,11 +39,11 @@ module.exports = {
   },
   signinSchemas: {
     authSchema: joi.object().keys({
-      email: joi
+      EMAIL: joi
         .string()
         .email()
         .required(),
-      password: joi.string().required()
+      PASSWORD: joi.string().required()
     })
   },
 }

@@ -84,6 +84,7 @@ module.exports = () => {
 
 				const results1 = await db.statementExecPromisified(statement1, [])
 				if (results1.length != 0) {
+					console.log(results1)
 					resolve("userexists")
 				} else {
 					const query =
