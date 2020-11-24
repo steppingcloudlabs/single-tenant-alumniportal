@@ -2,11 +2,11 @@ const ticketserivce = require("../../service/askhr")();
 const dbClass = require("sap-hdbext-promisfied");
 
 module.exports = {
-	createticket: async(req, res) => {
+	createticket: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.createticket({
+			let response = await ticketserivce.createticket({
 				payload,
 				db
 			});
@@ -31,11 +31,11 @@ module.exports = {
 		}
 
 	},
-	updateticket: async(req, res) => {
+	updateticket: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.updateticket({
+			let response = await ticketserivce.updateticket({
 				payload,
 				db
 			});
@@ -59,17 +59,18 @@ module.exports = {
 			});
 		}
 	},
-	getticket: async(req, res) => {
+	getticket: async (req, res) => {
 
 		try {
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.getticket({
+			let response = await ticketserivce.getticket({
 				payload,
 				db
 			});
-			console.log("hello")
+
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -89,13 +90,13 @@ module.exports = {
 		}
 
 	},
-	deleteticket: async(req, res) => {
+	deleteticket: async (req, res) => {
 		try {
 
 			const payload = req.body;
 			let db = new dbClass(req.db);
 
-			const response = await ticketserivce.deleteticket({
+			let response = await ticketserivce.deleteticket({
 				payload,
 				db
 			});
@@ -121,12 +122,12 @@ module.exports = {
 	},
 
 	// MESSAGE CONTROLLERS
-	createmessage: async(req, res) => {
+	createmessage: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
 			console.log(payload)
-			const response = await ticketserivce.createmessage({
+			let response = await ticketserivce.createmessage({
 				payload,
 				db
 			});
@@ -151,11 +152,11 @@ module.exports = {
 		}
 
 	},
-	updatemessage: async(req, res) => {
+	updatemessage: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.updatemessage({
+			let response = await ticketserivce.updatemessage({
 				payload,
 				db
 			});
@@ -179,18 +180,19 @@ module.exports = {
 			});
 		}
 	},
-	getmessage: async(req, res) => {
+	getmessage: async (req, res) => {
 
 		// try {
 
 		const payload = req.query;
 		let db = new dbClass(req.db);
 		console.log(payload)
-		const response = await ticketserivce.getmessage({
+		let response = await ticketserivce.getmessage({
 			payload,
 			db
 		});
 		if (response) {
+			response = response.length > 1 ? response : response[0];
 			res.type("application/json").status(200).send({
 				status: "200",
 				result: response,
@@ -210,11 +212,11 @@ module.exports = {
 		// }
 
 	},
-	deletemessage: async(req, res) => {
+	deletemessage: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.deletemessage({
+			let response = await ticketserivce.deletemessage({
 				payload,
 				db
 			});
@@ -240,11 +242,11 @@ module.exports = {
 
 	// MANAGER CONTROLLERS
 
-	createmanager: async(req, res) => {
+	createmanager: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.createmanager({
+			let response = await ticketserivce.createmanager({
 				payload,
 				db
 			});
@@ -269,11 +271,11 @@ module.exports = {
 		}
 
 	},
-	updatemanager: async(req, res) => {
+	updatemanager: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.updatemanager({
+			let response = await ticketserivce.updatemanager({
 				payload,
 				db
 			});
@@ -297,17 +299,18 @@ module.exports = {
 			});
 		}
 	},
-	getmanager: async(req, res) => {
+	getmanager: async (req, res) => {
 
 		try {
 
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.getmanager({
+			let response = await ticketserivce.getmanager({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -327,17 +330,18 @@ module.exports = {
 		}
 
 	},
-	getmanagerprofile: async(req, res) => {
+	getmanagerprofile: async (req, res) => {
 
 		try {
 
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.getmanagerprofile({
+			let response = await ticketserivce.getmanagerprofile({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -357,11 +361,11 @@ module.exports = {
 		}
 
 	},
-	deletemanager: async(req, res) => {
+	deletemanager: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await ticketserivce.deletemanager({
+			let response = await ticketserivce.deletemanager({
 				payload,
 				db
 			});

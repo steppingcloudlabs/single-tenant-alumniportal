@@ -2,11 +2,11 @@ const jobservice = require("../../service/job/index.js")();
 const dbClass = require("sap-hdbext-promisfied");
 
 module.exports = {
-	createjob: async(req, res) => {
+	createjob: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await jobservice.createjob({
+			let response = await jobservice.createjob({
 				payload,
 				db
 			});
@@ -31,11 +31,11 @@ module.exports = {
 		}
 
 	},
-	updatejob: async(req, res) => {
+	updatejob: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await jobservice.updatejob({
+			let response = await jobservice.updatejob({
 				payload,
 				db
 			});
@@ -59,17 +59,18 @@ module.exports = {
 			});
 		}
 	},
-	getjob: async(req, res) => {
+	getjob: async (req, res) => {
 
 		try {
 
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			const response = await jobservice.getjob({
+			let response = await jobservice.getjob({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -89,11 +90,11 @@ module.exports = {
 		}
 
 	},
-	deletejob: async(req, res) => {
+	deletejob: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await jobservice.deletejob({
+			let response = await jobservice.deletejob({
 				payload,
 				db
 			});
@@ -116,11 +117,11 @@ module.exports = {
 			});
 		}
 	},
-	createbulkjob: async(req, res) => {
+	createbulkjob: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await jobservice.createbulkjob({
+			let response = await jobservice.createbulkjob({
 				payload,
 				db
 			});

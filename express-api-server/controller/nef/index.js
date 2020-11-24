@@ -3,14 +3,15 @@
 	const dbClass = require("sap-hdbext-promisfied");
 	module.exports = {
 		// News Controllers
-		getnews: async(req, res) => {
+		getnews: async (req, res) => {
 			const payload = req.params;
 			let db = new dbClass(req.db);
-			const response = await nefserivce.viewnews({
+			let response = await nefserivce.viewnews({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
 					result: response,
@@ -23,11 +24,11 @@
 			}
 		},
 
-		createnews: async(req, res) => {
+		createnews: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.createnews({
+				let response = await nefserivce.createnews({
 					payload,
 					db
 				});
@@ -52,11 +53,11 @@
 
 		},
 
-		updatenews: async(req, res) => {
+		updatenews: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.updatenews({
+				let response = await nefserivce.updatenews({
 					payload,
 					db
 				});
@@ -81,13 +82,13 @@
 			}
 
 		},
-		deletenews: async(req, res) => {
+		deletenews: async (req, res) => {
 			try {
 
 				const payload = req.body;
 				let db = new dbClass(req.db);
 
-				const response = await nefserivce.deletenews({
+				let response = await nefserivce.deletenews({
 					payload,
 					db
 				});
@@ -113,15 +114,17 @@
 		},
 		//  FAQ CONTROLLERS 
 
-		getfaq: async(req, res) => {
+		getfaq: async (req, res) => {
 			try {
 				const payload = req.query;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.viewfaq({
+				let response = await nefserivce.viewfaq({
 					payload,
 					db
 				});
 				if (response) {
+					response = response.length > 1 ? response : response[0];
+					console.log(response)
 					res.status(200).send({
 						status: "200",
 						result: response,
@@ -140,11 +143,11 @@
 			}
 		},
 
-		createfaq: async(req, res) => {
+		createfaq: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.createfaq({
+				let response = await nefserivce.createfaq({
 					payload,
 					db
 				});
@@ -168,11 +171,11 @@
 			}
 
 		},
-		updatefaq: async(req, res) => {
+		updatefaq: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.updatefaq({
+				let response = await nefserivce.updatefaq({
 					payload,
 					db
 				});
@@ -196,11 +199,11 @@
 			}
 
 		},
-		deletefaq: async(req, res) => {
+		deletefaq: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.deletefaq({
+				let response = await nefserivce.deletefaq({
 					payload,
 					db
 				});
@@ -219,16 +222,17 @@
 		},
 		//Event COntroller
 		//Responsibility by Maaz
-		getevent: async(req, res) => {
+		getevent: async (req, res) => {
 			try {
 
 				const payload = req.query;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.getevent({
+				let response = await nefserivce.getevent({
 					payload,
 					db
 				});
 				if (response) {
+					response = response.length > 1 ? response : response[0];
 					res.type("application/json").status(200).send({
 						status: "200",
 						result: response,
@@ -247,11 +251,11 @@
 			}
 		},
 
-		createevent: async(req, res) => {
+		createevent: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.createevent({
+				let response = await nefserivce.createevent({
 					payload,
 					db
 				});
@@ -277,11 +281,11 @@
 
 		},
 
-		updateevent: async(req, res) => {
+		updateevent: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.updateevent({
+				let response = await nefserivce.updateevent({
 					payload,
 					db
 				});
@@ -307,11 +311,11 @@
 			}
 
 		},
-		deleteevent: async(req, res) => {
+		deleteevent: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await nefserivce.deleteevent({
+				let response = await nefserivce.deleteevent({
 					payload,
 					db
 				});

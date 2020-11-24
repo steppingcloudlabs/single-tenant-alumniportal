@@ -3,17 +3,16 @@
 	const dbClass = require("sap-hdbext-promisfied");
 	module.exports = {
 		// News Controllers
-		getdocuments: async(req, res) => {
+		getdocuments: async (req, res) => {
 			try {
 				const payload = req.query;
 				let db = new dbClass(req.db);
-				const response = await documentserivce.viewdocuments({
+				let response = await documentserivce.viewdocuments({
 					payload,
 					db
-					
-					
 				});
 				if (response) {
+					response = response.length > 1 ? response : response[0];
 					res.type("application/json").status(200).send({
 						status: "200",
 						result: response,
@@ -26,7 +25,7 @@
 				}
 
 			} catch (error) {
-					res.type("application/json").status(500).send({
+				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
 				});
@@ -34,11 +33,11 @@
 
 		},
 
-		createdocuments: async(req, res) => {
+		createdocuments: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await documentserivce.createdocuments({
+				let response = await documentserivce.createdocuments({
 					payload,
 					db
 				});
@@ -63,11 +62,11 @@
 
 		},
 
-		updatedocuments: async(req, res) => {
+		updatedocuments: async (req, res) => {
 			try {
 				const payload = req.body;
 				let db = new dbClass(req.db);
-				const response = await documentserivce.updatedocuments({
+				let response = await documentserivce.updatedocuments({
 					payload,
 					db
 				});
@@ -93,13 +92,13 @@
 
 		},
 
-		deletedocuments: async(req, res) => {
+		deletedocuments: async (req, res) => {
 			try {
 
 				const payload = req.body;
 				let db = new dbClass(req.db);
 
-				const response = await documentserivce.deletedocuments({
+				let response = await documentserivce.deletedocuments({
 					payload,
 					db
 				});
@@ -123,15 +122,15 @@
 				});
 			}
 		},
-		statusdocuments: async(req, res) => {
+		statusdocuments: async (req, res) => {
 			try {
 				const payload = req.query;
 				let db = new dbClass(req.db);
-				const response = await documentserivce.statusdocuments({
+				let response = await documentserivce.statusdocuments({
 					payload,
 					db
-					
-					
+
+
 				});
 				if (response) {
 					res.type("application/json").status(200).send({
@@ -146,7 +145,7 @@
 				}
 
 			} catch (error) {
-					res.type("application/json").status(500).send({
+				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
 				});

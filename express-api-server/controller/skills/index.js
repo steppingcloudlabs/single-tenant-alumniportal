@@ -1,121 +1,121 @@
 const skillsserivce = require("../../service/skills")();
 const dbClass = require("sap-hdbext-promisfied");
 
-    module.exports = {
-		createskills: async(req, res) => {
-			try {
-				const payload = req.body;
-				let db = new dbClass(req.db);
-				const response = await skillsserivce.createskills({
-					payload,
-					db
+module.exports = {
+	createskills: async (req, res) => {
+		try {
+			const payload = req.body;
+			let db = new dbClass(req.db);
+			let response = await skillsserivce.createskills({
+				payload,
+				db
+			});
+			console.log(response);
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response
 				});
-		        console.log(response);
-				if (response) {
-					res.type("application/json").status(200).send({
-						status: "200",
-						result: response
-					});
-				} else {
-					res.type("text/plain").status(200).send({
-						status: "500",
-						result: "Error"
-				
-					});
-				}
-			} catch (error) {
-				res.type("text/plain").status(500).send({
+			} else {
+				res.type("text/plain").status(200).send({
 					status: "500",
-					error: error
+					result: "Error"
+
 				});
 			}
+		} catch (error) {
+			res.type("text/plain").status(500).send({
+				status: "500",
+				error: error
+			});
+		}
 
-		},
-		updateskills: async(req, res) => {
-			try {
-				const payload = req.body;
-				let db = new dbClass(req.db);
-				const response = await skillsserivce.updateskills({
-					payload,
-					db
+	},
+	updateskills: async (req, res) => {
+		try {
+			const payload = req.body;
+			let db = new dbClass(req.db);
+			let response = await skillsserivce.updateskills({
+				payload,
+				db
+			});
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response
 				});
-				if (response) {
-					res.type("application/json").status(200).send({
-						status: "200",
-						result: response
-					});
-				} else {
-					res.type("text/plain").status(200).send({
-						status: "500",
-						result: "Error"
-					});
-
-				}
-
-			} catch (error) {
-				res.type("text/plain").status(500).send({
+			} else {
+				res.type("text/plain").status(200).send({
 					status: "500",
-					error: error
+					result: "Error"
 				});
-			}
-        },
-        getskills: async(req, res) => {
-    	
-			try {
-			
-				const payload = req.params;
-				let db = new dbClass(req.db);
-				const response = await skillsserivce.getskills({
-					payload,
-					db
-				});
-				if (response) {
-					res.type("application/json").status(200).send({
-						status: "200",
-						result: response,
-					});
-				} else {
-					res.status(400).send({
-						status: "400",
-						result: response
-					});
-				}
 
-			} catch (error) {
+			}
+
+		} catch (error) {
+			res.type("text/plain").status(500).send({
+				status: "500",
+				error: error
+			});
+		}
+	},
+	getskills: async (req, res) => {
+
+		try {
+
+			const payload = req.params;
+			let db = new dbClass(req.db);
+			let response = await skillsserivce.getskills({
+				payload,
+				db
+			});
+			if (response) {
+				response = response.length > 1 ? response : response[0];
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response,
+				});
+			} else {
 				res.status(400).send({
 					status: "400",
-					result: error
+					result: response
 				});
 			}
 
-		},
-		deleteskills: async(req, res) => {
-			try {
-				const payload = req.body;
-				let db = new dbClass(req.db);
-				const response = await skillsserivce.deleteskills({
-					payload,
-					db
-				});
-				if (response) {
-					res.type("application/json").status(200).send({
-						status: "200",
-						result: response
-					});
-				} else {
-					res.type("text/plain").status(200).send({
-						status: "500",
-						result: "Error"
-					});
+		} catch (error) {
+			res.status(400).send({
+				status: "400",
+				result: error
+			});
+		}
 
-				}
-			} catch (error) {
-				res.status(200).send({
-					status: "400",
-					result: "Element Not Found"
+	},
+	deleteskills: async (req, res) => {
+		try {
+			const payload = req.body;
+			let db = new dbClass(req.db);
+			let response = await skillsserivce.deleteskills({
+				payload,
+				db
+			});
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response
 				});
+			} else {
+				res.type("text/plain").status(200).send({
+					status: "500",
+					result: "Error"
+				});
+
 			}
-		},
-		
-    }
-   
+		} catch (error) {
+			res.status(200).send({
+				status: "400",
+				result: "Element Not Found"
+			});
+		}
+	},
+
+}

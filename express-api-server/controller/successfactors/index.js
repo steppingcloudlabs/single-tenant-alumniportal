@@ -2,15 +2,16 @@ const successfactorsservice = require("../../service/successfactors/index.js")()
 const dbClass = require("sap-hdbext-promisfied");
 
 module.exports = {
-	getuser: async(req, res) => {
+	getuser: async (req, res) => {
 		try {
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			const response = await successfactorsservice.getuser({
+			let response = await successfactorsservice.getuser({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response

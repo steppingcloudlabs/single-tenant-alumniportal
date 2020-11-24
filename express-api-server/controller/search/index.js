@@ -3,16 +3,17 @@ const searchService = require("../../service/search")();
 const dbClass = require("sap-hdbext-promisfied");
 
 module.exports = {
-	user: async(req, res) => {
+	user: async (req, res) => {
 		try {
 			const payload = req.query;
 			console.log(payload)
 			let db = new dbClass(req.db);
-			const response = await searchService.searchUser({
+			let response = await searchService.searchUser({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
 					result: response,
@@ -30,16 +31,17 @@ module.exports = {
 			});
 		}
 	},
-	skill: async(req, res) => {
+	skill: async (req, res) => {
 		try {
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			const response = await searchService.searchSkill({
+			let response = await searchService.searchSkill({
 				payload,
 				db
 			});
 
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
 					result: response,
@@ -58,15 +60,16 @@ module.exports = {
 		}
 
 	},
-	admin: async(req, res) => {
+	admin: async (req, res) => {
 		try {
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			const response = await searchService.searchAdmin({
+			let response = await searchService.searchAdmin({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
 					result: response,
@@ -85,15 +88,16 @@ module.exports = {
 		}
 
 	},
-	job: async(req, res) => {
+	job: async (req, res) => {
 		try {
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			const response = await searchService.searchJob({
+			let response = await searchService.searchJob({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
 					result: response,

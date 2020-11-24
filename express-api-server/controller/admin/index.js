@@ -2,11 +2,11 @@ const adminserivce = require("../../service/admin/index.js")();
 const dbClass = require("sap-hdbext-promisfied");
 
 module.exports = {
-	createuser: async(req, res) => {
+	createuser: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await adminserivce.createuser({
+			let response = await adminserivce.createuser({
 				payload,
 				db
 			});
@@ -30,11 +30,11 @@ module.exports = {
 		}
 
 	},
-	updateuser: async(req, res) => {
+	updateuser: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await adminserivce.updateuser({
+			let response = await adminserivce.updateuser({
 				payload,
 				db
 			});
@@ -59,16 +59,17 @@ module.exports = {
 			});
 		}
 	},
-	getuser: async(req, res) => {
+	getuser: async (req, res) => {
 		try {
 			const payload = req.params;
 			let db = new dbClass(req.db);
-			const response = await adminserivce.getuser({
+			let response = await adminserivce.getuser({
 				payload,
 				db
 			});
 
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -87,15 +88,16 @@ module.exports = {
 		}
 
 	},
-	deleteuser: async(req, res) => {
+	deleteuser: async (req, res) => {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await adminserivce.deleteuser({
+			let response = await adminserivce.deleteuser({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response

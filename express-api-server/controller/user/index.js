@@ -2,16 +2,17 @@ const userservice = require("../../service/user/index.js")();
 const dbClass = require("sap-hdbext-promisfied");
 
 module.exports = {
-	
-		getprofile: async(req, res,next) => {
-			try{
+
+	getprofile: async (req, res, next) => {
+		try {
 			const payload = req.query;
 			let db = new dbClass(req.db);
-			const response = await userservice.getprofile({
+			let response = await userservice.getprofile({
 				payload,
 				db
 			});
 			if (response) {
+				response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
 					result: response,
@@ -22,19 +23,18 @@ module.exports = {
 					result: `${e.toString()}`
 				});
 			}
-			}
-			catch(error){
-				res.type("text/plain").status(500).send({
-					status: "500",
-					error: error
-				});
-			}
-		},
-		updateprofile: async(req, res,next) => {
-			try{
+		} catch (error) {
+			res.type("text/plain").status(500).send({
+				status: "500",
+				error: error
+			});
+		}
+	},
+	updateprofile: async (req, res, next) => {
+		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await userservice.updateprofile({
+			let response = await userservice.updateprofile({
 				payload,
 				db
 			});
@@ -49,19 +49,18 @@ module.exports = {
 					result: `${e.toString()}`
 				});
 			}
-			}
-			catch(error){
-				res.type("text/plain").status(500).send({
-					status: "500",
-					error: error
-				});
-			}
-		},
-		deleteprofile: async(req, res,next) => {
-			try{
+		} catch (error) {
+			res.type("text/plain").status(500).send({
+				status: "500",
+				error: error
+			});
+		}
+	},
+	deleteprofile: async (req, res, next) => {
+		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			const response = await userservice.deleteprofile({
+			let response = await userservice.deleteprofile({
 				payload,
 				db
 			});
@@ -76,12 +75,11 @@ module.exports = {
 					result: `${e.toString()}`
 				});
 			}
-			}
-			catch(error){
-				res.type("text/plain").status(500).send({
-					status: "500",
-					error: error
-				});
-			}
-		},
+		} catch (error) {
+			res.type("text/plain").status(500).send({
+				status: "500",
+				error: error
+			});
+		}
+	},
 }
