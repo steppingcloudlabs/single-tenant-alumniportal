@@ -262,10 +262,10 @@ module.exports = () => {
 				// TODO: add pagination using [to, from] clauses in statement.
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				const statement = await db.preparePromisified(
-					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" rows LIMIT ${LIMIT} offset ${offset}`
-				)
+				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" rows LIMIT ${LIMIT} offset ${offset}`
+				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
+				console.log("inside services", results)
 				resolve(results);
 
 			} catch (error) {
@@ -365,7 +365,7 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"  WHERE ID = '${payload.id}'`
+				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"  WHERE ID = '${payload.payload.ID}'`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);

@@ -77,7 +77,8 @@ module.exports = {
 			});
 
 			if (response) {
-				response = response.length > 1 ? response : response[0];
+				if (response.length == 0) respose = response;
+					else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -108,7 +109,8 @@ module.exports = {
 				db
 			});
 			if (response) {
-				response = response.length > 1 ? response : response[0];
+				if (response.length == 0) respose = response;
+					else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response
