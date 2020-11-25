@@ -37,6 +37,7 @@ module.exports = () => {
 					ON A1."SKILL_ID" = A2."ID" where A1."USER_ID" = '${userid}';`
 				const statement = await db.preparePromisified(query)
 				const obj = await db.statementExecPromisified(statement, [])
+				console.log(obj)
 				var results = [];
 				var a = [];
 				results = obj[0];
@@ -56,6 +57,7 @@ module.exports = () => {
 	};
 	const updateprofile = ({
 		payload,
+		logger,
 		db
 	}) => {
 		return new Promise(async (resolve, reject) => {

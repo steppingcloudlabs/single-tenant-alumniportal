@@ -3,14 +3,14 @@ const utils = require("../../utils/database/index.js")();
 module.exports = () => {
 	const getuser = ({
 		payload,
+		logger,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({
 					db
 				})
-				console.log(schema)
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
@@ -19,6 +19,7 @@ module.exports = () => {
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
+				logger.error(`Error for ${logger.getTenantId()} at getuser function: ${error}`)
 				reject(error);
 			}
 		});
@@ -26,9 +27,10 @@ module.exports = () => {
 
 	const createuser = ({
 		payload,
+		logger,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({
 					db
@@ -65,6 +67,7 @@ module.exports = () => {
 				}
 			} catch (error) {
 				console.log(error)
+				logger.error(`Error for ${logger.getTenantId()} at createuser function: ${error}`)
 				reject(error);
 			}
 		});
@@ -74,7 +77,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({
 					db
@@ -85,6 +88,7 @@ module.exports = () => {
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
+				logger.error(`Error for ${logger.getTenantId()} at delteuser function: ${error}`)
 				reject(error);
 			}
 		});

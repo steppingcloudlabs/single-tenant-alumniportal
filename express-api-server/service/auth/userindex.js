@@ -59,7 +59,7 @@ module.exports = () => {
 										 FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
 										 LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
 										 ON A1.SKILL_ID = A2.ID where A1.USER_ID = '${USERID}';`
-						console.log(query4)
+
 						const statement4 = await db.preparePromisified(query4)
 						const result4 = await db.statementExecPromisified(statement4, [])
 						resolve(result4)

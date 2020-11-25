@@ -5,9 +5,11 @@ module.exports = {
 	createuser: async (req, res) => {
 		try {
 			const payload = req.body;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await adminserivce.createuser({
 				payload,
+				logger,
 				db
 			});
 			if (response == "userexists") {
@@ -23,6 +25,7 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.loggger.error(` Error for ${req.logger.getTenantId()}at admin/action/index/createuser ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -33,9 +36,11 @@ module.exports = {
 	updateuser: async (req, res) => {
 		try {
 			const payload = req.body;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await adminserivce.updateuser({
 				payload,
+				logger,
 				db
 			});
 			console.log(response)
@@ -53,6 +58,7 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.loggger.error(` Error for ${req.logger.getTenantId()}at admin/action/index/updateuser ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -62,9 +68,11 @@ module.exports = {
 	getuser: async (req, res) => {
 		try {
 			const payload = req.params;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await adminserivce.getuser({
 				payload,
+				logger,
 				db
 			});
 
@@ -81,8 +89,9 @@ module.exports = {
 				});
 			}
 		} catch (error) {
-			res.status(400).send({
-				status: "400",
+			req.loggger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/updateuser ${error}`);
+			res.status(500).send({
+				status: "500",
 				result: error
 			});
 		}
@@ -91,9 +100,11 @@ module.exports = {
 	deleteuser: async (req, res) => {
 		try {
 			const payload = req.body;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await adminserivce.deleteuser({
 				payload,
+				logger,
 				db
 			});
 			if (response) {
@@ -110,9 +121,10 @@ module.exports = {
 
 			}
 		} catch (error) {
-			res.status(200).send({
-				status: "400",
-				result: "Element Not Found"
+			req.loggger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/deleteuser ${error}`);
+			res.status(500).send({
+				status: "500",
+				result: error
 			});
 		}
 	},

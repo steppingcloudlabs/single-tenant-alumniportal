@@ -5,10 +5,11 @@ module.exports = {
 	createuser: async (req, res) => {
 		try {
 			const payload = req.body;
-
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await adminserivce.createuser({
 				payload,
+				logger,
 				db
 			});
 
@@ -25,6 +26,7 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/createuser ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error

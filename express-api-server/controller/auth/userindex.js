@@ -9,9 +9,11 @@ module.exports = {
 	login: async (req, res) => {
 		try {
 			const payload = req.body;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await authserivce.login({
 				payload,
+				logger,
 				db
 			});
 			if (response == "incorrectuser") {
@@ -45,7 +47,7 @@ module.exports = {
 					token: token
 				});
 			} else {
-
+				req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
 				res.type("text/plain").status(200).send({
 					status: "500",
 					result: "Error"
@@ -55,6 +57,7 @@ module.exports = {
 
 			}
 		} catch (error) {
+			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
 			res.type("text/plain").status(500).send({
 				status: "500",
 				error: error
@@ -65,9 +68,11 @@ module.exports = {
 	signup: async (req, res) => {
 		try {
 			const payload = req.body;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await authserivce.signup({
 				payload,
+				logger,
 				db
 			});
 
@@ -102,6 +107,7 @@ module.exports = {
 
 
 		} catch (error) {
+			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/signup ${error}`);
 			res.type("text/plain").status(500).send({
 				status: "500",
 				error: error
