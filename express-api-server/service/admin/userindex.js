@@ -3,15 +3,14 @@ const utils = require("../../utils/database/index.js")();
 module.exports = () => {
 	const getuser = ({
 		payload,
+		logger,
 		db
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-
 				const schema = await utils.currentSchema({
 					db
 				})
-				// TODO: add pagination using [to, from] clauses in statement.
 
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
@@ -21,6 +20,7 @@ module.exports = () => {
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
+
 				reject(error);
 			}
 		});
@@ -97,6 +97,7 @@ module.exports = () => {
 						'${USER_ID}',
 						'${GENDER}',
 						'${DATE_OF_BIRTH}',
+						'${DATE_OF_RELIEVING}',
 						'${DATE_OF_RESIGNATION}',
 						'${LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD}',
 						'${PERSONAL_EMAIL_ID}',
@@ -108,8 +109,8 @@ module.exports = () => {
 						'${CITY_ADDRESSES}',
 						'${PHONE_NUMBER_PHONE_INFORMATION}',
 						'${MANAGER_JOB_INFORMATION}',
-						'${DESIGNATION_JOB_INFORMATION}',
-						'${DATE_OF_RELIEVING}')`
+						'${DESIGNATION_JOB_INFORMATION}'
+						)`
 					console.log(query)
 					const statement = await db.preparePromisified(query)
 					let results = await db.statementExecPromisified(statement, [])

@@ -37,9 +37,11 @@ module.exports = {
 	updateuser: async (req, res) => {
 		try {
 			const payload = req.body;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await adminserivce.updateuser({
 				payload,
+				logger,
 				db
 			});
 			if (response) {
@@ -56,6 +58,7 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/updateuser ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -64,12 +67,12 @@ module.exports = {
 	},
 	getuser: async (req, res) => {
 		try {
-			const payload = req.params;
-
+			const payload = req.query;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await adminserivce.getuser({
 				payload,
-
+				logger,
 				db
 			});
 
@@ -86,6 +89,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
+			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/getuser ${error}`);
 			res.status(400).send({
 				status: "400",
 				result: error
@@ -96,9 +100,11 @@ module.exports = {
 	deleteuser: async (req, res) => {
 		try {
 			const payload = req.body;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await adminserivce.deleteuser({
 				payload,
+				logger,
 				db
 			});
 			if (response) {
@@ -108,15 +114,16 @@ module.exports = {
 				});
 			} else {
 				res.type("application/json").status(200).send({
-					status: "404",
+					status: "400",
 					result: response
 				});
 
 			}
 		} catch (error) {
-			res.status(200).send({
-				status: "400",
-				result: "Element Not Found"
+			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/updateuser ${error}`);
+			res.status(500).send({
+				status: "500",
+				result: error
 			});
 		}
 	},

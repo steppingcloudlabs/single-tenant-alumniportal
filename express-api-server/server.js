@@ -56,6 +56,7 @@
       tag: "hana"
     }
   });
+  console.log(hanaOptions)
   hanaOptions.hana.pooling = true;
   app.use(
     // passport.authenticate("JWT", {
