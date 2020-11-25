@@ -47,9 +47,8 @@ module.exports = () => {
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
-				const ID = uuid();
-				const document_ = util[payload.payload.FILENAME];
-				const file_name = util[payload.payload.FILENAME];
+				const ID = uuid()
+				const file_name = payload.payload.DOCUMENT;
 				const stream = payload.payload.FILE;
 				const userid = payload.payload.USERID
 				const statement = await db.preparePromisified(
@@ -66,6 +65,7 @@ module.exports = () => {
 				const results = await db.statementExecPromisified(statement, [])
 
 				resolve(results);
+
 			} catch (error) {
 				reject(error);
 			}

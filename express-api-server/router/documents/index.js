@@ -15,5 +15,6 @@ expressrouter
 	.post((req, res, next) => documentcontroller.deletedocuments(req, res, next));
 expressrouter
 	.route("/documents/status")
-	.post((req, res, next) => documentcontroller.statusdocuments(req, res, next));
+	.get((req, res, next) => documentcontroller.statusdocuments(req, res, next));
+
 module.exports = expressrouter;
