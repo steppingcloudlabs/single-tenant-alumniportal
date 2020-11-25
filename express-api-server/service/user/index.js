@@ -68,27 +68,34 @@ module.exports = () => {
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
+				logger.info(payload)
+				console.info(payload)
 				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS"
                     SET "PHONE_NUMBER_PHONE_INFORMATION" = CASE
-								WHEN '${payload.PHONE_NUMBER_PHONE_INFORMATION}' != 'undefined' THEN '${payload.PHONE_NUMBER_PHONE_INFORMATION}'
-								ELSE (select "PHONE_NUMBER_PHONE_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.USERID}')
+								WHEN '${payload.payload.PHONE_NUMBER_PHONE_INFORMATION}' != 'undefined' THEN '${payload.payload.PHONE_NUMBER_PHONE_INFORMATION}'
+								ELSE (select "PHONE_NUMBER_PHONE_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.payload.USERID}')
 								END,
 						"CITY_ADDRESSES" = case
-								WHEN '${payload.CITY_ADDRESSES}' != 'undefined' THEN '${payload.CITY_ADDRESSES}'
-								ELSE (select "CITY_ADDRESSES" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.USERID}')
+								WHEN '${payload.payload.CITY_ADDRESSES}' != 'undefined' THEN '${payload.payload.CITY_ADDRESSES}'
+								ELSE (select "CITY_ADDRESSES" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.payload.USERID}')
+								END,
+						"SKILL_ID" = case
+								WHEN '${payload.payload.SKILL}' != 'undefined' THEN '${payload.payload.SKILL}'
+								ELSE (select "SKILL_ID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.payload.USERID}')
 								END,
 						"LINKEDIN" = case
-								WHEN '${PAYLOAD.LINKEDIN}' != 'undefined' THEN '${PAYLOAD.LINKEDIN}'
-								ELSE (select "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID"='${payload.USERID}')
+								WHEN '${payload.payload.LINKEDIN}' != 'undefined' THEN '${payload.payload.LINKEDIN}'
+								ELSE(select "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "ID" = '${payload.payload.USERID}')
 								END,
 					    "MODIFIEDBY" = '${modifiedby}',
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
-					"USER_ID" = '${payload.USERID}'`
+					"USER_ID" = '${payload.payload.USERID}'`
 				console.log(query);
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
+				console.log(results)
 				if (results >= 1) {
 					resolve(1);
 				}

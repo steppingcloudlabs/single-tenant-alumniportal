@@ -32,7 +32,7 @@ module.exports = {
 	},
 	updateprofile: async (req, res, next) => {
 		try {
-			const payload = req.body.payload;
+			const payload = req.body;
 			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await userservice.updateprofile({
@@ -52,7 +52,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/updateprofile ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/updateprofile ${error}`);
 			res.type("text/plain").status(500).send({
 				status: "500",
 				error: error
