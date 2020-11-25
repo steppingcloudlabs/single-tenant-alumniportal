@@ -4,14 +4,17 @@
 	module.exports = {
 		// News Controllers
 		getnews: async (req, res) => {
-			const payload = req.params;
+			const payload = req.query;
+			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await nefserivce.viewnews({
 				payload,
+				logger,
 				db
 			});
+			console.log(response)
 			if (response) {
-				response = response.length > 1 ? response : response[0];
+				response = response.length >= 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
 					result: response,

@@ -11,7 +11,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
@@ -28,6 +28,7 @@ module.exports = () => {
 					.execute({
 						destinationName: "sfapi"
 					});
+				console.log(result);
 				resolve(result);
 			} catch (error) {
 				reject(error);

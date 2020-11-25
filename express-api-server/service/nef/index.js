@@ -40,7 +40,7 @@ module.exports = () => {
 					db
 				})
 				const createdat = new Date().toISOString();
-				const createdby = "payload.payload.AUTHOR";
+				const createdby = payload.payload.AUTHOR;
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
@@ -85,7 +85,7 @@ module.exports = () => {
 								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.ID}')
 								END,
 					   "CONTENT" = CASE
-								WHEN '${payload.payload.CONTENT}' != 'undefined' THEN '${payloadpayload.CONTENT}'
+								WHEN '${payload.payload.CONTENT}' != 'undefined' THEN '${payload.payload.CONTENT}'
 								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.ID}')
 								END,
 						"PHOTO" = case

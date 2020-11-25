@@ -67,7 +67,7 @@ module.exports = {
 	},
 	getuser: async (req, res) => {
 		try {
-			const payload = req.params;
+			const payload = req.query;
 			const logger = req.logger;
 			let db = new dbClass(req.db);
 			let response = await adminserivce.getuser({

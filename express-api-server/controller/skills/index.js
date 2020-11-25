@@ -63,7 +63,7 @@ module.exports = {
 
 		try {
 
-			const payload = req.params;
+			const payload = req.query;
 			let db = new dbClass(req.db);
 			let response = await skillsserivce.getskills({
 				payload,

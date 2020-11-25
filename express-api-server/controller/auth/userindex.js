@@ -154,7 +154,7 @@ module.exports = {
 		try {
 
 			const payload = req.body;
-			const resettoken = req.params;
+			const resettoken = req.query;
 
 			let db = new dbClass(req.db);
 			let response = await authserivce.resetpassword({

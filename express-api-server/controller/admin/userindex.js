@@ -10,7 +10,7 @@ module.exports = {
 			let response = await adminserivce.createuser({
 				payload,
 				logger,
-				db
+
 			});
 
 			if (response == "userexists") {
