@@ -297,12 +297,10 @@ module.exports = () => {
 				const lastname = payload.payload.LASTNAME;
 				const email = payload.payload.EMAIL;
 				const LEVELMANAGER = payload.payload.LEVELMANAGER;
-				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE EMAIL ='${email}'`
-				const statement = await db.preparePromisified(query);
-				const results = await db.statementExecPromisified(statement, [])
-				if (results.length == 0) {
-					const query1 =
-						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" VALUES(
+				if (LEVELMANAGER < 1) reject("Level Manager Cannot be less than 1")
+				if (LEVELMANAGER > 3) reject("Level Manager Cannot be greater than 3")
+				const query1 =
+					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" VALUES(
 					'${createdat}',
 					'${createdby}',
 					'${modifiedat}',
@@ -313,12 +311,10 @@ module.exports = () => {
 					'${email}',
 					'${LEVELMANAGER}'
 				)`
-					const statement1 = await db.preparePromisified(query1)
-					const results1 = await db.statementExecPromisified(statement1, [])
-					resolve(results1);
-				} else {
-					resolve("USERID exists")
-				}
+				const statement1 = await db.preparePromisified(query1)
+				const results1 = await db.statementExecPromisified(statement1, [])
+				resolve(results1);
+
 			} catch (error) {
 				reject(error);
 			}

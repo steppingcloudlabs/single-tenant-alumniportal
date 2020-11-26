@@ -19,11 +19,13 @@
     },
     "cds": {
         "requires": {
+            "hana": {
+                "deploy-format": "hdbtable"
+            },
             "db": {
                 "kind": "hana",
                 "model": [
-                    "db",
-                    "srv"
+                    "db"
                 ]
             }
         },
@@ -32,7 +34,6 @@
         }
     },
     "files": [
-        "db",
-        "srv"
+        "db"
     ]
 }

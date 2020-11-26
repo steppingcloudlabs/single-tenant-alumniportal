@@ -5,7 +5,7 @@ entity SCLABS_ALUMNIPORTAL_JOB_JOB {
   MODIFIEDAT : UTCTimestamp;
   MODIFIEDBY : String(255);
   key ID : String(36);
-  BOARDID : String(5000) not null;
+  BOARDID : String(5000);
   COUNTRY : String(5000);
   DEPARTMENT : String(5000);
   JOBDESCRIPTION : String(5000);
@@ -14,6 +14,6 @@ entity SCLABS_ALUMNIPORTAL_JOB_JOB {
   JOBTITLE : String(5000);
   LOCATION : String(5000);
   POSTINGSTATUS : String(5000);
-  POSTINGSTARTDATE : LocalDate;
-  POSTINGENDDATE : LocalDate;
+  POSTINGSTARTDATE : String(5000);
+  POSTINGENDDATE : String(5000);
 };

@@ -12,7 +12,7 @@ modules:
     requires:
       - name: single-tenant-alumniportal-sap-db-hdi-container
 # Nodejs backend
-  - name: express-api-server
+  - name: single-tenant-alumniportal-sap-srv
     type: nodejs
     path: express-api-server
     provides:
@@ -29,7 +29,7 @@ modules:
     properties:
       apiDest: 'sfsdkdest'
 # App Router
-  - name: app
+  - name: single-tenant-alumniportal-sap
     type: html5
     path: app
     requires:
@@ -37,6 +37,8 @@ modules:
       - name: express-api-server_api
         group: destinations
         properties:
+          memory: 256M
+          disk-quota: 512M
           name: express-api-server
           url: ~{url}
           forwardAuthToken: true
