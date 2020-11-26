@@ -11,8 +11,7 @@ module.exports = () => {
                 const {
                     USERID,
                     SUBJECT,
-                    MESSAGE,
-                    ESCLATATIONMANAGER
+                    MESSAGE
                 } = payload.payload;
 
                 const schema = await utils.currentSchema({
@@ -20,6 +19,7 @@ module.exports = () => {
                 })
                 const ESCLATATION = false
                 const RESOLVED = false
+                const ESCLATATIONMANAGER = 1;
                 const createdat = new Date().toISOString();
                 const createdby = "user";
                 const modifiedby = "user";
