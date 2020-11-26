@@ -24,6 +24,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/askhr/index/createticket ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -53,6 +54,7 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/updateuser ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -71,7 +73,7 @@ module.exports = {
 
 			if (response) {
 				if (response.length == 0) respose = response;
-					else response = response.length > 1 ? response : response[0];
+				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -84,6 +86,7 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/getticket ${error}`);
 			res.status(400).send({
 				status: "400",
 				result: error
@@ -115,6 +118,8 @@ module.exports = {
 
 			}
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/deleteticket ${error}`);
+
 			res.status(200).send({
 				status: "400",
 				result: "Element Not Found"
@@ -146,6 +151,8 @@ module.exports = {
 				});
 			}
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/createmessage ${error}`);
+
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -175,6 +182,8 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/updatemessage ${error}`);
+
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -183,35 +192,39 @@ module.exports = {
 	},
 	getmessage: async (req, res) => {
 
-		// try {
+		try {
 
-		const payload = req.query;
-		let db = new dbClass(req.db);
-		console.log(payload)
-		let response = await ticketserivce.getmessage({
-			payload,
-			db
-		});
-		if (response) {
-			if (response.length == 0) respose = response;
-					else response = response.length > 1 ? response : response[0];
-			res.type("application/json").status(200).send({
-				status: "200",
-				result: response,
+			const payload = req.query;
+			let db = new dbClass(req.db);
+			console.log(payload)
+			let response = await ticketserivce.getmessage({
+				payload,
+				db
 			});
-		} else {
-			res.status(400).send({
-				status: "400",
-				result: response
+			if (response) {
+				if (response.length == 0) respose = response;
+				else response = response.length > 1 ? response : response[0];
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response,
+				});
+			} else {
+				req.logger.info(`400 response for ${req.logger.getTenantId()} at admin/action/askhr/index/updatemessage ${response}`);
+
+				res.status(400).send({
+					status: "400",
+					result: response
+				});
+			}
+
+		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/updatemessage ${error}`);
+
+			res.type("application/json").status(500).send({
+				status: "500",
+				result: error
 			});
 		}
-
-		// } catch (error) {
-		// 	res.type("application/json").status(500).send({
-		// 		status: "500",
-		// 		result: error
-		// 	});
-		// }
 
 	},
 	deletemessage: async (req, res) => {
@@ -235,6 +248,8 @@ module.exports = {
 
 			}
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/deletemessage ${error}`);
+
 			res.status(200).send({
 				status: "400",
 				result: "Element Not Found"
@@ -266,6 +281,8 @@ module.exports = {
 				});
 			}
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/createmanager ${error}`);
+
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -295,6 +312,8 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/updatemanager ${error}`);
+
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -313,7 +332,7 @@ module.exports = {
 			});
 			if (response) {
 				if (response.length == 0) respose = response;
-					else response = response.length > 1 ? response : response[0];
+				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -326,6 +345,8 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/getmessage ${error}`);
+
 			res.status(400).send({
 				status: "400",
 				result: error
@@ -345,7 +366,7 @@ module.exports = {
 			});
 			if (response) {
 				if (response.length == 0) respose = response;
-					else response = response.length > 1 ? response : response[0];
+				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -358,6 +379,8 @@ module.exports = {
 			}
 
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/getmanagerprofile ${error}`);
+
 			res.status(400).send({
 				status: "400",
 				result: error
@@ -386,6 +409,7 @@ module.exports = {
 
 			}
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/deletemanager ${error}`);
 			res.status(200).send({
 				status: "400",
 				result: "Element Not Found"

@@ -26,9 +26,9 @@ module.exports = () => {
 						// PerPersonal.PERSON_NAV.select(PerPerson.EMAIL_NAV.select(PerEmail.EMAIL_ADDRESS))
 					).top(LIMIT).skip(offset)
 					.execute({
-						destinationName: "sfapi"
+						destinationName: process.env.apiDest
 					});
-				console.log(result);
+
 				resolve(result);
 			} catch (error) {
 				reject(error);

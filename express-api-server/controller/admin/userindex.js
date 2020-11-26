@@ -19,6 +19,8 @@ module.exports = {
 					result: "User Id already exists"
 				});
 			} else {
+				if (response.length == 0) respose = response;
+				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response
@@ -26,7 +28,7 @@ module.exports = {
 			}
 
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/createuser ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/userindex/createuser ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -45,6 +47,8 @@ module.exports = {
 				db
 			});
 			if (response) {
+				if (response.length == 0) respose = response;
+				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response
@@ -58,7 +62,7 @@ module.exports = {
 			}
 
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/updateuser ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/userindex/updateuser ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -78,7 +82,7 @@ module.exports = {
 
 			if (response) {
 				if (response.length == 0) respose = response;
-					else response = response.length > 1 ? response : response[0];
+				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -90,7 +94,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/getuser ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/userindex/getuser ${error}`);
 			res.status(400).send({
 				status: "400",
 				result: error
@@ -109,6 +113,8 @@ module.exports = {
 				db
 			});
 			if (response) {
+				if (response.length == 0) respose = response;
+				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response
@@ -121,7 +127,7 @@ module.exports = {
 
 			}
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/updateuser ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/userindex/deleteuser ${error}`);
 			res.status(500).send({
 				status: "500",
 				result: error

@@ -41,14 +41,14 @@ module.exports = {
 					JWT_SECRET
 				);
 				if (response.length == 0) respose = response;
-					else response = response.length > 1 ? response : response[0];
+				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
 					token: token
 				});
 			} else {
-				req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
+				req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
 				res.type("text/plain").status(200).send({
 					status: "500",
 					result: "Error"
@@ -58,7 +58,7 @@ module.exports = {
 
 			}
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
 			res.type("text/plain").status(500).send({
 				status: "500",
 				error: error
@@ -108,7 +108,7 @@ module.exports = {
 
 
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()} at user/action/index/signup ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/signup ${error}`);
 			res.type("text/plain").status(500).send({
 				status: "500",
 				error: error

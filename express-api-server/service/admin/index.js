@@ -66,7 +66,6 @@ module.exports = () => {
 					resolve("user id exists");
 				}
 			} catch (error) {
-				console.log(error)
 				logger.error(`Error for ${logger.getTenantId()} at createuser function: ${error}`)
 				reject(error);
 			}
@@ -88,7 +87,7 @@ module.exports = () => {
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
-				logger.error(`Error for ${logger.getTenantId()} at delteuser function: ${error}`)
+				req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/deleteuser ${error}`);
 				reject(error);
 			}
 		});

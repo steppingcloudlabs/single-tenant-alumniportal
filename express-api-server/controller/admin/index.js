@@ -25,7 +25,7 @@ module.exports = {
 			}
 
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()}at admin/action/index/createuser ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()}at admin/action/index/createuser ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -58,7 +58,7 @@ module.exports = {
 			}
 
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()}at admin/action/index/updateuser ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()}at admin/action/index/updateuser ${error}`);
 			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
@@ -78,7 +78,7 @@ module.exports = {
 
 			if (response) {
 				if (response.length == 0) respose = response;
-					else response = response.length > 1 ? response : response[0];
+				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
@@ -90,7 +90,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/updateuser ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/updateuser ${error}`);
 			res.status(500).send({
 				status: "500",
 				result: error
@@ -108,9 +108,8 @@ module.exports = {
 				logger,
 				db
 			});
+
 			if (response) {
-				if (response.length == 0) respose = response;
-					else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response
@@ -123,7 +122,7 @@ module.exports = {
 
 			}
 		} catch (error) {
-			req.loggger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/deleteuser ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/deleteuser ${error}`);
 			res.status(500).send({
 				status: "500",
 				result: error
