@@ -110,7 +110,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const userid = payload.USERID
+				const userid = payload.payload.USERID
 				const schema = await utils.currentSchema({
 					db
 				})

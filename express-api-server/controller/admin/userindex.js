@@ -10,7 +10,7 @@ module.exports = {
 			let response = await adminserivce.createuser({
 				payload,
 				logger,
-
+				db
 			});
 
 			if (response == "userexists") {
@@ -19,8 +19,7 @@ module.exports = {
 					result: "User Id already exists"
 				});
 			} else {
-				if (response.length == 0) respose = response;
-				else response = response.length > 1 ? response : response[0];
+
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response
@@ -47,7 +46,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -81,7 +80,7 @@ module.exports = {
 			});
 
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -113,7 +112,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",

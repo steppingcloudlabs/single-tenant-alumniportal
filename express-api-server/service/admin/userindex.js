@@ -28,7 +28,6 @@ module.exports = () => {
 
 	const createuser = ({
 		payload,
-
 		db
 	}) => {
 		return new Promise(async (resolve, reject) => {

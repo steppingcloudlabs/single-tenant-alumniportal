@@ -13,7 +13,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 					else response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
@@ -42,7 +42,7 @@ module.exports = {
 			});
 
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 					else response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
@@ -71,7 +71,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 					else response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",
@@ -100,7 +100,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 					else response = response.length > 1 ? response : response[0];
 				res.status(200).send({
 					status: "200",

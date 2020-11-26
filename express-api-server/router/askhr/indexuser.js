@@ -1,5 +1,5 @@
 const expressrouter = require("express").Router();
-const askhrusercontroller = require("../../controller/askhr/index.js");
+const askhrusercontroller = require("../../controller/askhr/userindex");
 
 expressrouter
 	.route("/ticket/create")

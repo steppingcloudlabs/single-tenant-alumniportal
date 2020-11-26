@@ -10,22 +10,23 @@ module.exports = () => {
 			try {
 				const {
 					USERID,
-					TITLE,
-					ESCLATATION,
-					RESOLVED,
+					SUBJECT,
+					MESSAGE,
 					ESCLATATIONMANAGER
 				} = payload.payload;
 
 				const schema = await utils.currentSchema({
 					db
 				})
-
+				const ESCLATATION = "false"
+				const RESOLVED = "false"
 				const createdat = new Date().toISOString();
 				const createdby = "user";
 				const modifiedby = "user";
 				const modifiedat = new Date().toISOString();
 				const ID = uuid();
-				const query =
+				// This query cretes the ticket 
+				let query =
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" VALUES(
 					'${createdat}'/*CREATEDAT <TIMESTAMP>*/,
 					'${createdby}'/*CREATEDBY <NVARCHAR(255)>*/,
@@ -33,14 +34,42 @@ module.exports = () => {
 					'${modifiedby}'/*MODIFIEDBY <NVARCHAR(255)>*/,
 					'${ID}'/*ID <NVARCHAR(36)>*/,
 					'${USERID}'/*USERID <NVARCHAR(5000)>*/,
-					'${TITLE}'/*TITLE <NVARCHAR(5000)>*/,
-					${ESCLATATION}/*ESCLATION <BOOLEAN>*/,
-					${RESOLVED}/*RESOLVED <BOOLEAN>*/,
+					'${SUBJECT}' /*TITLE <NVARCHAR(5000)>*/ ,
+					'${ESCLATATION}'/*ESCLATION <BOOLEAN>*/,
+					'${RESOLVED}'/*RESOLVED <BOOLEAN>*/,
 					'${ESCLATATIONMANAGER}'/*ESCLATATIONMANAGER <NVARCHAR(5000)>*/
 						)`
-				const statement = await db.preparePromisified(query)
-				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				let statement = await db.preparePromisified(query)
+				let results = await db.statementExecPromisified(statement, [])
+				if (results == 1) {
+					// this query get the ticketid 
+					let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE CREATEDAT = '${createdat}' AND USERID = '${USERID}')`
+					let statement = await db.preparePromisified(query)
+					let results = await db.statementExecPromisified(statement, [])
+					if (results.length) {
+						let TICKETID = results[0].ID
+						let USERTYPE = payload.payload.USERTYPE;
+						// this query add the message into the ticket 
+						query =
+							`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" VALUES(
+							'${createdat}'/*CREATEDAT <TIMESTAMP>*/,
+							'${createdby}'/*CREATEDBY <NVARCHAR(255)>*/,
+							'${modifiedat}'/*MODIFIEDAT <TIMESTAMP>*/,
+							'${modifiedby}'/*MODIFIEDBY <NVARCHAR(255)>*/,
+							'${ID}'/*ID <NVARCHAR(36)>*/,
+							'${USERTYPE}'/*USERTYPE <NVARCHAR(5000)>*/,
+							'${MESSAGE}'/*MESSAGE <NVARCHAR(5000)>*/,
+							'${TICKETID}'/*TICKETID <NVARCHAR(36)>*/)`
+						let statement = await db.preparePromisified(query)
+						let results = await db.statementExecPromisified(statement, [])
+						resolve(results);
+					} else {
+						reject(results)
+					}
+				} else {
+					reject(results);
+				}
+
 			} catch (error) {
 				reject(error);
 			}
@@ -53,7 +82,7 @@ module.exports = () => {
 		return new Promise(async (resolve, reject) => {
 			try {
 				const {
-					TICKETID
+					USERID
 				} = payload;
 				const schema = await utils.currentSchema({
 					db
@@ -61,7 +90,7 @@ module.exports = () => {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
-					`SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE ID = '${TICKETID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
+					`SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE USERID = '${USERID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
 				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])

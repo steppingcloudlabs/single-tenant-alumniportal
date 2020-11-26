@@ -4,7 +4,14 @@ const dbClass = require("sap-hdbext-promisfied");
 module.exports = {
 	createticket: async (req, res) => {
 		try {
-			const payload = req.body;
+			let payload = req.body;
+			// if (req.authInfo.checkScope('$XSAPPNAME.Adminstrator')) {
+			// 	payload.USERTYE = 'Administroator'
+			// }
+			// if (req.authInfo.checkScope('$XSAPPNAME.HR')) {
+			// 	payload.USERTYE = 'HR'
+			// }
+			payload.payload.USERTYE = 'HR'
 			let db = new dbClass(req.db);
 			let response = await ticketserivce.createticket({
 				payload,
@@ -72,7 +79,7 @@ module.exports = {
 			});
 
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -202,7 +209,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -331,7 +338,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -365,7 +372,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) respose = response;
+				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
 				res.type("application/json").status(200).send({
 					status: "200",
