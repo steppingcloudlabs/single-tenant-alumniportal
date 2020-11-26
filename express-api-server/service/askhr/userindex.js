@@ -35,19 +35,19 @@ module.exports = () => {
 					'${ID}'/*ID <NVARCHAR(36)>*/,
 					'${USERID}'/*USERID <NVARCHAR(5000)>*/,
 					'${SUBJECT}' /*TITLE <NVARCHAR(5000)>*/ ,
-					'${ESCLATATION}'/*ESCLATION <BOOLEAN>*/,
-					'${RESOLVED}'/*RESOLVED <BOOLEAN>*/,
-					'${ESCLATATIONMANAGER}'/*ESCLATATIONMANAGER <NVARCHAR(5000)>*/
-						)`
+					${ESCLATATION}/*ESCLATION <BOOLEAN>*/,
+					${RESOLVED}/*RESOLVED <BOOLEAN>*/,
+					'${ESCLATATIONMANAGER}'/*ESCLATATIONMANAGER <NVARCHAR(5000)>*/)`
                 let statement = await db.preparePromisified(query)
                 let results = await db.statementExecPromisified(statement, [])
                 console.log(results)
                 if (results == 1) {
                     // this query get the ticketid 
-                    let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE CREATEDAT = '${createdat}' AND USERID = '${USERID}')`
+                    let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE CREATEDAT = '${createdat}' AND USERID = '${USERID}'`
                     let statement = await db.preparePromisified(query)
-                    let results = await db.statementExecPromisified(statement, [])
-                    if (results.length) {
+                    results = await db.statementExecPromisified(statement, [])
+                    console.log(results)
+                    if (results.length == 1) {
                         let TICKETID = results[0].ID
                         console.log(TICKETID)
                         let USERTYPE = payload.payload.USERTYPE;
@@ -62,8 +62,8 @@ module.exports = () => {
 							'${USERTYPE}'/*USERTYPE <NVARCHAR(5000)>*/,
 							'${MESSAGE}'/*MESSAGE <NVARCHAR(5000)>*/,
 							'${TICKETID}'/*TICKETID <NVARCHAR(36)>*/)`
-                        let statement = await db.preparePromisified(query)
-                        let results = await db.statementExecPromisified(statement, [])
+                        statement = await db.preparePromisified(query)
+                        results = await db.statementExecPromisified(statement, [])
                         resolve(results);
                     } else {
                         reject(results)
