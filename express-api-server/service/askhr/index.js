@@ -292,28 +292,35 @@ module.exports = () => {
 				const createdby = "admin";
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();;
-				const ID = uuid();
+				const id = uuid();
 				const firstname = payload.payload.FIRSTNAME;
 				const lastname = payload.payload.LASTNAME;
 				const email = payload.payload.EMAIL;
 				const LEVELMANAGER = payload.payload.LEVELMANAGER;
 				if (LEVELMANAGER < 1) reject("Level Manager Cannot be less than 1")
 				if (LEVELMANAGER > 3) reject("Level Manager Cannot be greater than 3")
-				const query1 =
-					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" VALUES(
+				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE EMAIL ='${email}' or LEVELMANAGER = '${LEVELMANAGER}'`
+				const statement = await db.preparePromisified(query);
+				const results = await db.statementExecPromisified(statement, [])
+				if (results.length == 0) {
+					const query1 =
+						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" VALUES(
 					'${createdat}',
 					'${createdby}',
 					'${modifiedat}',
 					'${modifiedby}',
-					'${ID}',	
+					'${id}',	
 					'${firstname}',
 					'${lastname}',
 					'${email}',
 					'${LEVELMANAGER}'
 				)`
-				const statement1 = await db.preparePromisified(query1)
-				const results1 = await db.statementExecPromisified(statement1, [])
-				resolve(results1);
+					const statement1 = await db.preparePromisified(query1)
+					const results1 = await db.statementExecPromisified(statement1, [])
+					resolve(results1);
+				} else {
+					resolve(" Manager Email or Level Manager exists! use update manager api")
+				}
 
 			} catch (error) {
 				reject(error);
@@ -352,12 +359,21 @@ module.exports = () => {
 				})
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				const query =
-					`SELECT * from ${schema}.SCLABS_ALUMNIPORTAL_TICKET_TICKET WHERE EMAIL = '${payload.EMAIL}' ORDER BY CREATEDAT DESC rows LIMIT ${LIMIT} offset ${offset}`
-				const statement = await db.preparePromisified(query)
+				//get manager level 
+				let query = `SELECT "EMAIL", "LEVELMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" WHERE EMAIL = '${payload.EMAIL}'`
+				let statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-
-				resolve(results);
+				console.log(results)
+				if (results.length == 1) {
+					const query1 = `SELECT * from ${schema}.SCLABS_ALUMNIPORTAL_TICKET_TICKET WHERE ESCLATATIONMANAGER = '${results[0].LEVELMANAGER}' ORDER BY CREATEDAT DESC LIMIT ${LIMIT} OFFSET ${offset}`
+					console.log(query)
+					const statement1 = await db.preparePromisified(query1)
+					const result = await db.statementExecPromisified(statement1, [])
+					console.log(result)
+					resolve(result);
+				} else {
+					reject(results)
+				}
 			} catch (error) {
 				reject(error);
 			}
@@ -376,14 +392,23 @@ module.exports = () => {
 				const modifiedat = new Date().toISOString();
 				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"
-				     SET "LEVELMANAGER" = CASE 
-					     WHEN '${payload.payload.LEVELMANAGER}' != 'undefined' THEN '${payload.payload.LEVELMANAGER}'
-				      	 ELSE (select "LEVELMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" where EMAIL = '${payload.payload.EMAIL}')
-					     END,
+				     SET "FIRSTNAME" = CASE
+					     WHEN '${payload.payload.FIRSTNAME}' != 'undefined'
+					     THEN '${payload.payload.FIRSTNAME}'
+						 END,
+						 "LASTNAME" = CASE
+					     WHEN '${payload.payload.LASTNAME}' != 'undefined'
+					     THEN '${payload.payload.LASTNAME}'
+						 END,
+						 "EMAIL" = CASE
+						 WHEN '${payload.payload.EMAIL}' != 'undefined'
+						 THEN '${payload.payload.EMAIL}'
+						 END,
 					     "MODIFIEDBY" = '${modifiedby}',
     				     "MODIFIEDAT" = '${modifiedat}'
     				where
-    				"EMAIL" = '${payload.payload.EMAIL}'`
+    				"LEVELMANAGER" = '${payload.payload.LEVELMANAGER}'
+    				`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 

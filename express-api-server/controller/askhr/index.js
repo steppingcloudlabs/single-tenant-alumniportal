@@ -337,6 +337,7 @@ module.exports = {
 				payload,
 				db
 			});
+
 			if (response) {
 				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
@@ -354,8 +355,8 @@ module.exports = {
 		} catch (error) {
 			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/getmessage ${error}`);
 
-			res.status(400).send({
-				status: "400",
+			res.status(500).send({
+				status: "500",
 				result: error
 			});
 		}
@@ -371,6 +372,7 @@ module.exports = {
 				payload,
 				db
 			});
+			console.log(response)
 			if (response) {
 				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
@@ -387,9 +389,8 @@ module.exports = {
 
 		} catch (error) {
 			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/getmanagerprofile ${error}`);
-
-			res.status(400).send({
-				status: "400",
+			res.status(500).send({
+				status: "500",
 				result: error
 			});
 		}
