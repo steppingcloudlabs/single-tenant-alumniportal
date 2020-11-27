@@ -16,11 +16,12 @@ module.exports = () => {
 
 	const getPageCount = ({
 		schema,
-		tablename
+		tablename,
+		db
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const query = `(SELECT COUNT(*) FROM "${schema}"."${tablename}")`
+				const query = `SELECT COUNT(*) as TOTALROWS FROM "${schema}"."${tablename}"`
 				const schemaSQL = await db.preparePromisified(query)
 				let response = await db.statementExecPromisified(schemaSQL, [])
 				resolve(response);

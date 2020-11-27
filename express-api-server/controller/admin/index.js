@@ -1,6 +1,6 @@
 const adminserivce = require("../../service/admin/index.js")();
 const dbClass = require("sap-hdbext-promisfied");
-
+const utils = require("../../utils/database/index")();
 module.exports = {
 	createuser: async (req, res) => {
 		try {
@@ -77,11 +77,31 @@ module.exports = {
 			});
 
 			if (response) {
+
 				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
+				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				tablename = "SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"
+				const schema = await utils.currentSchema({
+					db
+				})
+
+				let pagecount = await utils.getPageCount({
+					schema,
+					tablename,
+					db
+				})
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': LIMIT,
+					'OFFSET': OFFSET
+				}
+				console.log(paginationobject)
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
+					pagination: paginationobject
 				});
 			} else {
 				res.status(400).send({
