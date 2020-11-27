@@ -13,7 +13,24 @@ module.exports = () => {
 			}
 		});
 	};
+
+	const getPageCount = ({
+		schema,
+		tablename
+	}) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const query = `(SELECT COUNT(*) FROM "${schema}"."${tablename}")`
+				const schemaSQL = await db.preparePromisified(query)
+				let response = await db.statementExecPromisified(schemaSQL, [])
+				resolve(response);
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
 	return {
-		currentSchema
+		currentSchema,
+		getPageCount
 	};
 };
