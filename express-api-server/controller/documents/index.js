@@ -1,6 +1,8 @@
 	/* eslint-disable */
 	const documentserivce = require("../../service/documents")();
+	const utils = require("../../utils/database/index")();
 	const dbClass = require("sap-hdbext-promisfied");
+
 	module.exports = {
 		// News Controllers
 		getdocuments: async (req, res) => {
@@ -14,9 +16,27 @@
 				if (response) {
 					if (response.length == 0) response = response;
 					else response = response.length > 1 ? response : response[0];
+					const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+					const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+					tablename = "SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS"
+					const schema = await utils.currentSchema({
+						db
+					})
+
+					let pagecount = await utils.getPageCount({
+						schema,
+						tablename,
+						db
+					})
+					paginationobject = {
+						'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+						'LIMIT': LIMIT,
+						'OFFSET': OFFSET
+					}
 					res.type("application/json").status(200).send({
 						status: "200",
 						result: response,
+						pagination: paginationobject
 					});
 				} else {
 					res.type("application/json").status(400).send({
