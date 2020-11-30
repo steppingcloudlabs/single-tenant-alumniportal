@@ -1,6 +1,6 @@
 const jobservice = require("../../service/job/index.js")();
 const dbClass = require("sap-hdbext-promisfied");
-const dbClass = require("sap-hdbext-promisfied");
+const utils = require("../../utils/database/index")();
 
 module.exports = {
 	createjob: async (req, res) => {

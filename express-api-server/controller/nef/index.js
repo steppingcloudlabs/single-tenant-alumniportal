@@ -1,6 +1,7 @@
 	/* eslint-disable */
 	const nefserivce = require("../../service/nef")();
 	const dbClass = require("sap-hdbext-promisfied");
+	const utils = require("../../utils/database/index")();
 	module.exports = {
 		// News Controllers
 		getnews: async (req, res) => {
@@ -14,10 +15,29 @@
 			});
 			console.log(response)
 			if (response) {
+				if (response.length == 0) response = response;
 				response = response.length >= 1 ? response : response[0];
+				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				tablename = "SCLABS_ALUMNIPORTAL_NEWS_NEWS"
+				const schema = await utils.currentSchema({
+					db
+				})
+
+				let pagecount = await utils.getPageCount({
+					schema,
+					tablename,
+					db
+				})
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': LIMIT,
+					'OFFSET': OFFSET
+				}
 				res.status(200).send({
 					status: "200",
 					result: response,
+					pagination: paginationobject
 				});
 			} else {
 				res.status(400).send({
