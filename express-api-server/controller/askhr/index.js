@@ -1,5 +1,6 @@
 const ticketserivce = require("../../service/askhr")();
 const dbClass = require("sap-hdbext-promisfied");
+const utils = require("../../utils/database/index")();
 
 module.exports = {
 	createticket: async (req, res) => {
@@ -81,9 +82,28 @@ module.exports = {
 			if (response) {
 				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
+				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				tablename = "SCLABS_ALUMNIPORTAL_TICKET_TICKET"
+				const schema = await utils.currentSchema({
+					db
+				})
+
+				let pagecount = await utils.getPageCount({
+					schema,
+					tablename,
+					db
+				})
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': LIMIT,
+					'OFFSET': OFFSET
+				}
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
+					pagination: paginationobject
+
 				});
 			} else {
 				res.status(400).send({
@@ -140,7 +160,7 @@ module.exports = {
 			const payload = req.body;
 			let db = new dbClass(req.db);
 			console.log(payload)
-			let response = await ticketserivce.createmessage({
+			let response = await ticketserivce.createMESSAGE({
 				payload,
 				db
 			});
@@ -171,7 +191,7 @@ module.exports = {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			let response = await ticketserivce.updatemessage({
+			let response = await ticketserivce.updateMESSAGE({
 				payload,
 				db
 			});
@@ -204,16 +224,34 @@ module.exports = {
 			const payload = req.query;
 			let db = new dbClass(req.db);
 			console.log(payload)
-			let response = await ticketserivce.getmessage({
+			let response = await ticketserivce.getMESSAGE({
 				payload,
 				db
 			});
 			if (response) {
 				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
+				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				tablename = "SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES"
+				const schema = await utils.currentSchema({
+					db
+				})
+
+				let pagecount = await utils.getPageCount({
+					schema,
+					tablename,
+					db
+				})
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': LIMIT,
+					'OFFSET': OFFSET
+				}
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
+					pagination: paginationobject
 				});
 			} else {
 				req.logger.info(`400 response for ${req.logger.getTenantId()} at admin/action/askhr/index/updatemessage ${response}`);
@@ -238,7 +276,7 @@ module.exports = {
 		try {
 			const payload = req.body;
 			let db = new dbClass(req.db);
-			let response = await ticketserivce.deletemessage({
+			let response = await ticketserivce.deleteMESSAGE({
 				payload,
 				db
 			});
@@ -341,9 +379,27 @@ module.exports = {
 			if (response) {
 				if (response.length == 0) response = response;
 				else response = response.length > 1 ? response : response[0];
+				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				tablename = "SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"
+				const schema = await utils.currentSchema({
+					db
+				})
+
+				let pagecount = await utils.getPageCount({
+					schema,
+					tablename,
+					db
+				})
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': LIMIT,
+					'OFFSET': OFFSET
+				}
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,
+					pagination: paginationobject
 				});
 			} else {
 				res.status(400).send({
