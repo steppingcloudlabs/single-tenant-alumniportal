@@ -24,8 +24,8 @@ modules:
       - name: single-tenant-alumniportal-sap-uaa
       - name: sfsdkdest
     parameters:
-      memory: 350M
-      disk-quota: 1024M
+      memory: 250M
+      disk-quota: 2024M
     properties:
       apiDest: 'sfsdkdest'
 # App Router
