@@ -149,7 +149,23 @@ module.exports = () => {
 				)
 				const results = await db.statementExecPromisified(statement, [])
 
-				resolve(results);
+				const result = {}
+				result['form16'] = 'false'
+				result['firstmonthsalary'] = 'false'
+				result['secondmonthsalary'] = 'false'
+				result['thirdmonthsalary'] = 'false'
+				for (let i = 0; i < results.length(); i++) {
+					if (results[i].FILENAME == 'form16') {
+						result['form16'] = 'true'
+					} else if (results[i].FILENAME == 'firstmonthsalary') {
+						result['firstmonthsalary'] = 'true'
+					} else if (results[i].FILENAME == 'secondmonthsalary') {
+						result['secondmonthsalary'] = 'true'
+					} else if (results[i].FILENAME == 'thirdmonthsalary') {
+						result['thirdmonthsalary'] = 'true'
+					}
+				}
+				resolve(result);
 
 			} catch (error) {
 				reject(error);

@@ -150,8 +150,6 @@
 				let response = await documentserivce.statusdocuments({
 					payload,
 					db
-
-
 				});
 				if (response) {
 					res.type("application/json").status(200).send({
