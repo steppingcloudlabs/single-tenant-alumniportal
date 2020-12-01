@@ -148,7 +148,7 @@ module.exports = () => {
 					`SELECT "FILENAME" FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "USERID"='${payload.USERID}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
-
+				console.log(results)
 				const result = {}
 				result['form16'] = 'false'
 				result['firstmonthsalary'] = 'false'

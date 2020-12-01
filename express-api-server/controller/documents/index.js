@@ -76,6 +76,7 @@
 
 				}
 			} catch (error) {
+				req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/getdocuments ${error}`);
 				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
@@ -106,6 +107,7 @@
 				}
 
 			} catch (error) {
+				req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/getdocuments ${error}`);
 				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
@@ -138,6 +140,7 @@
 
 				}
 			} catch (error) {
+				req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/getdocuments ${error}`);
 				res.type("application/json").status(200).send({
 					status: "400",
 					result: "Element Not Found"
@@ -165,6 +168,7 @@
 				}
 
 			} catch (error) {
+				req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/getdocuments ${error}`);
 				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
