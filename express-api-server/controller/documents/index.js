@@ -46,6 +46,7 @@
 				}
 
 			} catch (error) {
+				req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/getdocuments ${error}`);
 				res.type("application/json").status(500).send({
 					status: "500",
 					error: error
