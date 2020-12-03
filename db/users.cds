@@ -23,4 +23,4 @@ entity users: managed{
 	skill_id: UUID;
 	skills : Association[*] to skill on skills.ID=skill_id;
 	linkedin: String;
-};
+}
