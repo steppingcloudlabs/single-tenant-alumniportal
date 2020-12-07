@@ -26,9 +26,3 @@ COLUMN TABLE sclabs_alumniportal_users_users (
 ) WITH ASSOCIATIONS (
   MANY TO MANY JOIN sclabs_alumniportal_skills_skills AS skills ON (skills.ID = skill_id)
 )
-technical configuration
-{
-  fulltext index fti_first_name_personal_information on (first_name_personal_information);
-  fulltext index fti_last_name_personal_information  on (last_name_personal_information);
-  fulltext index fti_user_id on (user_id);
-};

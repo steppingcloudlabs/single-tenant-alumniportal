@@ -18,8 +18,3 @@ COLUMN TABLE sclabs_alumniportal_job_job (
   postingenddate NVARCHAR(5000),
   PRIMARY KEY(ID)
 )
-technical configuration
-{
-  fulltext index fti_jobTitle  on (jobTitle);
-  fulltext index fti_jobDescription  on (jobDescription);
-};

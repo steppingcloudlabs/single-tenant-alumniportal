@@ -1,0 +1,1 @@
+FULLTEXT INDEX skill_ft ON sclabs_alumniportal_skills_skills (skill) FUZZY SEARCH INDEX ON SYNC

@@ -8,7 +8,3 @@ COLUMN TABLE sclabs_alumniportal_skills_skills (
   skill NVARCHAR(5000),
   PRIMARY KEY(ID)
 )
-technical configuration
-{
-  fulltext index fti_skill on (title);
-};
