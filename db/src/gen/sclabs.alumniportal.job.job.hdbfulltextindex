@@ -1,3 +1,0 @@
-FULLTEXT INDEX jobDescription_ft ON sclabs_alumniportal_job_job (jobDescription) FUZZY SEARCH INDEX ON   
-FULLTEXT INDEX location_ft ON sclabs_alumniportal_job_job (location) FUZZY SEARCH INDEX ON  
-FULLTEXT INDEX jobTitle_ft ON sclabs_alumniportal_job_job (jobTitle) FUZZY SEARCH INDEX ON 

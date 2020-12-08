@@ -1,3 +1,0 @@
-FULLTEXT INDEX skill_ft ON sclabs_alumniportal_users_users (first_name_personal_information) FUZZY SEARCH INDEX ON
-FULLTEXT INDEX skill_ft ON sclabs_alumniportal_users_users (last_name_personal_information) FUZZY SEARCH INDEX ON
-FULLTEXT INDEX skill_ft ON sclabs_alumniportal_users_users (user_id) FUZZY SEARCH INDEX ON

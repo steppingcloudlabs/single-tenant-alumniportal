@@ -1,3 +1,0 @@
-FULLTEXT INDEX firstname_ft ON sclabs_alumniportal_manager_manager (firstname) FUZZY SEARCH INDEX ON SYNC
-FULLTEXT INDEX lastname_ft ON sclabs_alumniportal_manager_manager (lastname) FUZZY SEARCH INDEX ON SYNC
-FULLTEXT INDEX email_ft ON sclabs_alumniportal_manager_manager (email) FUZZY SEARCH INDEX ON SYNC
