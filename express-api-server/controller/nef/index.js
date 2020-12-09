@@ -278,7 +278,7 @@
 				const payload = req.query;
 				let db = new dbClass(req.db);
 				const logger = req.logger;
-				let response = await nefserivce.viewfaq({
+				let response = await nefserivce.getevent({
 					payload,
 					logger,
 					db
