@@ -10,4 +10,5 @@ entity SCLABS_ALUMNIPORTAL_TICKET_TICKET {
   ESCLATION : Boolean;
   RESOLVED : Boolean;
   ESCLATATIONMANAGER : String(5000);
+  DATE : String(5000);
 };

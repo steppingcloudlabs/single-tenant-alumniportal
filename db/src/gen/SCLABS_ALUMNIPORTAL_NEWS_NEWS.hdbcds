@@ -8,4 +8,5 @@ entity SCLABS_ALUMNIPORTAL_NEWS_NEWS {
   TITLE : String(5000);
   CONTENT : String(5000);
   PHOTO : LargeString;
+  DATE : String(5000);
 };

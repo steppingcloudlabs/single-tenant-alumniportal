@@ -32,6 +32,9 @@ modules:
   - name: single-tenant-alumniportal-sap
     type: html5
     path: app
+    parameters:
+      memory: 250M
+      disk-quota: 1024M
     requires:
       - name: single-tenant-alumniportal-sap-uaa
       - name: express-api-server_api
