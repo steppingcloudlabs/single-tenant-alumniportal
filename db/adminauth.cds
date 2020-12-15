@@ -1,13 +1,13 @@
-namespace sclabs.alumniportal.auth;
+namespace sclabs.alumniportal.adminauth;
 
 using {
     managed,
     sap
 } from '@sap/cds/common';
 
-entity login : managed {
+entity adminlogin : managed {
     key ID       : UUID @odata.Type : 'Edm.String';
-        userid   : String not null;
+        USERID   : String not null;
         username : String not null;
         password : String not null;
         usertype : String;

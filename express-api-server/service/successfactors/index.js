@@ -13,18 +13,16 @@ module.exports = () => {
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
-				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				let limit = payload.limit == undefined ? 10 : payload.limit
+				let offset = payload.offset == undefined ? 0 : payload.offset
 				const result = PerPersonal.requestBuilder()
 					.getAll()
 					.select(
 						PerPersonal.FIRST_NAME,
 						PerPersonal.LAST_NAME,
-						PerPersonal.PERSON_NAV.select(PerPerson.EMAIL_NAV.select(PerEmail.EMAIL_ADDRESS))).filter(PerPersonal.PERSON_NAV.filter(PerEmail.EMAIL_ADDRESS
-							.equals(payload.email))
-
-						// PerPersonal.PERSON_NAV.select(PerPerson.EMAIL_NAV.select(PerEmail.EMAIL_ADDRESS))
-					).top(LIMIT).skip(offset)
+						PerPersonal.PERSON_NAV.select(PerPerson.PERSON_ID, PerPerson.EMAIL_NAV.select(PerEmail.EMAIL_ADDRESS)))
+					.filter(PerPersonal.PERSON_NAV.filter(PerEmail.EMAIL_ADDRESS.equals(payload.EMAIL)))
+					.top(limit).skip(offset)
 					.execute({
 						destinationName: process.env.apiDest
 					});

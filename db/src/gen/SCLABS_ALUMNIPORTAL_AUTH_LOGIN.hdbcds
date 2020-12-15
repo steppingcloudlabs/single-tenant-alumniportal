@@ -8,4 +8,5 @@ entity SCLABS_ALUMNIPORTAL_AUTH_LOGIN {
   USERID : String(5000) not null;
   USERNAME : String(5000) not null;
   PASSWORD : String(5000) not null;
+  USERTYPE : String(5000);
 };

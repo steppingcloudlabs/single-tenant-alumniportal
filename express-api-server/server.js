@@ -133,7 +133,9 @@
   const searchRoutes = require("./router/search");
   const successfactorsRoutes = require("./router/successfactors");
   const askhradminroutes = require("./router/askhr")
+  const adminauthRoutes = require("./router/auth/index.js");
 
+  app.use("/admin/auth", adminauthRoutes);
   app.use("/admin/action", adminactionRoutes);
   app.use("/admin/action", adminskillsRoutes);
   app.use("/admin/action", adminjobRoutes);

@@ -4,6 +4,13 @@ const dbClass = require("sap-hdbext-promisfied");
 module.exports = {
 	getuser: async (req, res) => {
 		try {
+			const payload = req.query;
+			let db = new dbClass(req.db);
+			let response = await successfactorsservice.getuser({
+				payload,
+				db
+			});
+
 			if (response) {
 				if (response.length == 0) response = response
 				else response = response.length > 1 ? response : response[0];
