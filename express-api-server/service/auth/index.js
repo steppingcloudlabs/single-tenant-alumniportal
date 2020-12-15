@@ -122,7 +122,7 @@ module.exports = () => {
                     EMAIL
                 } = payload.payload;
 
-                const query1 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
+                const query1 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 const statement1 = await db.preparePromisified(query1)
                 const result1 = await db.statementExecPromisified(statement1, [])
 
@@ -213,7 +213,7 @@ module.exports = () => {
                     const EMAIL = decoderesettoken.sub;
 
                     const query =
-                        `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"
+                        `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"
 					SET "PASSWORD" = '${newpassword}' where USERNAME='${EMAIL}'`
                     const statement = await db.preparePromisified(query)
                     const result = await db.statementExecPromisified(statement, [])
