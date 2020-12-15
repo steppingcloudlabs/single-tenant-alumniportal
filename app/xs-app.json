@@ -1,19 +1,25 @@
 {
 	"welcomeFile": "index.html",
 	"authenticationMethod": "route",
-	"routes": [{
-		"source": "^/user/(.*)$",
-		"authenticationType": "xsuaa",
-		"scope": "$XSAPPNAME.User",
-		"destination": "express-api-server"
-	}, {
-		"source": "^/admin/(.*)$",
-		"authenticationType": "xsuaa",
-		"scope": ["$XSAPPNAME.Administrator", "$XSAPPNAME.Manager"],
-		"destination": "express-api-server"
-	}, {
-		"source": "^/(.*)",
-		"authenticationType": "none",
-		"localDir": "resource"
-	}]
+	"routes": [
+		{
+			"source": "^/user/(.*)$",
+			"authenticationType": "none",
+			"destination": "single-tenant-alumniportal-sap-srv"
+		},
+		{
+			"source": "^/admin/(.*)$",
+			"authenticationType": "xsuaa",
+			"scope": [
+				"$XSAPPNAME.Administrator",
+				"$XSAPPNAME.Manager"
+			],
+			"destination": "single-tenant-alumniportal-sap-srv"
+		},
+		{
+			"source": "^/(.*)",
+			"authenticationType": "none",
+			"localDir": "resource"
+		}
+	]
 }

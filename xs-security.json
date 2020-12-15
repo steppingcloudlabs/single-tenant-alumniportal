@@ -1,28 +1,28 @@
 {
 	"xsappname": "Agency Portal",
-	"scopes": [{
-		"name": "$XSAPPNAME.User",
-		"description": "Alumni portal user"
-	}, {
-		"name": "$XSAPPNAME.Administrator",
-		"description": "Alumni portal Administrator"
-	}, {
-		"name": "$XSAPPNAME.Manager",
-		"description": "Alumni portal AskHr Manager"
-	}],
-	"role-templates": [{
-		"name": "Administrator",
-		"description": "Represents Admin and Managers",
-		"scope-references": [
-			"$XSAPPNAME.Administrator",
-			"$XSAPPNAME.User",
-			"$XSAPPNAME.Manager"
-		]
-	}, {
-		"name": "User",
-		"description": "Represents user of Alumni Portal",
-		"scope-references": [
-			"$XSAPPNAME.User",
-		]
-	}, ]
+	"scopes": [
+		{
+			"name": "$XSAPPNAME.User",
+			"description": "Alumni portal user"
+		},
+		{
+			"name": "$XSAPPNAME.Administrator",
+			"description": "Alumni portal Administrator"
+		},
+		{
+			"name": "$XSAPPNAME.Manager",
+			"description": "Alumni portal AskHr Manager"
+		}
+	],
+	"role-templates": [
+		{
+			"name": "Administrator",
+			"description": "Represents Admin and Managers",
+			"scope-references": [
+				"$XSAPPNAME.Administrator",
+				"$XSAPPNAME.User",
+				"$XSAPPNAME.Manager"
+			]
+		}
+	]
 }
