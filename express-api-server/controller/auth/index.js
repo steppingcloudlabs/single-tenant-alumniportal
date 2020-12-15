@@ -21,15 +21,12 @@ module.exports = {
                     status: "200",
                     result: "Incorrect Username"
                 });
-            }
-            if (response == "incorrectpassword") {
+            } else if (response == "incorrectpassword") {
                 res.type("application/json").status(200).send({
                     status: "200",
                     result: "Incorrect password"
                 });
-            }
-
-            if (response) {
+            } else if (response) {
                 const token = JWT.sign({
                         iss: "steppingcloudforuser",
                         sub: response[0].USER_ID,

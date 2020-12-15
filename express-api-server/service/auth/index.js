@@ -26,6 +26,7 @@ module.exports = () => {
                 const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 const statement = await db.preparePromisified(query)
                 const result = await db.statementExecPromisified(statement, [])
+                console.log(`${EMAIL} =>: `, result)
                 if (result.length == 0) {
                     resolve("incorrectuser")
                 } else {
@@ -35,7 +36,7 @@ module.exports = () => {
                     if (result2.length == 0) {
                         resolve("incorrectpassword")
                     } else {
-                        const query3 = `SELECT EMAIL, USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where PASSWORD='${PASSWORD}' AND USERNAME='${EMAIL}'`
+                        const query3 = `SELECT USERNAME, USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where PASSWORD='${PASSWORD}' AND USERNAME='${EMAIL}'`
                         const statement3 = await db.preparePromisified(query3)
                         const result3 = await db.statementExecPromisified(statement3, [])
 
@@ -87,10 +88,10 @@ module.exports = () => {
 	                    '${modifiedat}',
 	                    '${modifiedby}',
                         '${ID}'/*ID <NVARCHAR(36)>*/,
+                        '${USERID}',
 	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
-	                    '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
-                        '${USERTYPE}' /*USERTYPE <NVARCHAR(5000)>*/,
-                        '${USERID}'
+                        '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
+                        '${USERTYPE}'
                         )`
                         console.log(query4)
                         const statement4 = await db.preparePromisified(query4)

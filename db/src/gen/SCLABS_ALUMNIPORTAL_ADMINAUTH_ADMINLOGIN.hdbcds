@@ -5,8 +5,8 @@ entity SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN {
   MODIFIEDAT : UTCTimestamp;
   MODIFIEDBY : String(255);
   key ID : String(36);
-  USERID : String(5000) not null;
   USERNAME : String(5000) not null;
   PASSWORD : String(5000) not null;
   USERTYPE : String(5000);
+  USERID : String(5000) not null;
 };
