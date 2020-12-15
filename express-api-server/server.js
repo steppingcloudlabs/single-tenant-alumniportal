@@ -9,6 +9,7 @@
   const xsHDBConn = require("@sap/hdbext");
   const JWTtoken = require("./middleware/JWTtoken/tokenchecks")()
   const passport = require("passport");
+  const admintokenchecker = require('./middleware/JWTtoken/admintokencheck')
   const port = process.env.PORT || 3000;
 
   //Initialize Express App for XS UAA and HDBEXT Middleware
@@ -56,7 +57,7 @@
       tag: "hana"
     }
   });
-  console.log(hanaOptions)
+
   hanaOptions.hana.pooling = true;
   app.use(
     // passport.authenticate("JWT", {
@@ -136,15 +137,15 @@
   const adminauthRoutes = require("./router/auth/index.js");
 
   app.use("/admin/auth", adminauthRoutes);
-  app.use("/admin/action", adminactionRoutes);
-  app.use("/admin/action", adminskillsRoutes);
-  app.use("/admin/action", adminjobRoutes);
-  app.use("/admin/action", adminnefRoutes);
-  app.use("/admin/action", adminuseractionRoutes)
-  app.use("/admin/action", admindocumentRoutes);
-  app.use("/admin/action/search", searchRoutes);
-  app.use("/admin/action", successfactorsRoutes)
-  app.use("/admin/action/askhr", askhradminroutes)
+  app.use("/admin/action", admintokenchecker, adminactionRoutes);
+  app.use("/admin/action", admintokenchecker, adminskillsRoutes);
+  app.use("/admin/action", admintokenchecker, adminjobRoutes);
+  app.use("/admin/action", admintokenchecker, adminnefRoutes);
+  app.use("/admin/action", admintokenchecker, adminuseractionRoutes)
+  app.use("/admin/action", admintokenchecker, admindocumentRoutes);
+  app.use("/admin/action/search", admintokenchecker, searchRoutes);
+  app.use("/admin/action", admintokenchecker, successfactorsRoutes)
+  app.use("/admin/action/askhr", admintokenchecker, askhradminroutes)
   //USER ROUTES
 
   //app.use(JWTtoken)     // express middleware for usertoken verfication
