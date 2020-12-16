@@ -37,32 +37,39 @@ module.exports = () => {
 						const statement3 = await db.preparePromisified(query3)
 						const result3 = await db.statementExecPromisified(statement3, [])
 						const USERID = result3[0].USERID;
-						const query4 = `SELECT 
-						                 A1."ID",
-						                 A1."USER_ID",
-										 A1."GENDER",
-										 A1."DATE_OF_BIRTH",
-										 A1."DATE_OF_RESIGNATION",
-										 A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
-										 A1."PERSONAL_EMAIL_ID",
-										 A1."FIRST_NAME_PERSONAL_INFORMATION",
-										 A1."LAST_NAME_PERSONAL_INFORMATION",
-										 A1."MIDDLE_NAME_PERSONAL_INFORMATION",
-										 A1."NATIONALITY_PERSONAL_INFORMATION",
-										 A1."SALUTATION_PERSONAL_INFORMATION",
-										 A1."CITY_ADDRESSES",
-										 A1."PHONE_NUMBER_PHONE_INFORMATION",
-										 A1."MANAGER_JOB_INFORMATION",
-										 A1."DESIGNATION_JOB_INFORMATION",
-										 A1."LINKEDIN",
-										 A2."SKILL" as skill
-										 FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
-										 LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
-										 ON A1.SKILL_ID = A2.ID where A1.USER_ID = '${USERID}';`
-
+						const query4 =
+							`SELECT 
+				    A1."ID",
+					A1."USER_ID",
+					A1."USERTYPE",
+					A1."GENDER",
+					A1."DATE_OF_BIRTH",
+					A1."DATE_OF_RESIGNATION",
+					A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
+					A1."PERSONAL_EMAIL_ID",
+					A1."FIRST_NAME_PERSONAL_INFORMATION",
+					A1."LAST_NAME_PERSONAL_INFORMATION",
+					A1."MIDDLE_NAME_PERSONAL_INFORMATION",
+					A1."NATIONALITY_PERSONAL_INFORMATION",
+					A1."SALUTATION_PERSONAL_INFORMATION",
+					A1."CITY_ADDRESSES",
+					A1."PHONE_NUMBER_PHONE_INFORMATION",
+					A1."MANAGER_JOB_INFORMATION",
+					A1."DESIGNATION_JOB_INFORMATION",
+					A1."LINKEDIN",
+					A2."SKILL" as skill
+					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
+					LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
+					ON A1.
+					"SKILL_ID" = A2.
+					"ID"
+					where A1.
+					"USER_ID" = '${USERID}';
+					`
 						const statement4 = await db.preparePromisified(query4)
-						const result4 = await db.statementExecPromisified(statement4, [])
-						resolve(result4)
+						const obj = await db.statementExecPromisified(statement4, [])
+
+						resolve(obj);
 					}
 				}
 			} catch (error) {
@@ -81,11 +88,10 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				});
+				const userType = 'user';
 				const {
 					EMAIL,
 					PASSWORD,
-					companyname,
-					userType,
 					USERID
 				} = payload;
 
@@ -106,8 +112,6 @@ module.exports = () => {
 						if (result3.length == 0) {
 							resolve("notalumni")
 						} else {
-							console.log(result3)
-							console.log(result3[0].USER_ID)
 							const createdat = new Date().toISOString();
 							const createdby = "admin";
 							const modifiedby = "admin";
@@ -147,8 +151,9 @@ module.exports = () => {
 									'${result3[0].PHONE_NUMBER_PHONE_INFORMATION}',
 									'${result3[0].MANAGER_JOB_INFORMATION}',
 									'${result3[0].DESIGNATION_JOB_INFORMATION}',
-									'ddbc2bb1-51a7-43e3-a656-55931a863f55',
-									'ddbc2bb1-51a7-43e3-a656-55931a863f55'
+									'',
+									'',
+									'${userType}'
                                     ) `
 
 							const statement5 = await db.preparePromisified(query5)

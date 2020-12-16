@@ -10,5 +10,4 @@ entity login : managed {
         userid   : String not null;
         username : String not null;
         password : String not null;
-        usertype : String;
 };

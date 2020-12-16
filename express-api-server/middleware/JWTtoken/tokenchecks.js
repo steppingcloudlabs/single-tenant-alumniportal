@@ -5,7 +5,7 @@ const JWT = require('jsonwebtoken');
 module.exports = () => {
 	function tokenchecks(req, res, next) {
 		if (!req.headers.authorization) {
-			return res.status(403).json({
+			return res.status(401).json({
 				status: "400",
 				result: "Rejected Request, Token Required"
 			});
@@ -17,16 +17,16 @@ module.exports = () => {
 			const tokendetails = JWT.verify(token, JWT_SECRET);
 			const expirytimefromtoken = tokendetails.exp;
 			if (Date.now() > expirytimefromtoken) {
-				res.type("application/json").status(200).send({
-					status: "200",
+				res.type("application/json").status(403).send({
+					status: "401",
 					result: "Token expired, Please Login Again"
 				});
 			} else {
 				next();
 			}
 		} else {
-			res.type("application/json").status(200).send({
-				status: "400",
+			res.type("application/json").status(401).send({
+				status: "401",
 				result: "Rejected Request, Token Required"
 			});
 		}
