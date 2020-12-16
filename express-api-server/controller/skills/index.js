@@ -1,6 +1,6 @@
 const skillsserivce = require("../../service/skills")();
 const dbClass = require("sap-hdbext-promisfied");
-
+const utils = require("../../utils/database/index")();
 module.exports = {
 	createskills: async (req, res) => {
 		try {
@@ -62,12 +62,13 @@ module.exports = {
 	getskills: async (req, res) => {
 
 		try {
-			const payload = req.body;
+			const payload = req.query;
 			let db = new dbClass(req.db);
 			let response = await skillsserivce.getskills({
 				payload,
 				db
 			});
+			console.log(response)
 			if (response) {
 				if (response.length == 0) response = response
 				else response = response.length > 1 ? response : response[0];
@@ -100,9 +101,9 @@ module.exports = {
 				})
 			}
 		} catch (error) {
-			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/successfactors/updateskills ${error}`);
-			res.status(400).send({
-				status: "400",
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/successfactors/getskills ${error}`);
+			res.status(500).send({
+				status: "500",
 				result: error
 			});
 		}

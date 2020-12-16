@@ -12,15 +12,23 @@ module.exports = () => {
 					db
 				})
 				// TODO: add pagination using [to, from] clauses in statement.
+				let skill = payload.skill;
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				console.log("here")
-				const query =
-					`SELECT "ID", "SKILL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" rows LIMIT ${LIMIT} offset ${offset}`
-				const statement = await db.preparePromisified(query)
-				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				if (skill) {
+					const query =
+						`SELECT "ID", "SKILL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE SKILL = '${skill}'`
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
+					resolve(results);
+				} else {
+					const query =
+						`SELECT "ID", "SKILL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" rows LIMIT ${LIMIT} offset ${offset}`
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
+					resolve(results);
 
+				}
 			} catch (error) {
 				reject(error);
 			}
