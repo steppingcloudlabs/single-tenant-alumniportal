@@ -20,6 +20,7 @@ module.exports = () => {
                 const ESCLATATION = false
                 const RESOLVED = false
                 const ESCLATATIONMANAGER = 1;
+                const DATE = Math.round((new Date()).getTime() / 1000);
                 const createdat = new Date().toISOString();
                 const createdby = "user";
                 const modifiedby = "user";
@@ -37,7 +38,8 @@ module.exports = () => {
 					'${SUBJECT}' /*TITLE <NVARCHAR(5000)>*/ ,
 					${ESCLATATION}/*ESCLATION <BOOLEAN>*/,
 					${RESOLVED}/*RESOLVED <BOOLEAN>*/,
-					'${ESCLATATIONMANAGER}'/*ESCLATATIONMANAGER <NVARCHAR(5000)>*/)`
+                    '${ESCLATATIONMANAGER}' /*ESCLATATIONMANAGER <NVARCHAR(5000)>*/,
+                    '${DATE}')`
                 let statement = await db.preparePromisified(query)
                 let results = await db.statementExecPromisified(statement, [])
                 console.log(results)
@@ -92,7 +94,7 @@ module.exports = () => {
                 const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
                 const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
                 const query =
-                    `SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE USERID = '${USERID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
+                    `SELECT ID, USERID, TITLE, ESCLATION, RESOLVED, ESCLATATIONMANAGER, DATE, CREATEDBY FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE USERID = '${USERID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
                 console.log(query)
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
