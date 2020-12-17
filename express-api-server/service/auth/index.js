@@ -20,27 +20,36 @@ module.exports = () => {
                 const {
                     EMAIL,
                     PASSWORD,
-                    USERTYPE,
-                    USERID
                 } = payload;
-                const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
-                const statement = await db.preparePromisified(query)
-                const result = await db.statementExecPromisified(statement, [])
-                console.log(`${EMAIL} =>: `, result)
+                let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
+                let statement = await db.preparePromisified(query)
+                let result = await db.statementExecPromisified(statement, [])
                 if (result.length == 0) {
                     resolve("incorrectuser")
                 } else {
-                    const query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where PASSWORD='${PASSWORD}'`
-                    const statement2 = await db.preparePromisified(query2)
-                    const result2 = await db.statementExecPromisified(statement2, [])
+                    let query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL}' and PASSWORD ='${PASSWORD}'`
+                    let statement2 = await db.preparePromisified(query2)
+                    let result2 = await db.statementExecPromisified(statement2, [])
                     if (result2.length == 0) {
                         resolve("incorrectpassword")
                     } else {
-                        const query3 = `SELECT USERNAME, USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where PASSWORD='${PASSWORD}' AND USERNAME='${EMAIL}'`
-                        const statement3 = await db.preparePromisified(query3)
-                        const result3 = await db.statementExecPromisified(statement3, [])
-
-                        resolve(result3)
+                        console.log(result2[0].USERTYPE)
+                        if (result2[0].USERTYPE == 'admin') {
+                            let query3 = `SELECT USERNAME, USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}' AND PASSWORD ='${PASSWORD}'`
+                            let statement3 = await db.preparePromisified(query3)
+                            let result3 = await db.statementExecPromisified(statement3, [])
+                            resolve(result3)
+                        } else if (result2[0].USERTYPE == 'hr') {
+                            query3 = `SELECT USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME='${EMAIL}' AND PASSWORD='${PASSWORD}'`
+                            statement3 = await db.preparePromisified(query3)
+                            result3 = await db.statementExecPromisified(statement3, [])
+                            let query4 = `SELECT "ID", "FIRSTNAME", "LASTNAME", "EMAIL", "LEVELMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" where EMAIL = '${EMAIL}'`
+                            let statement4 = await db.preparePromisified(query4)
+                            let result4 = await db.statementExecPromisified(statement4, [])
+                            result4[0].USERTYPE = result3[0].USERTYPE
+                            console.log(result4)
+                            resolve(result4)
+                        }
                     }
                 }
             } catch (error) {
