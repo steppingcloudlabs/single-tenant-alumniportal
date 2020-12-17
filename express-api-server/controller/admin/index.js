@@ -17,6 +17,11 @@ module.exports = {
 					status: "201",
 					result: "User Id already exists"
 				});
+			} else if (response == "onyadminsallowed") {
+				res.type("application/json").status(200).send({
+					status: "201",
+					result: "Only admin usertype allowed. Use add manager api for adding hr usertype."
+				});
 			} else {
 				res.type("application/json").status(200).send({
 					status: "200",

@@ -43,13 +43,15 @@ module.exports = () => {
 				const firstname = payload.payload.FIRSTNAME;
 				const lastname = payload.payload.LASTNAME;
 				const email = payload.payload.EMAIL;
-				const query =
-					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"  WHERE EMAIL ='${email}'`
-				const statement = await db.preparePromisified(query);
-				const results = await db.statementExecPromisified(statement, [])
-				if (results.length == 0) {
-					const query1 =
-						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" VALUES(
+				const usertype = payload.payload.USERTYPE;
+				if (usertype == 'admin') {
+					const query =
+						`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"  WHERE EMAIL ='${email}'`
+					const statement = await db.preparePromisified(query);
+					const results = await db.statementExecPromisified(statement, [])
+					if (results.length == 0) {
+						const query1 =
+							`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" VALUES(
 					'${createdat}',
 					'${createdby}',
 					'${modifiedat}',
@@ -57,14 +59,19 @@ module.exports = () => {
 					'${ID}',	
 					'${firstname}',
 					'${lastname}',
-					'${email}'
+					'${email}',
+					'${usertype}'
 				)`
-					const statement1 = await db.preparePromisified(query1)
-					const results1 = await db.statementExecPromisified(statement1, [])
-					resolve(results1);
+						const statement1 = await db.preparePromisified(query1)
+						const results1 = await db.statementExecPromisified(statement1, [])
+						resolve(results1);
+					} else {
+						resolve("user id exists");
+					}
 				} else {
-					resolve("user id exists");
+					resolve("onyadminsallowed")
 				}
+
 			} catch (error) {
 				logger.error(`Error for ${logger.getTenantId()} at createuser function: ${error}`)
 				reject(error);
