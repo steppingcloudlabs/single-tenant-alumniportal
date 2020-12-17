@@ -65,24 +65,37 @@ module.exports = () => {
                     USERTYPE,
                     USERID
                 } = payload;
+                console.log(USERTYPE)
+                if (USERTYPE != 'hr' && USERTYPE != 'admin') {
+                    resolve("onlyhrsandadmins");
+                } else if (USERTYPE == "hr") {
+                    /**
+                     * Check if HR is already added to the system?
+                     */
+                    let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" where EMAIL='${EMAIL}'`
 
-                let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
+                    let statement = await db.preparePromisified(query)
 
-                const statement = await db.preparePromisified(query)
+                    let result = await db.statementExecPromisified(statement, [])
+                    if (result.length > 0) {
+                        // other duplicate checks 
+                        let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
 
-                const result = await db.statementExecPromisified(statement, [])
+                        let statement = await db.preparePromisified(query)
 
-                if (result.length == 0) {
-                    const query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERID='${USERID}'`
-                    const statement2 = await db.preparePromisified(query2)
-                    const result2 = await db.statementExecPromisified(statement2, [])
-                    if (result2.length == 0) {
-                        const createdat = new Date().toISOString();
-                        const createdby = "admin";
-                        const modifiedby = "admin";
-                        const modifiedat = new Date().toISOString();
-                        const ID = uuid();
-                        query4 = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
+                        let result = await db.statementExecPromisified(statement, [])
+
+                        if (result.length == 0) {
+                            let query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERID='${USERID}'`
+                            let statement2 = await db.preparePromisified(query2)
+                            let result2 = await db.statementExecPromisified(statement2, [])
+                            if (result2.length == 0) {
+                                let createdat = new Date().toISOString();
+                                let createdby = "admin";
+                                let modifiedby = "admin";
+                                let modifiedat = new Date().toISOString();
+                                let ID = uuid();
+                                query4 = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
 	                    '${createdat}',
 	                    '${createdby}',
 	                    '${modifiedat}',
@@ -93,16 +106,59 @@ module.exports = () => {
                         '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
                         '${USERTYPE}'
                         )`
-                        console.log(query4)
-                        const statement4 = await db.preparePromisified(query4)
-                        const result4 = await db.statementExecPromisified(statement4, [])
-                        resolve(result4)
+                                console.log(query4)
+                                let statement4 = await db.preparePromisified(query4)
+                                let result4 = await db.statementExecPromisified(statement4, [])
+                                resolve(result4)
+                            } else {
+                                resolve("founduserid")
+                            }
+                        } else {
+                            resolve("foundemail");
+                        }
                     } else {
-                        resolve("founduserid")
+                        resolve("nothr")
                     }
                 } else {
-                    resolve("foundemail");
+                    let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
+
+                    let statement = await db.preparePromisified(query)
+
+                    let result = await db.statementExecPromisified(statement, [])
+
+                    if (result.length == 0) {
+                        let query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERID='${USERID}'`
+                        let statement2 = await db.preparePromisified(query2)
+                        let result2 = await db.statementExecPromisified(statement2, [])
+                        if (result2.length == 0) {
+                            let createdat = new Date().toISOString();
+                            let createdby = "admin";
+                            let modifiedby = "admin";
+                            let modifiedat = new Date().toISOString();
+                            let ID = uuid();
+                            query4 = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
+	                    '${createdat}',
+	                    '${createdby}',
+	                    '${modifiedat}',
+	                    '${modifiedby}',
+                        '${ID}'/*ID <NVARCHAR(36)>*/,
+                        '${USERID}',
+	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
+                        '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
+                        '${USERTYPE}'
+                        )`
+                            console.log(query4)
+                            let statement4 = await db.preparePromisified(query4)
+                            let result4 = await db.statementExecPromisified(statement4, [])
+                            resolve(result4)
+                        } else {
+                            resolve("founduserid")
+                        }
+                    } else {
+                        resolve("foundemail");
+                    }
                 }
+
             } catch (error) {
                 reject(error);
             }

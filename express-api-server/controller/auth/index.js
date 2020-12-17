@@ -16,17 +16,21 @@ module.exports = {
                 logger,
                 db
             });
+
             if (response == "incorrectuser") {
                 res.type("application/json").status(200).send({
                     status: "200",
                     result: "Incorrect Username"
                 });
-            } else if (response == "incorrectpassword") {
+            }
+            if (response == "incorrectpassword") {
                 res.type("application/json").status(200).send({
                     status: "200",
                     result: "Incorrect password"
                 });
-            } else if (response) {
+            }
+
+            if (response) {
                 const token = JWT.sign({
                         iss: "steppingcloudforuser",
                         sub: response[0].USER_ID,
@@ -46,7 +50,7 @@ module.exports = {
                 });
             } else {
                 req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
-                res.type("text/plain").status(200).send({
+                res.type("application/json").status(200).send({
                     status: "500",
                     result: "Error"
 
@@ -56,7 +60,7 @@ module.exports = {
             }
         } catch (error) {
             req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
-            res.type("text/plain").status(500).send({
+            res.type("application/json").status(500).send({
                 status: "500",
                 error: error
             });
@@ -73,36 +77,42 @@ module.exports = {
                 logger,
                 db
             });
+            console.log(response)
 
             if (response == "foundemail") {
                 res.type("application/json").status(200).send({
                     status: "200",
                     result: "Email already exists"
                 });
-            } else if (response == "founduserid") {
+            }
+            if (response == "founduserid") {
                 res.type("application/json").status(200).send({
                     status: "200",
                     result: "UserId already exists"
                 });
-            } else if (response == "notalumni") {
+            }
+            if (response == "notalumni") {
                 res.type("application/json").status(200).send({
                     status: "200",
                     result: "User is not an Alumni"
                 });
+            }
+            if (response == "onlyhrsandadmins") {
+                res.type("application/json").status(200).send({
+                    status: "401",
+                    result: "Only admin and hr users allowed"
+                });
+            } else if (response == "nothr") {
+                res.type("application/json").status(200).send({
+                    status: "401",
+                    result: "Hr not recognised in the database. Admin add hr action required"
+                })
             } else {
-
                 res.type("application/json").status(200).send({
                     status: "200",
                     result: response
                 });
             }
-            // } else {
-            // 	res.type("text/plain").status(200).send({
-            // 		status: "500",
-            // 		result: "Error"
-            // 	});
-
-
 
         } catch (error) {
             req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/signup ${error}`);
