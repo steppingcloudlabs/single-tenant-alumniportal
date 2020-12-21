@@ -1,0 +1,11 @@
+COLUMN TABLE sclabs_alumniportal_messages_messages (
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID NVARCHAR(36) NOT NULL,
+  usertype NVARCHAR(5000),
+  message NVARCHAR(5000),
+  ticketid NVARCHAR(36),
+  PRIMARY KEY(ID)
+)

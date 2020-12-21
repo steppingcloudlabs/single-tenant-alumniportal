@@ -1,23 +1,38 @@
 /* eslint-disable */
 const searchService = require("../../service/search")();
 const dbClass = require("sap-hdbext-promisfied");
-
+const utils = require("../../utils/database/index")();
 module.exports = {
 	user: async (req, res) => {
 		try {
 			const payload = req.query;
-			console.log(payload)
 			let db = new dbClass(req.db);
 			let response = await searchService.searchUser({
 				payload,
 				db
 			});
 			if (response) {
-				if (response.length == 0) response = response
-				
+				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				tablename = "SCLABS_ALUMNIPORTAL_NEWS_NEWS"
+				const schema = await utils.currentSchema({
+					db
+				})
+
+				let pagecount = await utils.getPageCount({
+					schema,
+					tablename,
+					db
+				})
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': LIMIT,
+					'OFFSET': OFFSET
+				}
 				res.status(200).send({
 					status: "200",
 					result: response,
+					pagination: paginationobject
 				});
 			} else {
 				res.status(400).send({
@@ -26,6 +41,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/search/user ${error}`);
 			res.status(400).send({
 				status: "400",
 				result: error
@@ -42,11 +58,27 @@ module.exports = {
 			});
 
 			if (response) {
-				if (response.length == 0) response = response
-				
+				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				tablename = "SCLABS_ALUMNIPORTAL_SKILLS_SKILLS"
+				const schema = await utils.currentSchema({
+					db
+				})
+
+				let pagecount = await utils.getPageCount({
+					schema,
+					tablename,
+					db
+				})
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': LIMIT,
+					'OFFSET': OFFSET
+				}
 				res.status(200).send({
 					status: "200",
 					result: response,
+					pagination: paginationobject
 				});
 			} else {
 				res.status(200).send({
@@ -55,6 +87,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/search/skill ${error}`);
 			res.status(200).send({
 				status: "400",
 				result: error
@@ -71,8 +104,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) response = response
-				
+
 				res.status(200).send({
 					status: "200",
 					result: response,
@@ -100,11 +132,27 @@ module.exports = {
 				db
 			});
 			if (response) {
-				if (response.length == 0) response = response
-				
+				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				tablename = "SCLABS_ALUMNIPORTAL_JOB_JOB"
+				const schema = await utils.currentSchema({
+					db
+				})
+
+				let pagecount = await utils.getPageCount({
+					schema,
+					tablename,
+					db
+				})
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': LIMIT,
+					'OFFSET': OFFSET
+				}
 				res.status(200).send({
 					status: "200",
 					result: response,
+					pagination: paginationobject
 				});
 			} else {
 				res.status(400).send({
@@ -113,6 +161,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/search/job ${error}`);
 			res.status(400).send({
 				status: "400",
 				result: error

@@ -1,0 +1,19 @@
+COLUMN TABLE SCLABS_ALUMNIPORTAL_JOB_JOB (
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID NVARCHAR(36) NOT NULL,
+  boardId NVARCHAR(5000),
+  country NVARCHAR(5000),
+  department NVARCHAR(5000),
+  jobDescription NVARCHAR(5000),
+  jobPostingId NVARCHAR(5000),
+  jobReqId NVARCHAR(5000),
+  jobTitle NVARCHAR(5000),
+  location NVARCHAR(5000),
+  postingStatus NVARCHAR(5000),
+  postingstartdate NVARCHAR(5000),
+  postingenddate NVARCHAR(5000),
+  PRIMARY KEY(ID)
+)

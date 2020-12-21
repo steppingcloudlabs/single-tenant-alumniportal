@@ -1,0 +1,14 @@
+COLUMN TABLE sclabs_alumniportal_ticket_ticket (
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID NVARCHAR(36) NOT NULL,
+  userid NVARCHAR(5000),
+  title NVARCHAR(5000),
+  esclation BOOLEAN,
+  resolved BOOLEAN,
+  esclatationmanager NVARCHAR(5000),
+  date NVARCHAR(5000),
+  PRIMARY KEY(ID)
+)

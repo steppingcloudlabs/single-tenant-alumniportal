@@ -17,10 +17,10 @@
 				console.log(response)
 				if (response) {
 					if (response.length == 0) response = response
-					
-					const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+
+					const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 					const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
-					tablename = "SCLABS_ALUMNIPORTAL_NEWS_NEWS"
+					tablename = "SCLABS_ALUMNIPORTAL_USERS_USERS"
 					const schema = await utils.currentSchema({
 						db
 					})
@@ -156,7 +156,7 @@
 				});
 				if (response) {
 					if (response.length == 0) response = response
-					
+
 					const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
 					const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 					tablename = "SCLABS_ALUMNIPORTAL_FAQ_FAQ"
@@ -285,7 +285,7 @@
 				});
 				if (response) {
 					if (response.length == 0) response = response
-					
+
 					const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
 					const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 					tablename = "SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"

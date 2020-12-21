@@ -5,7 +5,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({
 					db
@@ -33,7 +33,7 @@ module.exports = () => {
 						A1."LINKEDIN",
 						A2."SKILL" as skill FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
 						ON A1."SKILL_ID" = A2."ID"
-						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.query}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
+						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const obj = await db.statementExecPromisified(statement, [])
 				var results = [];
@@ -62,7 +62,7 @@ module.exports = () => {
 					results = obj[0];
 					a[0] = obj[0].SKILL;
 					results.SKILL = a
-				} 
+				}
 				resolve(results);
 			} catch (error) {
 				reject(error);
@@ -74,7 +74,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({
 					db
@@ -82,7 +82,7 @@ module.exports = () => {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
-					`SELECT ID, SKILL FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE CONTAINS ((SKILL),'${payload.query}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
+					`SELECT ID, SKILL FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE CONTAINS ((SKILL),'${payload.QUERY}', FUZZY(0.2)) LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				console.log(results)
@@ -97,7 +97,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({
 					db
@@ -124,7 +124,7 @@ module.exports = () => {
 						A1."DESIGNATION_JOB_INFORMATION",
 						A1."LINKEDIN",
 						FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" as A1 
-						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.query}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
+						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
 				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
@@ -139,7 +139,7 @@ module.exports = () => {
 		payload,
 		db
 	}) => {
-		return new Promise(async(resolve, reject) => {
+		return new Promise(async (resolve, reject) => {
 			try {
 				const schema = await utils.currentSchema({
 					db
@@ -147,7 +147,7 @@ module.exports = () => {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
-					`SELECT* FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS ((REQUISITION_ID,TITLE,JOB_ROLE,JOB_DETAILS,COUNTRY_OF_RESIDENCE,CITY),'${payload.query}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS ((jobTitle,location,jobDescription),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
 				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
