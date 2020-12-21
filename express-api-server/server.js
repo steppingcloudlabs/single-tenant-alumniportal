@@ -7,9 +7,9 @@
   const xsenv = require("@sap/xsenv");
   const xssec = require("@sap/xssec");
   const xsHDBConn = require("@sap/hdbext");
-  const JWTtoken = require("./middleware/JWTtoken/tokenchecks")()
   const passport = require("passport");
   const admintokenchecker = require('./middleware/JWTtoken/admintokencheck')
+  const usertokenchecker = require('./middleware/JWTtoken/tokenchecks')
   const port = process.env.PORT || 3000;
 
   //Initialize Express App for XS UAA and HDBEXT Middleware
@@ -157,13 +157,13 @@
   const usernefRoutes = require("./router/nef");
   const askhruserroutes = require("./router/askhr/indexuser.js")
   app.use("/user/auth", userauthRoutes);
-  app.use("/user/action", userskillsRoutes);
-  app.use("/user/action", userjobRoutes);
-  app.use("/user/action", usernefRoutes);
-  app.use("/user/action", userdocumentRoutes);
-  app.use("/user/action", useractionRoutes);
-  app.use("/user/action/askhr", askhruserroutes);
-  app.use("/user/action/search", searchRoutes);
+  app.use("/user/action", usertokenchecker, userskillsRoutes);
+  app.use("/user/action", usertokenchecker, userjobRoutes);
+  app.use("/user/action", usertokenchecker, usernefRoutes);
+  app.use("/user/action", usertokenchecker, userdocumentRoutes);
+  app.use("/user/action", usertokenchecker, useractionRoutes);
+  app.use("/user/action/askhr", usertokenchecker, askhruserroutes);
+  app.use("/user/action/search", usertokenchecker, searchRoutes);
   app.listen(port, () => {
     console.log(`Server listening on port: ${port}`);
   });
