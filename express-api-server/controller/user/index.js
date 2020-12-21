@@ -24,7 +24,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
-			res.type("text/plain").status(500).send({
+			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
 			});
@@ -53,7 +53,7 @@ module.exports = {
 			}
 		} catch (error) {
 			req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/updateprofile ${error}`);
-			res.type("text/plain").status(500).send({
+			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
 			});
@@ -79,7 +79,7 @@ module.exports = {
 				});
 			}
 		} catch (error) {
-			res.type("text/plain").status(500).send({
+			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
 			});

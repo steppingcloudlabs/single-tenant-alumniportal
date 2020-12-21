@@ -1,0 +1,81 @@
+2020-12-21 15:51:54,797:INFO:first_logger:Intilializing the driver to get the url
+2020-12-21 15:51:54,797:INFO:first_logger:Intilializing the driver to get the url
+2020-12-21 15:51:54,797:INFO:first_logger:Intilializing the driver to get the url
+2020-12-21 15:52:02,382:INFO:first_logger:Validating Credentials in the website
+2020-12-21 15:52:02,382:INFO:first_logger:Validating Credentials in the website
+2020-12-21 15:52:02,382:INFO:first_logger:Validating Credentials in the website
+2020-12-21 15:52:02,709:INFO:first_logger:Lets go to login page
+2020-12-21 15:52:02,709:INFO:first_logger:Lets go to login page
+2020-12-21 15:52:02,709:INFO:first_logger:Lets go to login page
+2020-12-21 15:52:58,470:INFO:first_logger:Moving to the document generation
+2020-12-21 15:52:58,470:INFO:first_logger:Moving to the document generation
+2020-12-21 15:52:58,470:INFO:first_logger:Moving to the document generation
+2020-12-21 15:52:58,480:ERROR:first_logger:An unexpected error occurred
+Traceback (most recent call last):
+  File "<ipython-input-1-3a825dc7eb97>", line 86, in login
+    navigate_users(logger, doc_logger)
+NameError: name 'navigate_users' is not defined
+2020-12-21 15:52:58,480:ERROR:first_logger:An unexpected error occurred
+Traceback (most recent call last):
+  File "<ipython-input-1-3a825dc7eb97>", line 86, in login
+    navigate_users(logger, doc_logger)
+NameError: name 'navigate_users' is not defined
+2020-12-21 15:52:58,480:ERROR:first_logger:An unexpected error occurred
+Traceback (most recent call last):
+  File "<ipython-input-1-3a825dc7eb97>", line 86, in login
+    navigate_users(logger, doc_logger)
+NameError: name 'navigate_users' is not defined
+2020-12-21 15:53:24,370:INFO:first_logger:Intilializing the driver to get the url
+2020-12-21 15:53:24,370:INFO:first_logger:Intilializing the driver to get the url
+2020-12-21 15:53:24,370:INFO:first_logger:Intilializing the driver to get the url
+2020-12-21 15:53:36,397:ERROR:first_logger:Login Failed
+Traceback (most recent call last):
+  File "<ipython-input-8-f0bdd051f829>", line 4, in login
+    driver.get(url)
+  File "C:\Users\akash\anaconda3\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 333, in get
+    self.execute(Command.GET, {'url': url})
+  File "C:\Users\akash\anaconda3\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\akash\anaconda3\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: chrome not reachable
+  (Session info: chrome=87.0.4280.88)
+
+2020-12-21 15:53:36,397:ERROR:first_logger:Login Failed
+Traceback (most recent call last):
+  File "<ipython-input-8-f0bdd051f829>", line 4, in login
+    driver.get(url)
+  File "C:\Users\akash\anaconda3\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 333, in get
+    self.execute(Command.GET, {'url': url})
+  File "C:\Users\akash\anaconda3\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\akash\anaconda3\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: chrome not reachable
+  (Session info: chrome=87.0.4280.88)
+
+2020-12-21 15:53:36,397:ERROR:first_logger:Login Failed
+Traceback (most recent call last):
+  File "<ipython-input-8-f0bdd051f829>", line 4, in login
+    driver.get(url)
+  File "C:\Users\akash\anaconda3\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 333, in get
+    self.execute(Command.GET, {'url': url})
+  File "C:\Users\akash\anaconda3\lib\site-packages\selenium\webdriver\remote\webdriver.py", line 321, in execute
+    self.error_handler.check_response(response)
+  File "C:\Users\akash\anaconda3\lib\site-packages\selenium\webdriver\remote\errorhandler.py", line 242, in check_response
+    raise exception_class(message, screen, stacktrace)
+selenium.common.exceptions.WebDriverException: Message: chrome not reachable
+  (Session info: chrome=87.0.4280.88)
+
+2020-12-21 15:54:58,155:INFO:first_logger:Intilializing the driver to get the url
+2020-12-21 15:54:58,155:INFO:first_logger:Intilializing the driver to get the url
+2020-12-21 15:54:58,155:INFO:first_logger:Intilializing the driver to get the url
+2020-12-21 15:55:06,700:INFO:first_logger:Validating Credentials in the website
+2020-12-21 15:55:06,700:INFO:first_logger:Validating Credentials in the website
+2020-12-21 15:55:06,700:INFO:first_logger:Validating Credentials in the website
+2020-12-21 15:55:07,077:INFO:first_logger:Lets go to login page
+2020-12-21 15:55:07,077:INFO:first_logger:Lets go to login page
+2020-12-21 15:55:07,077:INFO:first_logger:Lets go to login page
+2020-12-21 15:55:47,710:INFO:first_logger:Moving to the document generation
+2020-12-21 15:55:47,710:INFO:first_logger:Moving to the document generation
+2020-12-21 15:55:47,710:INFO:first_logger:Moving to the document generation

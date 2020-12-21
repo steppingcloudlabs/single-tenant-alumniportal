@@ -17,14 +17,14 @@ module.exports = {
 					result: response
 				});
 			} else {
-				res.type("text/plain").status(200).send({
+				res.type("application/json").status(200).send({
 					status: "500",
 					result: "Error"
 
 				});
 			}
 		} catch (error) {
-			res.type("text/plain").status(500).send({
+			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
 			});
@@ -45,7 +45,7 @@ module.exports = {
 					result: response
 				});
 			} else {
-				res.type("text/plain").status(200).send({
+				res.type("application/json").status(200).send({
 					status: "500",
 					result: "Error"
 				});
@@ -53,7 +53,7 @@ module.exports = {
 			}
 
 		} catch (error) {
-			res.type("text/plain").status(500).send({
+			res.type("application/json").status(500).send({
 				status: "500",
 				error: error
 			});
@@ -123,7 +123,7 @@ module.exports = {
 					result: response
 				});
 			} else {
-				res.type("text/plain").status(200).send({
+				res.type("application/json").status(200).send({
 					status: "500",
 					result: "Error"
 				});

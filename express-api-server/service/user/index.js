@@ -40,15 +40,21 @@ module.exports = () => {
 				console.log(obj)
 				var results = [];
 				var a = [];
-				results = obj[0];
-				if (1 < obj.length) {
-					for (var i = 0; i < obj.length; i++) {
-						a[i] = obj[i].SKILL;
-					}
+				if (obj[0].SKILL == null) {
+					results = obj[0];
+					results.SKILL = a;
 				} else {
-					a[0] = obj[0].SKILL;
+					results = obj[0];
+					if (1 < obj.length) {
+						for (var i = 0; i < obj.length; i++) {
+							a[i] = obj[i].SKILL;
+						}
+					} else {
+						a[0] = obj[0].SKILL;
+					}
+					results.SKILL = a;
 				}
-				results.SKILL = a;
+
 				resolve(results);
 			} catch (error) {
 				reject(error);

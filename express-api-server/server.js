@@ -96,7 +96,7 @@
       })
       return res.type("application/json").status(200).send(result)
     } catch (e) {
-      return res.type("text/plain").status(500).send(`ERROR: ${e.toString()}`)
+      return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
     }
   });
 
