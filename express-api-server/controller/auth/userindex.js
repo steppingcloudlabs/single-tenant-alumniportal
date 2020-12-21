@@ -41,7 +41,7 @@ module.exports = {
 					JWT_SECRET
 				);
 				if (response.length == 0) response = response
-				
+				else if (response[0].SKILL == null) response[0].SKILL = []
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response,

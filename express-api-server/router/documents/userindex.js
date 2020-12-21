@@ -1,5 +1,5 @@
 const expressrouter = require("express").Router();
-const documentcontroller = require("../../controller/nef/index");
+const documentcontroller = require("../../controller/documents/index");
 //document routers
 expressrouter
 	.route("/document/get")
