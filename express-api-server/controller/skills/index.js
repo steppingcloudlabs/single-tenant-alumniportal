@@ -71,7 +71,7 @@ module.exports = {
 			console.log(response)
 			if (response) {
 				if (response.length == 0) response = response
-				else response = response.length > 1 ? response : response[0];
+				
 				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_SKILLS_SKILLS"
