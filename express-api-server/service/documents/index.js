@@ -150,19 +150,19 @@ module.exports = () => {
 				const results = await db.statementExecPromisified(statement, [])
 				console.log(results)
 				const result = {}
-				result['form16'] = 'Not Available'
-				result['firstmonthsalary'] = 'Not Available'
-				result['secondmonthsalary'] = 'Not Available'
-				result['thirdmonthsalary'] = 'Not Available'
+				result['FORM16'] = 'Not Available'
+				result['FIRSTMONTHSALARY'] = 'Not Available'
+				result['SECONDMONTHSALARY'] = 'Not Available'
+				result['THIRDMONTHSALARY'] = 'Not Available'
 				for (let i = 0; i < results.length; i++) {
 					if (results[i].FILENAME == 'form16') {
-						result['form16'] = 'Available'
+						result['FORM16'] = 'Available'
 					} else if (results[i].FILENAME == 'firstmonthsalary') {
-						result['firstmonthsalary'] = 'Available'
+						result['FIRSTMONTHSALARY'] = 'Available'
 					} else if (results[i].FILENAME == 'secondmonthsalary') {
-						result['secondmonthsalary'] = 'Available'
+						result['SECONDMONTHSALARY'] = 'Available'
 					} else if (results[i].FILENAME == 'thirdmonthsalary') {
-						result['thirdmonthsalary'] = 'Available'
+						result['THIRDMONTHSALARY'] = 'Available'
 					}
 				}
 				resolve(result);
