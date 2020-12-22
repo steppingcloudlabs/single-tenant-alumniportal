@@ -22,7 +22,7 @@ module.exports = () => {
 						"MIDDLE_NAME_PERSONAL_INFORMATION",
 						"SALUTATION_PERSONAL_INFORMATION",
 						"CITY_ADDRESSES",
-						"LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
+						IFNULL(LINKEDIN, '') "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const obj = await db.statementExecPromisified(statement, [])
 				resolve(obj)
@@ -161,7 +161,13 @@ module.exports = () => {
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				let country = payload.COUNTRY == undefined ? "" : payload.COUNTRY
 				const query =
-					`SELECT "ID", "USER_ID","CITY_ADDRESSES" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows LIMIT ${LIMIT} offset ${offset}`
+					`SELECT 
+					"ID",
+					"USER_ID",
+					"CITY_ADDRESSES",
+					IFNULL(STATE, '') "STATE",
+					IFNULL(COUNTRY, '') "COUNTRY"
+					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" rows LIMIT ${LIMIT} offset ${offset}`
 				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
