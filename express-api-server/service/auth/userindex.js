@@ -153,7 +153,10 @@ module.exports = () => {
 									'${result3[0].DESIGNATION_JOB_INFORMATION}',
 									'',
 									'',
-									'${userType}'
+									'${userType}',
+									'',
+									'',
+									''
                                     ) `
 
 							const statement5 = await db.preparePromisified(query5)

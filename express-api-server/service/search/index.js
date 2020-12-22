@@ -110,7 +110,9 @@ module.exports = () => {
 						A1."SALUTATION_PERSONAL_INFORMATION",
 						A1."CITY_ADDRESSES"
 						A1."LINKEDIN",
-						FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" as A1 
+						FROM "${schema}".
+						"SCLABS_ALUMNIPORTAL_USERS_USERS"
+						as A1
 						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
 				console.log(query)
 				const statement = await db.preparePromisified(query)
