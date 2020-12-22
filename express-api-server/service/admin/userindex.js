@@ -3,7 +3,6 @@ const utils = require("../../utils/database/index.js")();
 module.exports = () => {
 	const getuser = ({
 		payload,
-		logger,
 		db
 	}) => {
 		return new Promise(async (resolve, reject) => {
@@ -15,7 +14,8 @@ module.exports = () => {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const statement = await db.preparePromisified(
-					`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows LIMIT ${LIMIT} offset ${offset}`
+					`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION", IFNULL(STATE, '') "STATE",
+					IFNULL(COUNTRY, '') "COUNTRY" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows LIMIT ${LIMIT} offset ${offset}`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -49,7 +49,9 @@ module.exports = () => {
 					MANAGER_JOB_INFORMATION,
 					DESIGNATION_JOB_INFORMATION,
 					GENDER,
-					DATE_OF_BIRTH
+					DATE_OF_BIRTH,
+					STATE,
+					COUNTRY
 				} = payload.payload;
 				DATE_OF_RELIEVING = DATE_OF_RELIEVING == undefined ? " " : Date.parse(DATE_OF_RELIEVING);
 				USER_ID = USER_ID == undefined ? " " : USER_ID;
@@ -110,7 +112,9 @@ module.exports = () => {
 						'${CITY_ADDRESSES}',
 						'${PHONE_NUMBER_PHONE_INFORMATION}',
 						'${MANAGER_JOB_INFORMATION}',
-						'${DESIGNATION_JOB_INFORMATION}'
+						'${DESIGNATION_JOB_INFORMATION}',
+						'${STATE}',
+						'${COUNTRY}'
 						)`
 
 					const statement = await db.preparePromisified(query)

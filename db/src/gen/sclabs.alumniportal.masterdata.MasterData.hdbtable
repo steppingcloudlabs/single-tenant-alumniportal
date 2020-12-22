@@ -20,5 +20,7 @@ COLUMN TABLE sclabs_alumniportal_masterdata_MasterData (
   phone_number_phone_information NVARCHAR(5000),
   manager_job_information NVARCHAR(5000),
   designation_job_information NVARCHAR(5000),
+  state NVARCHAR(5000),
+  country NVARCHAR(5000),
   PRIMARY KEY(ID)
 )

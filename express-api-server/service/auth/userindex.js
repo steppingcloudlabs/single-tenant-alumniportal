@@ -53,8 +53,8 @@ module.exports = () => {
 							A1."NATIONALITY_PERSONAL_INFORMATION",
 							IFNULL(A1.CITY_ADDRESSES,'') "CITY_ADDRESSES",
 							IFNULL(A1.PHONE_NUMBER_PHONE_INFORMATION, '') "PHONE_NUMBER_PHONE_INFORMATION",
-							IFNULL(A1.MANAGER_JOB_INFORMATION, '') "A1.MANAGER_JOB_INFORMATION",
-							IFNULL(A1.DESIGNATION_JOB_INFORMATION, '') "A1.DESIGNATION_JOB_INFORMATION",
+							IFNULL(A1.MANAGER_JOB_INFORMATION, '') "MANAGER_JOB_INFORMATION",
+							IFNULL(A1.DESIGNATION_JOB_INFORMATION, '') "DESIGNATION_JOB_INFORMATION",
 							IFNULL(A1.SKILL_ID, '') "SKILL_ID", 
 							IFNULL(A1.LINKEDIN, '') "LINKEDIN",
 							IFNULL(A1.USERTYPE, '') "USERTYPE", 
@@ -153,8 +153,8 @@ module.exports = () => {
 									'',
 									'${userType}',
 									'',
-									'',
-									''
+									'${result3[0].STATE}',
+									'${result3[0].COUNTRY}'
                                     ) `
 
 							const statement5 = await db.preparePromisified(query5)
