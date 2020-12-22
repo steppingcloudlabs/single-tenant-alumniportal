@@ -21,4 +21,9 @@ expressrouter
 	.route("/job")
 	.get((req, res, next) => searchContoller.job(req, res, next));
 
+// For map 
+expressrouter
+	.route("/maps/userids/get")
+	.get((req, res, next) => searchContoller.userids(req, res, next));
+
 module.exports = expressrouter;
