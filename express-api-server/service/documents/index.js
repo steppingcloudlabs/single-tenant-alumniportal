@@ -22,7 +22,8 @@ module.exports = () => {
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 
 				const statement = await db.preparePromisified(
-					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "USERID"='${payload.USERID}'`
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" where "USERID"='${payload.USERID}'
+					 AND "FILENAME"='${payload.FILENAME}'`
 				)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
