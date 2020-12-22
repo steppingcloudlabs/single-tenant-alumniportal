@@ -36,34 +36,39 @@ module.exports = () => {
 						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const obj = await db.statementExecPromisified(statement, [])
-				var results = [];
-				var l = obj.length;
-				var a = [];
-				var g = 0;
-				if (1 < l) {
-					for (var i = 0; i < l; i++) {
-						results[i] = obj[i];
-						a[g] = obj[i].SKILL;
-						for (var j = (i + 1); j < l; j++) {
-							if (results[i].USER_ID == obj[j].USER_ID) {
-								a[++g] = obj[j].SKILL;
-								for (var k = j; k < (l - 1); k++) {
-									obj[k] = obj[k + 1];
-								}
-								l = l - 1;
-								obj.length = l;
-							}
-						}
-						results[i].SKILL = a;
-						g = 0;
-						a = [];
-					}
+				if (obj.length == 0) {
+					resolve(obj)
 				} else {
-					results = obj[0];
-					a[0] = obj[0].SKILL;
-					results.SKILL = a
+					var results = [];
+					var l = obj.length;
+					var a = [];
+					var g = 0;
+					if (1 < l) {
+						for (var i = 0; i < l; i++) {
+							results[i] = obj[i];
+							a[g] = obj[i].SKILL;
+							for (var j = (i + 1); j < l; j++) {
+								if (results[i].USER_ID == obj[j].USER_ID) {
+									a[++g] = obj[j].SKILL;
+									for (var k = j; k < (l - 1); k++) {
+										obj[k] = obj[k + 1];
+									}
+									l = l - 1;
+									obj.length = l;
+								}
+							}
+							results[i].SKILL = a;
+							g = 0;
+							a = [];
+						}
+					} else {
+						results = obj[0];
+						a[0] = obj[0].SKILL;
+						results.SKILL = a
+					}
+					resolve(results);
 				}
-				resolve(results);
+
 			} catch (error) {
 				reject(error);
 			}
