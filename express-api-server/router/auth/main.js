@@ -1,5 +1,6 @@
 const expressrouter = require("express").Router();
-const authcontroller = require("../../controller/auth/main.js");
+const authcontroller = require("../../controller/auth/main");
+
 const {
     signupValidateBody,
     signupSchemas,

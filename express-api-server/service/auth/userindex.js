@@ -60,7 +60,7 @@ module.exports = () => {
 							IFNULL(A1.USERTYPE, '') "USERTYPE", 
 							IFNULL(A1.PROFILEIMAGE, '') "PROFILEIMAGE",
 							IFNULL(A1.STATE, '') "STATE", 
-							IFNULL(A1.COUNTRY, '') "COUNTRY",
+							IFNULL(A1.COUNTRY, '') "COUNTRY"
 						    FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1  
 							where A1."USER_ID" = '${USERID}'`
 						const statement4 = await db.preparePromisified(query4)

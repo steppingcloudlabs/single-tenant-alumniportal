@@ -124,6 +124,9 @@
     }
   });
 
+  const auth = require('./router/auth/index');
+  app.use("/auth", auth);
+
   // ADMIN ROUTES 
   const adminskillsRoutes = require("./router/skills");
   const adminjobRoutes = require("./router/job");
