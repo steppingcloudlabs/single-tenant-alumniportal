@@ -106,6 +106,10 @@ module.exports = () => {
 								WHEN '${payload.payload.COUNTRY}' != 'undefined' THEN '${payload.payload.COUNTRY}'
 								ELSE (select "COUNTRY" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "USER_ID"='${payload.payload.USERID}')
 								END,
+						"SKILL_ID" = CASE
+								WHEN '${payload.payload.SKILL}' != 'undefined' THEN '${payload.payload.SKILL}'
+								ELSE (select "SKILL_ID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "USER_ID"='${payload.payload.USERID}')
+								END,
 						"LINKEDIN" = CASE
 								WHEN '${payload.payload.LINKEDIN}' != 'undefined' THEN '${payload.payload.LINKEDIN}'
 								ELSE(select "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" where "USER_ID" = '${payload.payload.USERID}')

@@ -143,7 +143,7 @@
   app.use("/admin/action", admintokenchecker, adminnefRoutes);
   app.use("/admin/action", admintokenchecker, adminuseractionRoutes)
   app.use("/admin/action", admintokenchecker, admindocumentRoutes);
-  app.use("/admin/action/search", admintokenchecker, searchRoutes);
+  app.use("/search", admintokenchecker, searchRoutes);
   app.use("/admin/action", admintokenchecker, successfactorsRoutes)
   app.use("/admin/action/askhr", admintokenchecker, askhradminroutes)
   //USER ROUTES
