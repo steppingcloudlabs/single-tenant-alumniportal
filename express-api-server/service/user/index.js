@@ -1,5 +1,6 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
+const skillservice = require("../skills/index.js")();
 // const currentSchema = require("../../utils/database/index.js")();
 module.exports = () => {
 	const getprofile = ({
@@ -35,14 +36,12 @@ module.exports = () => {
 					IFNULL(A1.USERTYPE, '') "USERTYPE", 
 					IFNULL(A1.PROFILEIMAGE, '') "PROFILEIMAGE",
 					IFNULL(A1.STATE, '') "STATE", 
-					IFNULL(A1.COUNTRY, '') "COUNTRY",
-					IFNULL(A2.SKILL, '') as skill
+					IFNULL(A1.COUNTRY, '') "COUNTRY"
 					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
-					LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 
-					ON A1."SKILL_ID" = A2."ID" where A1."USER_ID" = '${userid}';`
+				    where A1."USER_ID" = '${userid}';`
 				const statement = await db.preparePromisified(query)
-				const obj = await db.statementExecPromisified(statement, [])
-				console.log(obj)
+				let obj = await db.statementExecPromisified(statement, [])
+			/* 	console.log(obj)
 				var results = [];
 				var a = [];
 				if (obj[0].SKILL == "") {
@@ -59,9 +58,12 @@ module.exports = () => {
 					}
 					results.SKILL = a;
 				}
-
-				resolve(results);
+ */
+				let response = await skillservice.getskills({payload,db})
+			    obj[0].SKILL = response
+				resolve(obj);
 			} catch (error) {
+
 				reject(error);
 			}
 		});

@@ -12,23 +12,25 @@ module.exports = () => {
 					db
 				})
 				// TODO: add pagination using [to, from] clauses in statement.
-				let skill = payload.skill;
+				let skill = payload.SKILL;
+				let userid = payload.USERID;
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				if (skill) {
+				 
 					const query =
-						`SELECT "ID", "SKILL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE SKILL = '${skill}'`
+						`SELECT "ID", "SKILL", "USERID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE USERID = '${userid}'`
 					const statement = await db.preparePromisified(query)
 					const results = await db.statementExecPromisified(statement, [])
 					resolve(results);
-				} else {
-					const query =
-						`SELECT "ID", "SKILL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" rows LIMIT ${LIMIT} offset ${offset}`
-					const statement = await db.preparePromisified(query)
-					const results = await db.statementExecPromisified(statement, [])
-					resolve(results);
+				
+				// } else {
+				// 	const query =
+				// 		`SELECT "ID", "SKILL","USERID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" rows LIMIT ${LIMIT} offset ${offset}`
+				// 	const statement = await db.preparePromisified(query)
+				// 	const results = await db.statementExecPromisified(statement, [])
+				// 	resolve(results);
 
-				}
+				// }
 			} catch (error) {
 				reject(error);
 			}
@@ -52,6 +54,7 @@ module.exports = () => {
 				const modifiedat = new Date().toISOString();
 				const ID = uuid();
 				const skill = payload.payload.SKILL;
+				const userid = payload.payload.USERID;
 				const query =
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" VALUES(	
 				        '${createdat}',
@@ -59,6 +62,7 @@ module.exports = () => {
 						'${modifiedat}',
 						'${modifiedby}',
 						'${ID}',
+						'${userid}',
 						'${skill}')`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])

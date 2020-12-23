@@ -61,8 +61,8 @@ module.exports = () => {
 							IFNULL(A1.PROFILEIMAGE, '') "PROFILEIMAGE",
 							IFNULL(A1.STATE, '') "STATE", 
 							IFNULL(A1.COUNTRY, '') "COUNTRY",
-							A2."SKILL" as skill FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1  
-							LEFT JOIN  "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" as A2 ON A1."SKILL_ID" = A2."ID" where A1."USER_ID" = '${USERID}'`
+						    FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1  
+							where A1."USER_ID" = '${USERID}'`
 						const statement4 = await db.preparePromisified(query4)
 						let obj = await db.statementExecPromisified(statement4, [])
 
