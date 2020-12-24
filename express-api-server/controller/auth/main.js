@@ -55,7 +55,7 @@ module.exports = {
                             jwtKey: "steppingcloudsecret",
                             algorithm: "HS256",
                             iat: new Date().getTime(),
-                            exp: new Date().setTime(new Date().getTime() + 900000),
+                            exp: new Date().setTime(new Date().getTime() + 900000000),
                         },
                         JWT_SECRET
                     )
