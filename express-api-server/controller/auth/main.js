@@ -130,7 +130,11 @@ module.exports = {
     },
     signup: async (req, res) => {
         try {
-            let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" where USER_ID='${USERID}'`
+            let db = new dbClass(req.db);
+            let schema = await utils.currentSchema({
+                db
+            });
+            let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" where USER_ID='${req.body.USERID}'`
             let statement = await db.preparePromisified(query)
             let result = await db.statementExecPromisified(statement, [])
             let payload = req.body;
@@ -139,7 +143,7 @@ module.exports = {
                     const payload = req.body;
                     const logger = req.logger;
                     let db = new dbClass(req.db);
-                    let response = await authserivce.signup({
+                    let response = await adminauthserivce.signup({
                         payload,
                         logger,
                         db
@@ -193,7 +197,7 @@ module.exports = {
                     const payload = req.body;
                     const logger = req.logger;
                     let db = new dbClass(req.db);
-                    let response = await authserivce.signup({
+                    let response = await userauthserivce.signup({
                         payload,
                         logger,
                         db
