@@ -49,8 +49,15 @@ module.exports = () => {
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
 				const ID = uuid();
-				const query =
-					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" VALUES(
+				if (payload.payload.ID) {
+					const result = await updatenews({
+						payload,
+						db
+					});
+					resolve(result)
+				} else {
+					const query =
+						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" VALUES(
 						'${createdat}',
 						'${createdby}',
 						'${modifiedat}',
@@ -61,10 +68,12 @@ module.exports = () => {
 						'${payload.payload.PHOTO}',
 						'${payload.payload.DATE}'
 						)`
-				const statement = await db.preparePromisified(query)
-				const results = await db.statementExecPromisified(statement, [])
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
 
-				resolve(results);
+					resolve(results);
+				}
+
 			} catch (error) {
 				reject(error);
 			}
