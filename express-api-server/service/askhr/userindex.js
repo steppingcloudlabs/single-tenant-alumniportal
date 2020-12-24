@@ -231,7 +231,7 @@ module.exports = () => {
                 const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
                 const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
                 const query =
-                    `SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID = '${TICKETID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
+                    `SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID = '${TICKETID}' ORDER BY MODIFIEDAT ASC LIMIT ${LIMIT} offset ${offset}`
                 console.log(query)
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
