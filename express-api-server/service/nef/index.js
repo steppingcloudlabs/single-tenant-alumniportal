@@ -187,16 +187,24 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const createdat = new Date().toISOString().split('T')[0];
-				const createdby = "admin";
-				const modifiedby = "admin";
-				const modifiedat = new Date().toISOString().split('T')[0];
-				const ID = uuid();
-				const query =
-					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${ID}', '${payload.payload.QUESTION}', '${payload.payload.ANSWER}')`
-				const statement = await db.preparePromisified(query)
-				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				if (payload.payload.ID) {
+					const result = await updatefaq({
+						payload,
+						db
+					});
+					resolve(result)
+				} else {
+					const createdat = new Date().toISOString().split('T')[0];
+					const createdby = "admin";
+					const modifiedby = "admin";
+					const modifiedat = new Date().toISOString().split('T')[0];
+					const ID = uuid();
+					const query =
+						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${ID}', '${payload.payload.QUESTION}', '${payload.payload.ANSWER}')`
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
+					resolve(results);
+				}
 			} catch (error) {
 				reject(error);
 			}
@@ -302,8 +310,15 @@ module.exports = () => {
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
 				const ID = uuid();
-				const query =
-					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" VALUES(
+				if (payload.payload.ID) {
+					const result = await updateevent({
+						payload,
+						db
+					});
+					resolve(result)
+				} else {
+					const query =
+						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" VALUES(
 						'${createdat}',
 						'${createdby}',
 						'${modifiedat}',
@@ -314,10 +329,11 @@ module.exports = () => {
 						'${payload.payload.PHOTO}',
 						'${payload.payload.DATE}')
 						`
-				console.log(query)
-				const statement = await db.preparePromisified(query)
-				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+					console.log(query)
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
+					resolve(results);
+				}
 			} catch (error) {
 				console.log(error)
 				reject(error);
