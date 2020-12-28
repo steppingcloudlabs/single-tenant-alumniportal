@@ -1,7 +1,6 @@
   /*eslint no-console: 0*/
   "use strict";
   const express = require("express");
-  const morgan = require("morgan");
   const bodyParser = require("body-parser");
   const compression = require("compression");
   const xsenv = require("@sap/xsenv");
@@ -11,27 +10,26 @@
   const admintokenchecker = require('./middleware/JWTtoken/admintokencheck')
   const usertokenchecker = require('./middleware/JWTtoken/tokenchecks')
   const port = process.env.PORT || 3000;
+  const helmet = require('helmet');
+  // Handling cors
+  const cors = require("cors");
 
   //Initialize Express App for XS UAA and HDBEXT Middleware
   const app = express();
-  app.use(bodyParser.urlencoded({
-    extended: false
+  app.use(cors());
+  app.use(bodyParser.json({
+    limit: '1024mb'
   }));
-  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({
+    limit: '1024mb',
+    extended: true
+  }));
+  app.disable('x-powered-by');
 
-  const logging = require("@sap/logging");
-  const appContext = logging.createAppContext();
-
-  const helmet = require("helmet");
   // ...
   app.use(helmet());
-  app.use(helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "sapui5.hana.ondemand.com"],
-      scriptSrc: ["'self'", "sapui5.hana.ondemand.com"]
-    }
-  }));
+  app.use(helmet.xssFilter());
+  app.use(helmet.frameguard());
   // Sets "Referrer-Policy: no-referrer".
   app.use(helmet.referrerPolicy({
     policy: "no-referrer"
@@ -70,14 +68,12 @@
   app.use(require("compression")({
     threshold: "1b"
   }));
-  // Handling cors
-  const cors = require("cors");
-  app.use(cors());
+
   // compress responses
   app.use(compression());
   app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+    res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE");
     res.header(
       "Access-Control-Allow-Headers",
       "Origin, X-Requested-With, Content-Type, Accept"
