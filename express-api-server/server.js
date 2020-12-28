@@ -130,7 +130,7 @@
   const admindocumentRoutes = require("./router/documents");
   const adminactionRoutes = require("./router/admin/");
   const adminuseractionRoutes = require("./router/admin/indexuser.js");
-  const searchRoutes = require("./router/search");
+  const searchRoutes = require("./router/search/adminindex");
   const successfactorsRoutes = require("./router/successfactors");
   const askhradminroutes = require("./router/askhr")
   const adminauthRoutes = require("./router/auth/index.js");
@@ -142,7 +142,7 @@
   app.use("/admin/action", admintokenchecker, adminnefRoutes);
   app.use("/admin/action", admintokenchecker, adminuseractionRoutes)
   app.use("/admin/action", admintokenchecker, admindocumentRoutes);
-  app.use("/search", admintokenchecker, searchRoutes);
+  app.use("/admin/action/search", admintokenchecker, searchRoutes);
   app.use("/admin/action", admintokenchecker, successfactorsRoutes)
   app.use("/admin/action/askhr", admintokenchecker, askhradminroutes)
   //USER ROUTES
@@ -155,6 +155,7 @@
   const useractionRoutes = require("./router/users/index.js");
   const usernefRoutes = require("./router/nef");
   const askhruserroutes = require("./router/askhr/indexuser.js")
+  const searchuserRoutes = require("./router/search/index")
   app.use("/user/auth", userauthRoutes);
   app.use("/user/action", usertokenchecker, userskillsRoutes);
   app.use("/user/action", usertokenchecker, userjobRoutes);
@@ -162,7 +163,7 @@
   app.use("/user/action", usertokenchecker, userdocumentRoutes);
   app.use("/user/action", usertokenchecker, useractionRoutes);
   app.use("/user/action/askhr", usertokenchecker, askhruserroutes);
-  app.use("/user/action/search", usertokenchecker, searchRoutes);
+  app.use("/search", usertokenchecker, searchuserRoutes);
   app.listen(port, () => {
     console.log(`Server listening on port: ${port}`);
   });

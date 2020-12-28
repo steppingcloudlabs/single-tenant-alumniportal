@@ -157,7 +157,7 @@
 				if (response) {
 					if (response.length == 0) response = response
 
-					const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+					const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 					const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 					tablename = "SCLABS_ALUMNIPORTAL_FAQ_FAQ"
 					const schema = await utils.currentSchema({
@@ -286,7 +286,7 @@
 				if (response) {
 					if (response.length == 0) response = response
 
-					const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+					const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 					const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 					tablename = "SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"
 					const schema = await utils.currentSchema({

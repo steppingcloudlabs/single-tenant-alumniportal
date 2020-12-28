@@ -82,7 +82,7 @@ module.exports = {
 			if (response) {
 				if (response.length == 0) response = response
 				
-				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_TICKET_TICKET"
 				const schema = await utils.currentSchema({
@@ -231,7 +231,7 @@ module.exports = {
 			if (response) {
 				if (response.length == 0) response = response
 				
-				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES"
 				const schema = await utils.currentSchema({
@@ -379,7 +379,7 @@ module.exports = {
 			if (response) {
 				if (response.length == 0) response = response
 				
-				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"
 				const schema = await utils.currentSchema({

@@ -12,7 +12,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_USERS_USERS"
 				const schema = await utils.currentSchema({
@@ -58,7 +58,7 @@ module.exports = {
 			});
 
 			if (response) {
-				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_SKILLS_SKILLS"
 				const schema = await utils.currentSchema({
@@ -132,7 +132,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_JOB_JOB"
 				const schema = await utils.currentSchema({
@@ -178,7 +178,7 @@ module.exports = {
 				db
 			});
 			if (response) {
-				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_JOB_JOB"
 				const schema = await utils.currentSchema({

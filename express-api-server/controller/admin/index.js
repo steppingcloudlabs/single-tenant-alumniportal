@@ -85,7 +85,7 @@ module.exports = {
 
 				if (response.length == 0) response = response
 				
-				const LIMIT = payload.LIMIT == undefined ? 1 : payload.LIMIT
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION"
 				const schema = await utils.currentSchema({
