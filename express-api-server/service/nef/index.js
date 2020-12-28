@@ -70,8 +70,14 @@ module.exports = () => {
 						)`
 					const statement = await db.preparePromisified(query)
 					const results = await db.statementExecPromisified(statement, [])
+					if (results == 1) {
+						data = payload.payload;
+						data.ID = ID;
+						resolve(data);
+					} else {
+						reject(results);
+					}
 
-					resolve(results);
 				}
 
 			} catch (error) {
@@ -92,13 +98,14 @@ module.exports = () => {
 				const modifiedby = "admin";
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
+
 				const query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"
 					SET "TITLE" = CASE
 								WHEN '${payload.payload.TITLE}' != 'undefined' THEN '${payload.payload.TITLE}'
 								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.ID}')
 								END,
-					   "CONTENT" = CASE
+					    "CONTENT" = CASE
 								WHEN '${payload.payload.CONTENT}' != 'undefined' THEN '${payload.payload.CONTENT}'
 								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.ID}')
 								END,
@@ -113,7 +120,20 @@ module.exports = () => {
 					"ID" = '${payload.payload.ID}'`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				resolve(results)
+				if (results == 1) {
+					const query =
+						`SELECT "ID",
+					"TITLE",
+					"CONTENT",
+					"PHOTO",
+					"DATE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" WHERE "ID" = '${payload.payload.ID}'`
+					const statement = await db.preparePromisified(query)
+					const result = await db.statementExecPromisified(statement, [])
+					resolve(result)
+				} else {
+					reject(results)
+				}
+
 
 			} catch (error) {
 				console.log(error)
@@ -203,7 +223,13 @@ module.exports = () => {
 						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${ID}', '${payload.payload.QUESTION}', '${payload.payload.ANSWER}')`
 					const statement = await db.preparePromisified(query)
 					const results = await db.statementExecPromisified(statement, [])
-					resolve(results);
+					if (results == 1) {
+						data = payload.payload;
+						data.ID = ID;
+						resolve(data);
+					} else {
+						reject(results);
+					}
 				}
 			} catch (error) {
 				reject(error);
@@ -238,7 +264,15 @@ module.exports = () => {
     				"ID" = '${payload.payload.ID}'`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				resolve(results)
+				if (results == 1) {
+					const query =
+						`SELECT "ID","QUESTION","ANSWER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" WHERE "ID" = '${payload.payload.ID}'`
+					const statement = await db.preparePromisified(query)
+					const result = await db.statementExecPromisified(statement, [])
+					resolve(result)
+				} else {
+					reject(results)
+				}
 
 			} catch (error) {
 				reject(error);
@@ -332,7 +366,13 @@ module.exports = () => {
 					console.log(query)
 					const statement = await db.preparePromisified(query)
 					const results = await db.statementExecPromisified(statement, [])
-					resolve(results);
+					if (results == 1) {
+						data = payload.payload;
+						data.ID = ID;
+						resolve(data);
+					} else {
+						reject(results);
+					}
 				}
 			} catch (error) {
 				console.log(error)
@@ -375,11 +415,19 @@ module.exports = () => {
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
 					"ID" = '${payload.payload.ID}'`
-				console.log(query)
 
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				resolve(results)
+				if (results == 1) {
+					const query =
+						`SELECT "ID", "TITLE", "CONTENT", "PHOTO", "DATE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" WHERE "ID" = '${payload.payload.ID}'`
+					console.log(query)
+					const statement = await db.preparePromisified(query)
+					const result = await db.statementExecPromisified(statement, [])
+					resolve(result)
+				} else {
+					reject(results)
+				}
 
 			} catch (error) {
 				console.log(error)

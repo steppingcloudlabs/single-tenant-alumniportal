@@ -26,8 +26,8 @@ module.exports = {
 				})
 				paginationobject = {
 					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
-					'LIMIT': LIMIT,
-					'OFFSET': OFFSET
+					'LIMIT': parseInt(LIMIT),
+					'OFFSET': parseInt(OFFSET)
 				}
 				res.status(200).send({
 					status: "200",
@@ -72,8 +72,8 @@ module.exports = {
 				})
 				paginationobject = {
 					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
-					'LIMIT': LIMIT,
-					'OFFSET': OFFSET
+					'LIMIT': parseInt(LIMIT),
+					'OFFSET': parseInt(OFFSET)
 				}
 				res.status(200).send({
 					status: "200",
@@ -146,8 +146,8 @@ module.exports = {
 				})
 				paginationobject = {
 					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
-					'LIMIT': LIMIT,
-					'OFFSET': OFFSET
+					'LIMIT': parseInt(LIMIT),
+					'OFFSET': parseInt(OFFSET)
 				}
 				res.status(200).send({
 					status: "200",
@@ -192,8 +192,8 @@ module.exports = {
 				})
 				paginationobject = {
 					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
-					'LIMIT': LIMIT,
-					'OFFSET': OFFSET
+					'LIMIT': parseInt(LIMIT),
+					'OFFSET': parseInt(OFFSET)
 				}
 				res.status(200).send({
 					status: "200",

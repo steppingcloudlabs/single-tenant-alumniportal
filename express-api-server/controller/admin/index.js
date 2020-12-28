@@ -99,8 +99,8 @@ module.exports = {
 				})
 				paginationobject = {
 					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
-					'LIMIT': LIMIT,
-					'OFFSET': OFFSET
+					'LIMIT': parseInt(LIMIT),
+					'OFFSET': parseInt(OFFSET)
 				}
 				console.log(paginationobject)
 				res.type("application/json").status(200).send({
