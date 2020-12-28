@@ -63,12 +63,12 @@ module.exports = () => {
 							STATE,
 							COUNTRY
 						} = payload.payload;
-						DATE_OF_RELIEVING = DATE_OF_RELIEVING == undefined ? " " : Date.parse(DATE_OF_RELIEVING);
+						DATE_OF_RELIEVING = DATE_OF_RELIEVING == undefined ? " " : DATE_OF_RELIEVING;
 						USER_ID = USER_ID == undefined ? " " : USER_ID;
 
-						DATE_OF_RESIGNATION = DATE_OF_RESIGNATION == undefined ? " " : Date.parse(DATE_OF_RESIGNATION);
+						DATE_OF_RESIGNATION = DATE_OF_RESIGNATION == undefined ? " " : DATE_OF_RESIGNATION;
 
-						LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD = LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD == undefined ? " " : Date.parse(LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD);
+						LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD = LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD == undefined ? " " : LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD;
 						PERSONAL_EMAIL_ID = PERSONAL_EMAIL_ID == undefined ? " " : PERSONAL_EMAIL_ID;
 						FIRST_NAME_PERSONAL_INFORMATION = FIRST_NAME_PERSONAL_INFORMATION == undefined ? " " : FIRST_NAME_PERSONAL_INFORMATION;
 						LAST_NAME_PERSONAL_INFORMATION = LAST_NAME_PERSONAL_INFORMATION == undefined ? " " : LAST_NAME_PERSONAL_INFORMATION;
@@ -80,7 +80,7 @@ module.exports = () => {
 						MANAGER_JOB_INFORMATION = MANAGER_JOB_INFORMATION == undefined ? " " : MANAGER_JOB_INFORMATION;
 						DESIGNATION_JOB_INFORMATION = DESIGNATION_JOB_INFORMATION == undefined ? " " : DESIGNATION_JOB_INFORMATION;
 						GENDER = GENDER == undefined ? " " : GENDER;
-						DATE_OF_BIRTH = DATE_OF_BIRTH == undefined ? " " : Date.parse(DATE_OF_BIRTH);
+						DATE_OF_BIRTH = DATE_OF_BIRTH == undefined ? " " : DATE_OF_BIRTH;
 						STATE = STATE == undefined ? " " : STATE;
 						COUNTRY = COUNTRY == undefined ? " " : COUNTRY;
 						const schema = await utils.currentSchema({

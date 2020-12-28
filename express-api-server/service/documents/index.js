@@ -155,6 +155,8 @@ module.exports = () => {
 				result['FIRSTMONTHSALARY'] = 'Not Available'
 				result['SECONDMONTHSALARY'] = 'Not Available'
 				result['THIRDMONTHSALARY'] = 'Not Available'
+				result['EXPERIENCELETTER'] = 'Not Available'
+				result['RELIEVINGLETTER'] = 'Not Available'
 				for (let i = 0; i < results.length; i++) {
 					if (results[i].FILENAME == 'form16') {
 						result['FORM16'] = 'Available'
@@ -164,6 +166,10 @@ module.exports = () => {
 						result['SECONDMONTHSALARY'] = 'Available'
 					} else if (results[i].FILENAME == 'thirdmonthsalary') {
 						result['THIRDMONTHSALARY'] = 'Available'
+					} else if (results[i].FILENAME == 'experienceletter') {
+						result['EXPERIENCELETTER'] = 'Available'
+					} else if (results[i].FILENAME == 'relievingletter') {
+						result['RELIEVINGLETTER'] = 'Available'
 					}
 				}
 				resolve(result);
