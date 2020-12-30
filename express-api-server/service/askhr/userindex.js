@@ -20,7 +20,7 @@ module.exports = () => {
                 const ESCLATATION = false
                 const RESOLVED = false
                 const ESCLATATIONMANAGER = 1;
-                const DATE = Math.round((new Date()).getTime() / 1000);
+                const DATE = Date.now()
                 const createdat = new Date().toISOString();
                 const createdby = "user";
                 const modifiedby = "user";
