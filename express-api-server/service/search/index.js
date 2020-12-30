@@ -1,5 +1,6 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
+const jobService = require("../job/index")();
 module.exports = () => {
 	const searchUser = ({
 		payload,
@@ -12,6 +13,7 @@ module.exports = () => {
 				})
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				const searchquery = payload.QUERY == undefined ? "" : payload.QUERY
 				const query =
 					`SELECT 
 						"ID",
@@ -25,7 +27,7 @@ module.exports = () => {
 						"MIDDLE_NAME_PERSONAL_INFORMATION",
 						"SALUTATION_PERSONAL_INFORMATION",
 						"CITY_ADDRESSES",
-						IFNULL(LINKEDIN, '') "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.8)) LIMIT ${LIMIT} offset ${offset}`
+						IFNULL(LINKEDIN, '') "LINKEDIN" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${searchquery}', FUZZY(0.8)) LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const obj = await db.statementExecPromisified(statement, [])
 				resolve(obj)
@@ -139,12 +141,23 @@ module.exports = () => {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				let country = payload.COUNTRY == undefined ? "" : payload.COUNTRY
-				const query =
-					`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${payload.QUERY + " "+country}', FUZZY(0.4))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
-				console.log(query)
-				const statement = await db.preparePromisified(query)
-				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				let searchquery = payload.QUERY == undefined ? "" : payload.QUERY
+				searchquery = searchquery + " " + country
+				if (searchquery == " ") {
+					let results = await jobService.getjob({
+						payload,
+						db
+					});
+					resolve(results);
+				} else {
+					const query =
+						`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${searchquery}', FUZZY(0.5))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
+					console.log(query)
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
+					resolve(results);
+				}
+
 			} catch (error) {
 				reject(error);
 			}
@@ -165,16 +178,25 @@ module.exports = () => {
 				let country = payload.COUNTRY == undefined ? "" : payload.COUNTRY
 				const query =
 					`SELECT 
-					"ID",
-					"USER_ID",
-					"FIRST_NAME_PERSONAL_INFORMATION",
-					"LAST_NAME_PERSONAL_INFORMATION",
-					"MIDDLE_NAME_PERSONAL_INFORMATION",
-					"SALUTATION_PERSONAL_INFORMATION",
-					"CITY_ADDRESSES",
-					IFNULL(STATE, '') "STATE",
-					IFNULL(COUNTRY, '') "COUNTRY"
-					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" rows LIMIT ${LIMIT} offset ${offset}`
+				    A1."ID",
+				    A1."USER_ID",
+					A1."GENDER",
+					A1."DATE_OF_BIRTH",
+					A1."DATE_OF_RESIGNATION",
+					A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
+					A1."PERSONAL_EMAIL_ID",
+					A1."FIRST_NAME_PERSONAL_INFORMATION",
+					A1."LAST_NAME_PERSONAL_INFORMATION",
+					A1."MIDDLE_NAME_PERSONAL_INFORMATION",
+					A1."NATIONALITY_PERSONAL_INFORMATION",
+					A1."SALUTATION_PERSONAL_INFORMATION",
+					IFNULL(A1.CITY_ADDRESSES,'') "CITY_ADDRESSES",
+					IFNULL(A1.PHONE_NUMBER_PHONE_INFORMATION, '') "PHONE_NUMBER_PHONE_INFORMATION",
+					IFNULL(A1.MANAGER_JOB_INFORMATION, '') "MANAGER_JOB_INFORMATION",
+					IFNULL(A1.DESIGNATION_JOB_INFORMATION, '') "DESIGNATION_JOB_INFORMATION",
+					IFNULL(A1.STATE, '') "STATE", 
+					IFNULL(A1.COUNTRY, '') "COUNTRY"
+					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" as A1 LIMIT ${LIMIT} offset ${offset}`
 				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
