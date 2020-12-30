@@ -180,7 +180,7 @@ module.exports = {
             if (response) {
                 const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
                 const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
-                tablename = "SCLABS_ALUMNIPORTAL_JOB_JOB"
+                tablename = "SCLABS_ALUMNIPORTAL_USERS_USERS"
                 const schema = await utils.currentSchema({
                     db
                 })

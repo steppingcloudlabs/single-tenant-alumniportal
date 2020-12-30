@@ -162,7 +162,7 @@ module.exports = () => {
                 const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
                 let country = payload.COUNTRY == undefined ? "" : payload.COUNTRY
                 const query =
-                    `SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${payload.QUERY + " "+country}', FUZZY(0.4))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
+                    `SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${payload.QUERY + " "+country}', FUZZY(0.8))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
                 console.log(query)
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])

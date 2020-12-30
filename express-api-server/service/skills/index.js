@@ -16,13 +16,13 @@ module.exports = () => {
 				let userid = payload.USERID;
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				 
-					const query =
-						`SELECT "ID", "SKILL", "USERID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE USERID = '${userid}'`
-					const statement = await db.preparePromisified(query)
-					const results = await db.statementExecPromisified(statement, [])
-					resolve(results);
-				
+
+				const query =
+					`SELECT "ID", "SKILL", "USERID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE USERID = '${userid}'`
+				const statement = await db.preparePromisified(query)
+				const results = await db.statementExecPromisified(statement, [])
+				resolve(results);
+
 				// } else {
 				// 	const query =
 				// 		`SELECT "ID", "SKILL","USERID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" rows LIMIT ${LIMIT} offset ${offset}`
@@ -66,7 +66,14 @@ module.exports = () => {
 						'${skill}')`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				if (results == 1) {
+					let data = payload.payload
+					data.ID = ID
+					resolve(data)
+				} else {
+					resolve("Not able to add skill with this user");
+				}
+
 			} catch (error) {
 				reject(error);
 			}
