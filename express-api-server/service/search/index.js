@@ -13,7 +13,7 @@ module.exports = () => {
 				})
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				const searchquery = payload.QUERY == undefined ? "" : payload.QUERY
+				const searchquery = payload.QUERY == "null" || payload.QUERY == undefined ? "" : payload.QUERY
 				const query =
 					`SELECT 
 						"ID",
@@ -140,9 +140,10 @@ module.exports = () => {
 				})
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				let country = payload.COUNTRY == undefined ? "" : payload.COUNTRY
-				let searchquery = payload.QUERY == undefined ? "" : payload.QUERY
+				let country = (payload.COUNTRY == "null" || payload.COUNTRY == undefined) ? "" : payload.COUNTRY
+				let searchquery = (payload.QUERY == "null" || payload.QUERY == undefined) ? "" : payload.QUERY
 				searchquery = searchquery + " " + country
+				console.log(searchquery)
 				if (searchquery == " ") {
 					let results = await jobService.getjob({
 						payload,

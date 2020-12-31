@@ -14,7 +14,7 @@ module.exports = () => {
                 })
                 const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
                 const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-                let searchquery = payload.QUERY == undefined ? "" : payload.QUERY
+                let searchquery = payload.QUERY == null ? "" : payload.QUERY
                 if (searchquery == "") {
                     let response = await searchUserids({
                         payload,
@@ -166,8 +166,8 @@ module.exports = () => {
                 })
                 const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
                 const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-                let country = payload.COUNTRY == undefined ? "" : payload.COUNTRY
-                let searchquery = payload.QUERY == undefined ? "" : payload.QUERY
+                let country = payload.COUNTRY == null ? "" : payload.COUNTRY
+                let searchquery = payload.QUERY == null ? "" : payload.QUERY
                 searchquery = searchquery + " " + country
                 if (searchquery == " ") {
                     let results = await jobService.getjob({
