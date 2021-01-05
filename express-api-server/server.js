@@ -5,7 +5,7 @@ const bodyParser = require("body-parser");
 const compression = require("compression");
 const xsenv = require("@sap/xsenv");
 const xssec = require("@sap/xssec");
-xsenv.loadEnv();
+xsenv.loadEnv("D:\\steppingcloud\\github\\single-tenant-alumniportal\\express-api-server\\default-env.json");
 const xsHDBConn = require("@sap/hdbext");
 const passport = require("passport");
 const admintokenchecker = require('./middleware/JWTtoken/admintokencheck')
@@ -82,6 +82,7 @@ app.get("/", async (req, res) => {
   try {
     const dbClass = require("sap-hdbext-promisfied")
     let db = new dbClass(req.db);
+    console.log(db);
     const statement = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
     const results = await db.statementExecPromisified(statement, [])
     let result = JSON.stringify({
