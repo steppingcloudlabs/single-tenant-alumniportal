@@ -36,11 +36,11 @@ app.use(helmet.referrerPolicy({
   policy: "no-referrer"
 }));
 
-passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
-  uaa: {
-    tag: "xsuaa"
-  }
-}).uaa));
+// passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
+//   uaa: {
+//     tag: "xsuaa"
+//   }
+// }).uaa));
 
 const log = require("cf-nodejs-logging-support");
 log.setLoggingLevel("info");
@@ -55,9 +55,9 @@ var hanaOptions = xsenv.getServices({
 hanaOptions.hana.pooling = true;
 
 app.use(
-  passport.authenticate("JWT", {
-    session: false
-  }),
+  // passport.authenticate("JWT", {
+  //   session: false
+  // }),
   xsHDBConn.middleware(hanaOptions.hana)
 );
 
