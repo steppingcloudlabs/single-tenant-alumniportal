@@ -16,7 +16,7 @@ module.exports = () => {
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
 					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  LIMIT ${LIMIT} offset ${offset}`
-				console.log(query);
+
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -72,12 +72,11 @@ module.exports = () => {
 					'${posting_start_date}'/*POSTINGSTARTDATE <DATE>*/,
 					'${posting_end_date}'/*POSTINGENDDATE <DATE>*/
 					)`
-				console.log(query);
+
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
-				console.log(error);
 				reject(error);
 			}
 		});
@@ -111,7 +110,7 @@ module.exports = () => {
     				"MODIFIEDAT" = '${modifiedat}'
     				where
     				"ID" = '${payload.payload.ID}'`
-				console.log(query);
+
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
@@ -128,14 +127,11 @@ module.exports = () => {
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				/*console.log(
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
-				)*/
 				const schema = await utils.currentSchema({
 					db
 				})
 				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  WHERE ID = '${payload.payload.ID}'`
-				console.log(query);
+
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -152,13 +148,8 @@ module.exports = () => {
 		return new Promise(async (resolve, reject) => {
 			try {
 				res = [];
-
-				// console.log(payload.payload)
 				for (var i = 0; i < payload.payload.length; i++) {
-					// var obj = new Object();
-					// obj.payload = payload.payload[i];
-					// var jsonString = JSON.stringify(obj);
-					// console.log(jsonString);
+
 					const schema = await utils.currentSchema({
 						db
 					});
@@ -168,7 +159,7 @@ module.exports = () => {
 					const modifiedat = new Date().toISOString();
 					const date = new Date().toISOString();
 					const ID = uuid();
-					console.log(payload);
+
 					const requisition_id = payload.payload[i].requisition_id;
 					const posting_end_date = payload.payload[i].posting_end_date;
 					const posting_start_date = payload.payload[i].posting_start_date;
@@ -196,12 +187,11 @@ module.exports = () => {
 						             '${city}')`
 					const statement = await db.preparePromisified(query);
 					const result = await db.statementExecPromisified(statement, [])
-					console.log(result);
+
 					res.push(result);
 				}
 				resolve(res);
 			} catch (error) {
-				console.log(error);
 				reject(error);
 
 			}

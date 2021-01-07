@@ -11,7 +11,7 @@ module.exports = {
 				payload,
 				db
 			});
-			console.log(response)
+
 			if (response) {
 				res.status(200).send({
 					status: "200",

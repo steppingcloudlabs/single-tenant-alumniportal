@@ -33,7 +33,7 @@ module.exports = () => {
                     if (result2.length == 0) {
                         resolve("incorrectpassword")
                     } else {
-                        console.log(result2[0].USERTYPE)
+
                         if (result2[0].USERTYPE == 'admin') {
                             let query3 = `SELECT USERNAME, USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}' AND PASSWORD ='${PASSWORD}'`
                             let statement3 = await db.preparePromisified(query3)
@@ -47,7 +47,7 @@ module.exports = () => {
                             let statement4 = await db.preparePromisified(query4)
                             let result4 = await db.statementExecPromisified(statement4, [])
                             result4[0].USERTYPE = result3[0].USERTYPE
-                            console.log(result4)
+
                             resolve(result4)
                         }
                     }
@@ -74,7 +74,7 @@ module.exports = () => {
                     USERTYPE,
                     USERID
                 } = payload;
-                console.log(USERTYPE)
+
                 if (USERTYPE != 'hr' && USERTYPE != 'admin') {
                     resolve("onlyhrsandadmins");
                 } else if (USERTYPE == "hr") {
@@ -115,7 +115,7 @@ module.exports = () => {
                         '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
                         '${USERTYPE}'
                         )`
-                                console.log(query4)
+
                                 let statement4 = await db.preparePromisified(query4)
                                 let result4 = await db.statementExecPromisified(statement4, [])
                                 resolve(result4)
@@ -156,7 +156,6 @@ module.exports = () => {
                         '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
                         '${USERTYPE}'
                         )`
-                            console.log(query4)
                             let statement4 = await db.preparePromisified(query4)
                             let result4 = await db.statementExecPromisified(statement4, [])
                             resolve(result4)
@@ -194,13 +193,13 @@ module.exports = () => {
                 if (result1.length != 0) {
 
                     const token = JWT.sign({
-                            iss: 'steppingcloudforpasswordreset',
-                            sub: EMAIL,
-                            jwtKey: 'steppingcloudsecret',
-                            algorithm: 'HS256',
-                            iat: new Date().getTime(),
-                            exp: new Date().setDate(new Date().getDate() + 1),
-                        },
+                        iss: 'steppingcloudforpasswordreset',
+                        sub: EMAIL,
+                        jwtKey: 'steppingcloudsecret',
+                        algorithm: 'HS256',
+                        iat: new Date().getTime(),
+                        exp: new Date().setDate(new Date().getDate() + 1),
+                    },
                         JWT_SECRET
                     );
 
@@ -232,8 +231,8 @@ module.exports = () => {
                     };
                     // Create the promise and SES service object
                     const sendPromise = new AWS.SES({
-                            apiVersion: '2010-12-01'
-                        })
+                        apiVersion: '2010-12-01'
+                    })
                         .sendEMAIL(params)
                         .promise();
                     // Handle promise's fulfilled/rejected states
@@ -308,8 +307,8 @@ module.exports = () => {
                         };
                         // Create the promise and SES service object
                         const sendPromise = new AWS.SES({
-                                apiVersion: '2010-12-01'
-                            })
+                            apiVersion: '2010-12-01'
+                        })
                             .sendEmail(params)
                             .promise();
                         // Handle promise's fulfilled/rejected states

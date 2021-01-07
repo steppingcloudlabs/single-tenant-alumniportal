@@ -41,26 +41,8 @@ module.exports = () => {
 				    where A1."USER_ID" = '${userid}';`
 				const statement = await db.preparePromisified(query)
 				let obj = await db.statementExecPromisified(statement, [])
-			/* 	console.log(obj)
-				var results = [];
-				var a = [];
-				if (obj[0].SKILL == "") {
-					results = obj[0];
-					results.SKILL = a;
-				} else {
-					results = obj[0];
-					if (1 < obj.length) {
-						for (var i = 0; i < obj.length; i++) {
-							a[i] = obj[i].SKILL;
-						}
-					} else {
-						a[0] = obj[0].SKILL;
-					}
-					results.SKILL = a;
-				}
- */
-				let response = await skillservice.getskills({payload,db})
-			    obj[0].SKILL = response
+				let response = await skillservice.getskills({ payload, db })
+				obj[0].SKILL = response
 				resolve(obj);
 			} catch (error) {
 
@@ -120,11 +102,9 @@ module.exports = () => {
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
 					"USER_ID" = '${payload.payload.USERID}'`
-				console.log(query);
+
 				let statement = await db.preparePromisified(query)
 				let results = await db.statementExecPromisified(statement, [])
-
-				console.log(results)
 				if (results >= 1) {
 					resolve(1);
 				}

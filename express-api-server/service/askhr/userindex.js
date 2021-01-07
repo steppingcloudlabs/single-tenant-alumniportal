@@ -42,16 +42,16 @@ module.exports = () => {
                     '${DATE}')`
                 let statement = await db.preparePromisified(query)
                 let results = await db.statementExecPromisified(statement, [])
-                console.log(results)
+
                 if (results == 1) {
                     // this query get the ticketid 
                     let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE CREATEDAT = '${createdat}' AND USERID = '${USERID}'`
                     let statement = await db.preparePromisified(query)
                     results = await db.statementExecPromisified(statement, [])
-                    console.log(results)
+
                     if (results.length == 1) {
                         let TICKETID = results[0].ID
-                        console.log(TICKETID)
+
                         let USERTYPE = payload.payload.USERTYPE;
                         // this query add the message into the ticket 
                         query =
@@ -95,7 +95,7 @@ module.exports = () => {
                 const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
                 const query =
                     `SELECT ID, USERID, TITLE, ESCLATION, RESOLVED, ESCLATATIONMANAGER, DATE, CREATEDBY FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE USERID = '${USERID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
-                console.log(query)
+
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
                 resolve(results);
@@ -142,7 +142,7 @@ module.exports = () => {
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
 					"ID" = '${payload.payload.ID}'`
-                console.log(query)
+
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
                 resolve(results)
@@ -188,7 +188,7 @@ module.exports = () => {
                     TICKETID,
                     USERTYPE
                 } = payload.payload;
-                console.log(payload.payload)
+
                 const schema = await utils.currentSchema({
                     db
                 })
@@ -232,12 +232,11 @@ module.exports = () => {
                 const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
                 const query =
                     `SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID = '${TICKETID}' ORDER BY MODIFIEDAT ASC LIMIT ${LIMIT} offset ${offset}`
-                console.log(query)
+
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
                 resolve(results);
             } catch (error) {
-                console.log(error)
                 reject(error);
             }
         });

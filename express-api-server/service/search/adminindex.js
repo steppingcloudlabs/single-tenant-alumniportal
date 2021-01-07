@@ -100,7 +100,7 @@ module.exports = () => {
                     `SELECT ID, SKILL FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE CONTAINS ((SKILL),'${payload.QUERY}', FUZZY(0.2)) LIMIT ${LIMIT} offset ${offset}`
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
-                console.log(results)
+
                 resolve(results);
             } catch (error) {
                 console.log(error);
@@ -145,7 +145,7 @@ module.exports = () => {
 					IFNULL(A1.COUNTRY, '') "COUNTRY"
 					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
 						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
-                console.log(query)
+
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
                 resolve(results);
@@ -178,7 +178,7 @@ module.exports = () => {
                 } else {
                     const query =
                         `SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${searchquery}', FUZZY(0.5))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
-                    console.log(query)
+
                     const statement = await db.preparePromisified(query)
                     const results = await db.statementExecPromisified(statement, [])
                     resolve(results);
@@ -223,7 +223,7 @@ module.exports = () => {
 					IFNULL(A1.STATE, '') "STATE", 
 					IFNULL(A1.COUNTRY, '') "COUNTRY"
 					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" as A1  LIMIT ${LIMIT} offset ${offset}`
-                console.log(query)
+
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
                 resolve(results);

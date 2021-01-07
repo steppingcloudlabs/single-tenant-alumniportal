@@ -33,7 +33,7 @@
 	"scripts": {
 		"test": "node node_modules/jest/bin/jest --config jest.json",
 		"test-coverage": "node node_modules/jest/bin/jest --coverage --config jest.json",
-		"start": "nodemon server.js"
+		"start": "node --prof server.js"
 	},
 	"engines": {
 		"node": "10.x"

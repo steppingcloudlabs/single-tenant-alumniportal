@@ -32,17 +32,17 @@ module.exports = {
 
             if (response) {
                 const token = JWT.sign({
-                        iss: "steppingcloudforuser",
-                        sub: response[0].USER_ID,
-                        jwtKey: "steppingcloudsecret",
-                        algorithm: "HS256",
-                        iat: new Date().getTime(),
-                        exp: new Date().setTime(new Date().getTime() + 900000),
-                    },
+                    iss: "steppingcloudforuser",
+                    sub: response[0].USER_ID,
+                    jwtKey: "steppingcloudsecret",
+                    algorithm: "HS256",
+                    iat: new Date().getTime(),
+                    exp: new Date().setTime(new Date().getTime() + 900000),
+                },
                     JWT_SECRET
                 );
                 if (response.length == 0) response = response
-                
+
                 res.type("application/json").status(200).send({
                     status: "200",
                     result: response,
@@ -77,7 +77,6 @@ module.exports = {
                 logger,
                 db
             });
-            console.log(response)
 
             if (response == "foundemail") {
                 res.type("application/json").status(200).send({

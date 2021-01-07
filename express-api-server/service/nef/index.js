@@ -189,7 +189,7 @@ module.exports = () => {
 					`SELECT "ID","QUESTION","ANSWER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				console.log(results)
+
 				resolve(results);
 
 			} catch (error) {
@@ -321,7 +321,6 @@ module.exports = () => {
 				const query = `SELECT "ID", "TITLE", "CONTENT", "PHOTO", "DATE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				console.log("inside services", results)
 				resolve(results);
 
 			} catch (error) {
@@ -363,7 +362,7 @@ module.exports = () => {
 						'${payload.payload.PHOTO}',
 						'${payload.payload.DATE}')
 						`
-					console.log(query)
+
 					const statement = await db.preparePromisified(query)
 					const results = await db.statementExecPromisified(statement, [])
 					if (results == 1) {
@@ -421,7 +420,7 @@ module.exports = () => {
 				if (results == 1) {
 					const query =
 						`SELECT "ID", "TITLE", "CONTENT", "PHOTO", "DATE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" WHERE "ID" = '${payload.payload.ID}'`
-					console.log(query)
+
 					const statement = await db.preparePromisified(query)
 					const result = await db.statementExecPromisified(statement, [])
 					resolve(result)

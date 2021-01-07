@@ -10,7 +10,7 @@ module.exports = {
 				payload,
 				db
 			});
-			console.log(response);
+
 			if (response) {
 				res.type("application/json").status(200).send({
 					status: "200",
@@ -68,10 +68,10 @@ module.exports = {
 				payload,
 				db
 			});
-			console.log(response)
+
 			if (response) {
 				if (response.length == 0) response = response
-				
+
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_SKILLS_SKILLS"

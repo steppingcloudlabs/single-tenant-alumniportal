@@ -86,7 +86,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				console.log("before statement");
+
 				//const {createdat,createdby,modifiedat,modifiedby,id,skill}=payload.payload;
 				const schema = await utils.currentSchema({
 					db
@@ -123,9 +123,7 @@ module.exports = () => {
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				/*console.log(
-					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"  WHERE ID = '${payload.id}'`
-				)*/
+
 				const schema = await utils.currentSchema({
 					db
 				})

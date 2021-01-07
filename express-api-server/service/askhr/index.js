@@ -91,7 +91,7 @@ module.exports = () => {
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
 					`SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE USERID = '${USERID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
-				console.log(query)
+
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
@@ -138,7 +138,7 @@ module.exports = () => {
 					    "MODIFIEDAT" = '${modifiedat}'
 					where
 					"ID" = '${payload.payload.ID}'`
-				console.log(query)
+
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results)
@@ -184,7 +184,7 @@ module.exports = () => {
 					TICKETID,
 					USERTYPE
 				} = payload.payload;
-				console.log(payload.payload)
+
 				const schema = await utils.currentSchema({
 					db
 				})
@@ -228,12 +228,12 @@ module.exports = () => {
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
 					`SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID = '${TICKETID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
-				console.log(query)
+
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
 			} catch (error) {
-				console.log(error)
+
 				reject(error);
 			}
 		});
@@ -363,13 +363,13 @@ module.exports = () => {
 				let query = `SELECT "EMAIL", "LEVELMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" WHERE EMAIL = '${payload.EMAIL}'`
 				let statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				console.log(results)
+
 				if (results.length == 1) {
 					const query1 = `SELECT * from ${schema}.SCLABS_ALUMNIPORTAL_TICKET_TICKET WHERE ESCLATATIONMANAGER = '${results[0].LEVELMANAGER}' ORDER BY CREATEDAT DESC LIMIT ${LIMIT} OFFSET ${offset}`
-					console.log(query)
+
 					const statement1 = await db.preparePromisified(query1)
 					const result = await db.statementExecPromisified(statement1, [])
-					console.log(result)
+
 					resolve(result);
 				} else {
 					reject(results)

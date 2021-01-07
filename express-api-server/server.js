@@ -82,7 +82,6 @@ app.get("/", async (req, res) => {
   try {
     const dbClass = require("sap-hdbext-promisfied")
     let db = new dbClass(req.db);
-    console.log(db);
     const statement = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
     const results = await db.statementExecPromisified(statement, [])
     let result = JSON.stringify({

@@ -25,10 +25,8 @@ module.exports = {
             let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME= '${EMAIL}'`
             let statement = await db.preparePromisified(query)
             let result = await db.statementExecPromisified(statement, [])
-            console.log(result)
-            if (result.length == 0) {
-                console.log("Its an admin")
 
+            if (result.length == 0) {
                 const payload = req.body;
                 const logger = req.logger;
 
@@ -50,13 +48,13 @@ module.exports = {
                     });
                 } else if (response) {
                     const token = JWT.sign({
-                            iss: "steppingcloudforuser",
-                            sub: response[0].USER_ID,
-                            jwtKey: "steppingcloudsecret",
-                            algorithm: "HS256",
-                            iat: new Date().getTime(),
-                            exp: new Date().setTime(new Date().getTime() + 900000000),
-                        },
+                        iss: "steppingcloudforuser",
+                        sub: response[0].USER_ID,
+                        jwtKey: "steppingcloudsecret",
+                        algorithm: "HS256",
+                        iat: new Date().getTime(),
+                        exp: new Date().setTime(new Date().getTime() + 900000000),
+                    },
                         JWT_SECRET
                     )
                     if (response.length == 0) response = response
@@ -68,7 +66,7 @@ module.exports = {
                     });
                 }
             } else {
-                console.log("Its a user")
+
                 const payload = req.body;
                 const logger = req.logger;
                 let db = new dbClass(req.db);
@@ -92,13 +90,13 @@ module.exports = {
 
                 if (response) {
                     const token = JWT.sign({
-                            iss: "steppingcloudforuser",
-                            sub: response[0].USER_ID,
-                            jwtKey: "steppingcloudsecret",
-                            algorithm: "HS256",
-                            iat: new Date().getTime(),
-                            exp: new Date().setTime(new Date().getTime() + 90000000),
-                        },
+                        iss: "steppingcloudforuser",
+                        sub: response[0].USER_ID,
+                        jwtKey: "steppingcloudsecret",
+                        algorithm: "HS256",
+                        iat: new Date().getTime(),
+                        exp: new Date().setTime(new Date().getTime() + 90000000),
+                    },
                         JWT_SECRET
                     );
                     if (response.length == 0) response = response
@@ -148,7 +146,6 @@ module.exports = {
                         logger,
                         db
                     });
-                    console.log(response)
 
                     if (response == "foundemail") {
                         res.type("application/json").status(200).send({

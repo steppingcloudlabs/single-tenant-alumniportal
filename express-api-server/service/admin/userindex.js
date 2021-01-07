@@ -86,7 +86,7 @@ module.exports = () => {
 						const schema = await utils.currentSchema({
 							db
 						});
-						console.log("I'm here")
+
 						const createdat = new Date().toISOString();
 						const createdby = "admin";
 						const modifiedby = "admin";
@@ -127,15 +127,13 @@ module.exports = () => {
 						'${STATE}',
 						'${COUNTRY}'
 						)`
-							console.log(query)
+
 							const statement = await db.preparePromisified(query)
 							let results = await db.statementExecPromisified(statement, [])
-							console.log("Added user", results)
 							resolve(results);
 						}
 
 					} catch (error) {
-						console.log(error)
 						reject(error);
 					}
 				}
