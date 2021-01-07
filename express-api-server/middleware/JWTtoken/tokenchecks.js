@@ -5,7 +5,7 @@ const JWT = require('jsonwebtoken');
 module.exports =
 	function checkusertoken(req, res, next) {
 		if (!req.headers.authorization) {
-			return res.status(400).json({
+			return res.status(200).json({
 				status: "400",
 				result: "Rejected Request, Token Required"
 			});
@@ -20,7 +20,7 @@ module.exports =
 				const tokendetails = JWT.verify(token, JWT_SECRET);
 				const expirytimefromtoken = tokendetails.exp;
 				if (Date.now() > expirytimefromtoken) {
-					res.type("application/json").status(400).send({
+					res.type("application/json").status(200).send({
 						status: "400",
 						result: "Token expired, Please Login Again"
 					});
@@ -28,14 +28,14 @@ module.exports =
 					next();
 				}
 			} catch (error) {
-				res.type("application/json").status(400).send({
+				res.type("application/json").status(200).send({
 					status: "400",
 					result: "Rejected Request, Token Required"
 				});
 			}
 
 		} else {
-			res.type("application/json").status(400).send({
+			res.type("application/json").status(200).send({
 				status: "400",
 				result: "Rejected Request, Token Required"
 			});
