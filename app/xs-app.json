@@ -3,6 +3,21 @@
 	"authenticationMethod": "route",
 	"routes": [
 		{
+			"source": "^/user/(.*)$",
+			"authenticationType": "none",
+			"destination": "single-tenant-alumniportal-sap-srv"
+		},
+		{
+			"source": "^/auth/(.*)$",
+			"authenticationType": "none",
+			"destination": "single-tenant-alumniportal-sap-srv"
+		},
+		{
+			"source": "^/admin/(.*)$",
+			"authenticationType": "none",
+			"destination": "single-tenant-alumniportal-sap-srv"
+		},
+		{
 			"source": "^/(.*)",
 			"authenticationType": "none",
 			"localDir": "resource"
