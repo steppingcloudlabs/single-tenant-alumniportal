@@ -65,9 +65,7 @@ module.exports = () => {
 						} = payload.payload;
 						DATE_OF_RELIEVING = DATE_OF_RELIEVING == undefined ? " " : DATE_OF_RELIEVING;
 						USER_ID = USER_ID == undefined ? " " : USER_ID;
-
 						DATE_OF_RESIGNATION = DATE_OF_RESIGNATION == undefined ? " " : DATE_OF_RESIGNATION;
-
 						LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD = LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD == undefined ? " " : LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD;
 						PERSONAL_EMAIL_ID = PERSONAL_EMAIL_ID == undefined ? " " : PERSONAL_EMAIL_ID;
 						FIRST_NAME_PERSONAL_INFORMATION = FIRST_NAME_PERSONAL_INFORMATION == undefined ? " " : FIRST_NAME_PERSONAL_INFORMATION;
@@ -86,6 +84,11 @@ module.exports = () => {
 						const schema = await utils.currentSchema({
 							db
 						});
+
+						DATE_OF_BIRTH = new Date(DATE_OF_BIRTH).getTime().toString() == "NaN" ? DATE_OF_BIRTH : new Date(DATE_OF_BIRTH).getTime();
+						DATE_OF_RESIGNATION = new Date(DATE_OF_RESIGNATION).getTime().toString() == "NaN" ? DATE_OF_RESIGNATION : new Date(DATE_OF_RESIGNATION).getTime();
+						LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD = new Date(LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD).getTime().toString() == "NaN" ? LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD : new Date(LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD).getTime();
+						DATE_OF_RELIEVING = new Date(DATE_OF_RELIEVING).getTime().toString() == "NaN" ? DATE_OF_RELIEVING : new Date(DATE_OF_RELIEVING).getTime();
 
 						const createdat = new Date().toISOString();
 						const createdby = "admin";
