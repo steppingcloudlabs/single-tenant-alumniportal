@@ -117,6 +117,48 @@ app.get("/user/action/info", async (req, res) => {
   }
 });
 
+// Creation on first admin user
+app.post("/initialize", async (req, res, next) => {
+  try {
+    const dbClass = require("sap-hdbext-promisfied")
+    const uuid = require("uuid");
+    const utils = require("./utils/database/index.js")();
+    let db = new dbClass(req.db);
+    let createdat = new Date().toISOString();
+    let createdby = "admin";
+    let modifiedby = "admin";
+    let modifiedat = new Date().toISOString();
+    let USERTYPE = req.body.USERTYPE;
+    let PASSWORD = req.body.PASSWORD;
+    let USERID = uuid();
+    let EMAIL = req.body.EMAIL;
+    let ID = uuid();
+    const schema = await utils.currentSchema({ db });
+    let query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
+	                    '${createdat}',
+	                    '${createdby}',
+	                    '${modifiedat}',
+	                    '${modifiedby}',
+                      '${ID}'/*ID <NVARCHAR(36)>*/,
+                      '${USERID}',
+	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
+                      '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
+                      '${USERTYPE}'
+                        )`
+
+    let statement = await db.preparePromisified(query)
+    let results = await db.statementExecPromisified(statement, [])
+    let result = JSON.stringify({
+      Objects: "results"
+    })
+    return res.type("application/json").status(200).send(result)
+  } catch (e) {
+    return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
+  }
+})
+
+
+//
 const auth = require('./router/auth/index');
 app.use("/auth", auth);
 
