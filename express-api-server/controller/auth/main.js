@@ -54,6 +54,7 @@ module.exports = {
                         algorithm: "HS256",
                         iat: new Date().getTime(),
                         exp: new Date().setTime(new Date().getTime() + 900000000),
+                        usertype: response[0].USERTYPE,
                     },
                         JWT_SECRET
                     )
@@ -96,6 +97,7 @@ module.exports = {
                         algorithm: "HS256",
                         iat: new Date().getTime(),
                         exp: new Date().setTime(new Date().getTime() + 90000000),
+                        usertype: response[0].USERTYPE,
                     },
                         JWT_SECRET
                     );

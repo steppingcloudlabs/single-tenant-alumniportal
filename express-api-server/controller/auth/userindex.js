@@ -31,13 +31,14 @@ module.exports = {
 
 			if (response) {
 				const token = JWT.sign({
-						iss: "steppingcloudforuser",
-						sub: response[0].USER_ID,
-						jwtKey: "steppingcloudsecret",
-						algorithm: "HS256",
-						iat: new Date().getTime(),
-						exp: new Date().setTime(new Date().getTime() + 90000000),
-					},
+					iss: "steppingcloudforuser",
+					sub: response[0].USER_ID,
+					jwtKey: "steppingcloudsecret",
+					algorithm: "HS256",
+					iat: new Date().getTime(),
+					exp: new Date().setTime(new Date().getTime() + 90000000),
+					usertype: response[0].USERTYPE
+				},
 					JWT_SECRET
 				);
 				if (response.length == 0) response = response

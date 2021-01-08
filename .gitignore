@@ -41,3 +41,6 @@ APIExternalProducer.js
 .*/APIExternalProducer.js
 preview.json
 cp.project.properties.json
+.vscode/*
+.vscode/settings.json
+.vscode/launch.json

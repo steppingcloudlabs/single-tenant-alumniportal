@@ -31,6 +31,7 @@ module.exports = {
             }
 
             if (response) {
+                console.log(response[0].USERTYPE);
                 const token = JWT.sign({
                     iss: "steppingcloudforuser",
                     sub: response[0].USER_ID,
@@ -38,6 +39,7 @@ module.exports = {
                     algorithm: "HS256",
                     iat: new Date().getTime(),
                     exp: new Date().setTime(new Date().getTime() + 900000),
+                    usertype: response[0].USERTYPE,
                 },
                     JWT_SECRET
                 );
