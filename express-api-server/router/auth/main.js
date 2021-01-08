@@ -20,6 +20,13 @@ expressrouter
 expressrouter
     .route("/reset/:token")
     .post((req, res, next) => authcontroller.resetpassword(req, res, next));
-
-
+expressrouter
+    .route("/integration/user/add")
+    .post((req, res, next) => authcontroller.addIntegrationUser(req, res, next));
+expressrouter
+    .route("/integration/user/delete")
+    .post((req, res, next) => authcontroller.deleteIntegrationUser(req, res, next));
+expressrouter
+    .route("/integration/user/login")
+    .post((req, res, next) => authcontroller.loginIntegrationUser(req, res, next));
 module.exports = expressrouter;
