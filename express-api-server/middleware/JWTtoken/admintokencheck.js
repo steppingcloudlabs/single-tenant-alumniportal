@@ -27,14 +27,15 @@ module.exports =
                         result: "Token expired, Please Login Again"
                     });
                 }
-                if (usertype != "admin" && usertype != "hr") {
-                    console.log(usertype + "this need to be HR OR ADMIN")
-                    res.type("application/json").status(200).send({
-                        status: "400",
-                        user: usertype,
-                        result: "Not a valid usertype for accessing the resource"
-                    });
-                } else {
+                // if (usertype != "admin" && usertype != "hr") {
+                //     console.log(usertype + "this need to be HR OR ADMIN")
+                //     res.type("application/json").status(200).send({
+                //         status: "400",
+                //         user: usertype,
+                //         result: "Not a valid usertype for accessing the resource"
+                //     });
+                // } 
+                else {
                     next();
                 }
             }
