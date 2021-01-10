@@ -1,72 +1,33 @@
-/*eslint no-console: 0*/
 "use strict";
 const express = require("express");
 const bodyParser = require("body-parser");
 const compression = require("compression");
 const xsenv = require("@sap/xsenv");
 const xssec = require("@sap/xssec");
-xsenv.loadEnv("D:\\steppingcloud\\github\\single-tenant-alumniportal\\express-api-server\\default-env.json");
 const xsHDBConn = require("@sap/hdbext");
 const passport = require("passport");
 const admintokenchecker = require('./middleware/JWTtoken/admintokencheck')
 const usertokenchecker = require('./middleware/JWTtoken/tokenchecks')
 const port = process.env.PORT || 8000;
 const helmet = require('helmet');
-// Handling cors
 const cors = require("cors");
+const log = require("cf-nodejs-logging-support");
 
-//Initialize Express App for XS UAA and HDBEXT Middleware
 const app = express();
-app.use(cors());
-app.use(bodyParser.json({
-  limit: '1024mb'
-}));
-app.use(bodyParser.urlencoded({
-  limit: '1024mb',
-  extended: true
-}));
-app.disable('x-powered-by');
 
-// ...
+//---------------------------------------------------------------------------------------------
+// middlewares for CORS, bodyParser, helmet, compress responses.
+//---------------------------------------------------------------------------------------------
+
+app.use(cors());
+app.use(bodyParser.json({ limit: '1024mb' }));
+app.use(bodyParser.urlencoded({ limit: '1024mb', extended: true }));
+app.disable('x-powered-by');
 app.use(helmet());
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard());
-// Sets "Referrer-Policy: no-referrer".
-app.use(helmet.referrerPolicy({
-  policy: "no-referrer"
-}));
-
-// passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
-//   uaa: {
-//     tag: "xsuaa"
-//   }
-// }).uaa));
-
-const log = require("cf-nodejs-logging-support");
-log.setLoggingLevel("info");
-log.setLogPattern("{{written_at}} - {{msg}}");
-app.use(log.logNetwork);
-//app.use(passport.initialize());
-var hanaOptions = xsenv.getServices({
-  hana: {
-    tag: "hana"
-  }
-});
-hanaOptions.hana.pooling = true;
-
-app.use(
-  // passport.authenticate("JWT", {
-  //   session: false
-  // }),
-  xsHDBConn.middleware(hanaOptions.hana)
-);
-
-//Compression
-app.use(require("compression")({
-  threshold: "1b"
-}));
-
-// compress responses
+app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
+app.use(require("compression")({ threshold: "1024b" }));
 app.use(compression());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -77,6 +38,48 @@ app.use(function (req, res, next) {
   );
   next();
 });
+
+//---------------------------------------------------------------------------------------------
+// Passport injection for app router integration and secure Hana Database connection.
+//---------------------------------------------------------------------------------------------
+
+app.use(passport.initialize());
+passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
+  uaa: {
+    tag: "xsuaa"
+  }
+}).uaa));
+
+//---------------------------------------------------------------------------------------------
+// Logging configuration for SAP Hana Cloud Platfrom.
+//---------------------------------------------------------------------------------------------
+
+log.setLoggingLevel("info");
+log.setLogPattern("{{written_at}} - {{msg}}");
+app.use(log.logNetwork);
+
+//---------------------------------------------------------------------------------------------
+// SAP Hana Database Configuration and connection injection into request object.
+//---------------------------------------------------------------------------------------------
+var hanaOptions = xsenv.getServices(
+  {
+    hana: {
+      tag: "hana"
+    }
+  }
+);
+hanaOptions.hana.pooling = true;
+app.use(
+  // passport.authenticate("JWT", {
+  //   session: false
+  // }),
+  xsHDBConn.middleware(hanaOptions.hana)
+);
+
+//---------------------------------------------------------------------------------------------
+// Application Test Routes for dataabse access 
+//---------------------------------------------------------------------------------------------
+
 
 app.get("/", async (req, res) => {
   try {
@@ -93,31 +96,10 @@ app.get("/", async (req, res) => {
   }
 });
 
-app.get("/admin/action/info", async (req, res) => {
-
-  let info = {
-    'userInfo': req.authInfo.userInfo,
-    'subdomain': req.authInfo.subdomain,
-    'tenantId': req.authInfo.identityZone
-  };
-  res.status(200).json(info);
-
-});
-
-app.get("/user/action/info", async (req, res) => {
-  if (req.authInfo.checkScope('$XSAPPNAME.Administrator')) {
-    let info = {
-      'userInfo': req.authInfo.userInfo,
-      'subdomain': req.authInfo.subdomain,
-      'tenantId': req.authInfo.identityZone
-    };
-    res.status(200).json(info);
-  } else {
-    res.status(403).send('Forbidden');
-  }
-});
-
-// Creation on first admin user
+//---------------------------------------------------------------------------------------------
+// Applcation init route, created a ROOT admin user which can be used for creating admin.
+// Planing is to improve this thing ( In new deployment this api is the only way to create admin, this api has no security checks) 
+//---------------------------------------------------------------------------------------------
 app.post("/initialize", async (req, res, next) => {
   try {
     const dbClass = require("sap-hdbext-promisfied")
@@ -158,11 +140,15 @@ app.post("/initialize", async (req, res, next) => {
 })
 
 
-//
+//---------------------------------------------------------------------------------------------
+// Commong Authentication and Authorization routes for User, Admin and HR.
+//---------------------------------------------------------------------------------------------
 const auth = require('./router/auth/index');
 app.use("/auth", auth);
 
-// ADMIN ROUTES 
+//---------------------------------------------------------------------------------------------
+// Admin Routes that for managing Alumni portal data.
+//---------------------------------------------------------------------------------------------
 const adminskillsRoutes = require("./router/skills");
 const adminjobRoutes = require("./router/job");
 const adminnefRoutes = require("./router/nef");
@@ -206,4 +192,4 @@ app.use("/search", usertokenchecker, searchuserRoutes);
 app.listen(port, () => {
   console.log(`Server listening on port: ${port}`);
 });
-module.exports = express;
+module.exports = app;
