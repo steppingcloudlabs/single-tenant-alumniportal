@@ -1,6 +1,7 @@
 const uuid = require("uuid");
 const bcrypt = require('bcryptjs');
 const AWS = require('aws-sdk');
+const nodemailer = require('nodemailer')
 const {
 	JWT_SECRET
 } = require('../../config');
@@ -202,47 +203,27 @@ module.exports = () => {
 					},
 						JWT_SECRET
 					);
+					let html = `
+					<p>You are receiving this because you (or someone else) have requested the reset of the PASSWORD for your account.</p>
+					
+                    <p>Please click on the following link, or paste this into your browser to complete the process: https://org-dev-sclabs-space-test-single-tenant-alumniportal-sap-srv.cfapps.eu10.hana.ondemand.com/auth/reset/'${token}</p>
+                    <p>If you did not request this, please ignore this EMAIL and your PASSWORD will remain unchanged. Please note that the token will get expired in 24hrs </p>
+                    `
+					var transporter = nodemailer.createTransport({
+						service: 'gmail',
+						auth: {
+							user: 'prakritidev@steppingcloud.com',
+							pass: 'SteppingCloud'
+						}
+					});
 
-					// EMAIL sent and sending the token to reset the token
-					const params = {
-						Source: config['from_adderess'],
-						Destination: {
-							ToAddresses: [EMAIL],
-						},
-						ReplyToAddresses: [config['from_adderess']],
-						Message: {
-							Body: {
-								Text: {
-									Charset: 'UTF-8',
-									Data: 'You are receiving this because you (or someone else) have requested the reset of the PASSWORD for your account.\n\n' +
-										'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-										'https://org-dev-sclabs-space-test-single-tenant-alumniportal-sap-srv.cfapps.eu10.hana.ondemand.com/user/auth/reset/' +
-										token +
-										'\n\n' +
-										'If you did not request this, please ignore this EMAIL and your PASSWORD will remain unchanged.\n' +
-										'Please note that the token will get expired in 24hrs',
-								},
-							},
-							Subject: {
-								Charset: 'UTF-8',
-								Data: 'PASSWORD Reset',
-							},
-						},
-					};
-					// Create the promise and SES service object
-					const sendPromise = new AWS.SES({
-						apiVersion: '2010-12-01'
-					})
-						.sendEMAIL(params)
-						.promise();
-					// Handle promise's fulfilled/rejected states
-					sendPromise
-						.then(function (data) {
-							resolve("tokensent");
-						})
-						.catch(function (err) {
-							reject(err.stack);
-						});
+					let info = await transporter.sendMail({
+						from: '"support@alumniportal" <prakritidev@steppingcloud.com>', // sender address
+						to: EMAIL, // list of receivers
+						subject: "AlumiPortal Password Reset Request", // Subject line
+						html: html, // html body
+					});
+					resolve("tokensent");
 				} else {
 					resolve("notfounduser");
 				}
@@ -263,7 +244,7 @@ module.exports = () => {
 					db
 				});
 				const {
-					newpassword
+					NEWPASSWORD,
 				} = payload.payload;
 
 				const resettokenforpass = resettoken.token
@@ -276,49 +257,12 @@ module.exports = () => {
 					// the payload body contains new PASSWORD to be reset
 					const EMAIL = decoderesettoken.sub;
 
-					const query =
-						`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"
-					SET "PASSWORD" = '${newpassword}' where USERNAME='${EMAIL}'`
+					const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"
+					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
 					const statement = await db.preparePromisified(query)
 					const result = await db.statementExecPromisified(statement, [])
-
 					if (result) {
-						// trigger mail to user about successful resetting of PASSWORD
-						const params = {
-							Source: config['from_adderess'],
-							Destination: {
-								ToAddresses: [decoderesettoken.sub],
-							},
-							ReplyToAddresses: [config['from_adderess']],
-							Message: {
-								Body: {
-									Text: {
-										Charset: 'UTF-8',
-										Data: 'This is a confirmation that the PASSWORD for your account ' +
-											decoderesettoken.sub +
-											' has just been changed.\n',
-									},
-								},
-								Subject: {
-									Charset: 'UTF-8',
-									Data: 'PASSWORD Changed Successfully',
-								},
-							},
-						};
-						// Create the promise and SES service object
-						const sendPromise = new AWS.SES({
-							apiVersion: '2010-12-01'
-						})
-							.sendEmail(params)
-							.promise();
-						// Handle promise's fulfilled/rejected states
-						sendPromise
-							.then(function (data) {
-								resolve('updated');
-							})
-							.catch(function (err) {
-								reject(err.stack);
-							});
+						resolve('updated');
 					} else {
 						resolve('Updation Failed, Please Check');
 					}
