@@ -143,7 +143,7 @@ app.post("/initialize", async (req, res, next) => {
 //---------------------------------------------------------------------------------------------
 // Commong Authentication and Authorization routes for User, Admin and HR.
 //---------------------------------------------------------------------------------------------
-const auth = require('./router/auth/index');
+const auth = require('./router/auth/main');
 app.use("/auth", auth);
 
 //---------------------------------------------------------------------------------------------

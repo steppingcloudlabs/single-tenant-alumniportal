@@ -370,5 +370,66 @@ module.exports = {
                 error: error.message
             });
         }
+    },
+    // FORGET AND RESET PASSWORD 
+    resetpassword: async (req, res) => {
+        try {
+
+            const payload = req.body;
+
+            let db = new dbClass(req.db);
+            let response = await userauthserivce.resetpassword({
+                payload,
+                db
+            });
+
+            if (response == "updated") {
+                res.status(200).send({
+                    status: 200,
+                    result: "New password updated successfully",
+                });
+            } else {
+                res.status(200).send({
+                    status: 200,
+                    result: response,
+                });
+            }
+
+        } catch (error) {
+            res.type("application/json").status(500).send({
+                status: "400",
+                error: error.message
+            });
+        }
+    },
+    forgetpassword: async (req, res) => {
+        try {
+            const payload = req.body;
+            let db = new dbClass(req.db);
+            let response = await userauthserivce.forgetpassword({
+                payload,
+                db
+            });
+
+            if (response == "notfounduser") {
+                res.status(200).send({
+                    status: 400,
+                    result: "user not found",
+                });
+            } else {
+                res.status(200).send({
+                    status: 200,
+                    result: response,
+                });
+            }
+
+        } catch (error) {
+            res.type("application/json").status(500).send({
+                status: "500",
+                error: error.message
+            });
+        }
     }
+
+
 }

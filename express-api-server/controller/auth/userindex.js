@@ -148,7 +148,7 @@ module.exports = {
 		} catch (error) {
 			res.type("application/json").status(500).send({
 				status: "500",
-				error: error
+				error: error.message
 			});
 		}
 	},

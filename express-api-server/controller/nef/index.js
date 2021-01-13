@@ -149,10 +149,13 @@ module.exports = {
 			const payload = req.query;
 			let db = new dbClass(req.db);
 			const logger = req.logger;
+			const schema = await utils.currentSchema({
+				db
+			})
 			let response = await nefserivce.viewfaq({
 				payload,
-				logger,
-				db
+				db,
+				schema
 			});
 			if (response) {
 				if (response.length == 0) response = response
@@ -160,9 +163,6 @@ module.exports = {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_FAQ_FAQ"
-				const schema = await utils.currentSchema({
-					db
-				})
 
 				let pagecount = await utils.getPageCount({
 					schema,

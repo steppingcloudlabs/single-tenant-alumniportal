@@ -193,13 +193,13 @@ module.exports = () => {
 				if (result1.length != 0) {
 
 					const token = JWT.sign({
-							iss: 'steppingcloudforpasswordreset',
-							sub: EMAIL,
-							jwtKey: 'steppingcloudsecret',
-							algorithm: 'HS256',
-							iat: new Date().getTime(),
-							exp: new Date().setDate(new Date().getDate() + 1),
-						},
+						iss: 'steppingcloudforpasswordreset',
+						sub: EMAIL,
+						jwtKey: 'steppingcloudsecret',
+						algorithm: 'HS256',
+						iat: new Date().getTime(),
+						exp: new Date().setDate(new Date().getDate() + 1),
+					},
 						JWT_SECRET
 					);
 
@@ -216,7 +216,7 @@ module.exports = () => {
 									Charset: 'UTF-8',
 									Data: 'You are receiving this because you (or someone else) have requested the reset of the PASSWORD for your account.\n\n' +
 										'Please click on the following link, or paste this into your browser to complete the process:\n\n' +
-										'https://45chqdynx28slt2nxpress-api-server.cfapps.eu10.hana.ondemand.com/user/auth/reset/' +
+										'https://org-dev-sclabs-space-test-single-tenant-alumniportal-sap-srv.cfapps.eu10.hana.ondemand.com/user/auth/reset/' +
 										token +
 										'\n\n' +
 										'If you did not request this, please ignore this EMAIL and your PASSWORD will remain unchanged.\n' +
@@ -231,8 +231,8 @@ module.exports = () => {
 					};
 					// Create the promise and SES service object
 					const sendPromise = new AWS.SES({
-							apiVersion: '2010-12-01'
-						})
+						apiVersion: '2010-12-01'
+					})
 						.sendEMAIL(params)
 						.promise();
 					// Handle promise's fulfilled/rejected states
@@ -307,8 +307,8 @@ module.exports = () => {
 						};
 						// Create the promise and SES service object
 						const sendPromise = new AWS.SES({
-								apiVersion: '2010-12-01'
-							})
+							apiVersion: '2010-12-01'
+						})
 							.sendEmail(params)
 							.promise();
 						// Handle promise's fulfilled/rejected states
