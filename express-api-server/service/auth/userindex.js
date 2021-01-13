@@ -245,18 +245,11 @@ module.exports = () => {
 				});
 				const {
 					NEWPASSWORD,
+					EMAIL
 				} = payload.payload;
 
-				const resettokenforpass = resettoken.token
-
-				const decoderesettoken = JWT.verify(resettokenforpass, JWT_SECRET);
-
-				if (Date.now() > decoderesettoken.exp) {
-					resolve('ResetTokenExpired');
-				} else {
-					// the payload body contains new PASSWORD to be reset
-					const EMAIL = decoderesettoken.sub;
-
+				const resettokenforpass = resettoken.TOKEN
+				if (resettokenforpass == undefined || resettokenforpass == 'null') {
 					const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"
 					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
 					const statement = await db.preparePromisified(query)
@@ -266,7 +259,28 @@ module.exports = () => {
 					} else {
 						resolve('Updation Failed, Please Check');
 					}
+				} else {
+					const decoderesettoken = JWT.verify(resettokenforpass, JWT_SECRET);
+
+					if (Date.now() > decoderesettoken.exp) {
+						resolve('ResetTokenExpired');
+					} else {
+						// the payload body contains new PASSWORD to be reset
+						const EMAIL = decoderesettoken.sub;
+
+						const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"
+					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
+						const statement = await db.preparePromisified(query)
+						const result = await db.statementExecPromisified(statement, [])
+						if (result) {
+							resolve('updated');
+						} else {
+							resolve('Updation Failed, Please Check');
+						}
+					}
 				}
+
+
 			} catch (error) {
 				reject(error);
 			}
