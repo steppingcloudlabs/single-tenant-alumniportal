@@ -376,11 +376,10 @@ module.exports = {
         try {
 
             const payload = req.body;
-            const resettoken = req.query;
+
             let db = new dbClass(req.db);
             let response = await userauthserivce.resetpassword({
                 payload,
-                resettoken,
                 db
             });
 

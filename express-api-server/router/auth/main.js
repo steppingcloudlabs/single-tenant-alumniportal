@@ -18,7 +18,7 @@ expressrouter
     .route("/forgetpassword")
     .post((req, res, next) => authcontroller.forgetpassword(req, res, next));
 expressrouter
-    .route("/reset")
+    .route("/reset/:token")
     .post((req, res, next) => authcontroller.resetpassword(req, res, next));
 expressrouter
     .route("/integration/user/add")
