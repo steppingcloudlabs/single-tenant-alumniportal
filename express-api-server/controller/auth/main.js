@@ -122,7 +122,7 @@ module.exports = {
             req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
             res.type("application/json").status(200).send({
                 status: "500",
-                result: error
+                result: error.message
 
             });
         }
@@ -187,7 +187,7 @@ module.exports = {
                     req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/signup ${error}`);
                     res.type("application/json").status(500).send({
                         status: "500",
-                        error: error
+                        error: error.message
                     });
                 }
             } else {
@@ -236,7 +236,7 @@ module.exports = {
             req.logger.error(` Error for ${req.logger.getTenantId()} at auth/index/signup ${error}`);
             res.type("application/json").status(500).send({
                 status: "500",
-                error: error
+                error: error.message
             });
         }
     },
