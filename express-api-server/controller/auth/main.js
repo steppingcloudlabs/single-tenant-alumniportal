@@ -39,12 +39,12 @@ module.exports = {
 
                 if (response == "incorrectuser") {
                     res.type("application/json").status(200).send({
-                        status: "200",
-                        result: "Incorrect Admin Email"
+                        status: "400",
+                        result: "Incorrect Username"
                     });
                 } else if (response == "incorrectpassword") {
                     res.type("application/json").status(200).send({
-                        status: "200",
+                        status: "400",
                         result: "Incorrect password"
                     });
                 } else if (response) {
@@ -79,12 +79,12 @@ module.exports = {
                 });
                 if (response == "incorrectuser") {
                     res.type("application/json").status(200).send({
-                        status: "200",
-                        result: "Incorrect ALumni Username"
+                        status: "400",
+                        result: "Incorrect Username"
                     });
                 } else if (response == "incorrectpassword") {
                     res.type("application/json").status(200).send({
-                        status: "200",
+                        status: "400",
                         result: "Incorrect password"
                     });
                 }

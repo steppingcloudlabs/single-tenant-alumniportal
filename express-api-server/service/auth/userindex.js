@@ -206,7 +206,7 @@ module.exports = () => {
 					let html = `
 					<p>You are receiving this because you (or someone else) have requested the reset of the PASSWORD for your account.</p>
 					
-                    <p>Please click on the following link, or paste this into your browser to complete the process: https://org-dev-sclabs-space-test-single-tenant-alumniportal-sap-srv.cfapps.eu10.hana.ondemand.com/auth/reset/'${token}</p>
+                    <p>Please click on the following link, or paste this into your browser to complete the process: https://org-dev-sclabs-space-test-single-tenant-alumniportal-sap-srv.cfapps.eu10.hana.ondemand.com/auth/reset'${token}</p>
                     <p>If you did not request this, please ignore this EMAIL and your PASSWORD will remain unchanged. Please note that the token will get expired in 24hrs </p>
                     `
 					var transporter = nodemailer.createTransport({
@@ -248,9 +248,9 @@ module.exports = () => {
 					EMAIL
 				} = payload.payload;
 
-				const resettokenforpass = resettoken.TOKEN
-				if (resettokenforpass == undefined || resettokenforpass == 'null') {
-					const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"
+
+				if (resettoken == undefined || resettoken == 'null') {
+					const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"
 					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
 					const statement = await db.preparePromisified(query)
 					const result = await db.statementExecPromisified(statement, [])
@@ -260,15 +260,15 @@ module.exports = () => {
 						resolve('Updation Failed, Please Check');
 					}
 				} else {
+					const resettokenforpass = resettoken.TOKEN
 					const decoderesettoken = JWT.verify(resettokenforpass, JWT_SECRET);
-
 					if (Date.now() > decoderesettoken.exp) {
 						resolve('ResetTokenExpired');
 					} else {
 						// the payload body contains new PASSWORD to be reset
 						const EMAIL = decoderesettoken.sub;
 
-						const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"
+						const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"
 					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
 						const statement = await db.preparePromisified(query)
 						const result = await db.statementExecPromisified(statement, [])
