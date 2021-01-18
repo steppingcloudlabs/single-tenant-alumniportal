@@ -109,6 +109,10 @@ module.exports = () => {
 								WHEN '${payload.payload.CONTENT}' != 'undefined' THEN '${payload.payload.CONTENT}'
 								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.ID}')
 								END,
+						"DATE" = CASE
+								WHEN '${payload.payload.DATE}' != 'undefined' THEN '${payload.payload.DATE}'
+								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.ID}')
+								END,
 						"PHOTO" = case
 								WHEN '${payload.payload.PHOTO}' != 'undefined'
 								THEN '${payload.payload.PHOTO}'
@@ -404,6 +408,10 @@ module.exports = () => {
 					   "CONTENT" = CASE
 								WHEN '${payload.payload.CONTENT}' != 'undefined' THEN '${payload.payload.CONTENT}'
 								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.payload.ID}')
+								END,
+						"DATE" = CASE
+								WHEN '${payload.payload.DATE}' != 'undefined' THEN '${payload.payload.DATE}'
+								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.ID}')
 								END,
 						"PHOTO" = case
 								WHEN '${payload.payload.PHOTO}' != 'undefined' THEN '${payload.payload.PHOTO}'

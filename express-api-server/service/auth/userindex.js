@@ -206,7 +206,7 @@ module.exports = () => {
 					let html = `
 					<p>You are receiving this because you (or someone else) have requested the reset of the PASSWORD for your account.</p>
 					
-                    <p>Please click on the following link, or paste this into your browser to complete the process: https://org-dev-sclabs-space-test-single-tenant-alumniportal-sap-srv.cfapps.eu10.hana.ondemand.com/auth/reset'${token}</p>
+                    <p>Please click on the following link, or paste this into your browser to complete the process: https://org-dev-sclabs-space-test-single-tenant-alumniportal-sap.cfapps.eu10.hana.ondemand.com/#/resetpassword/${token}</p>
                     <p>If you did not request this, please ignore this EMAIL and your PASSWORD will remain unchanged. Please note that the token will get expired in 24hrs </p>
                     `
 					var transporter = nodemailer.createTransport({
@@ -245,19 +245,29 @@ module.exports = () => {
 				});
 				const {
 					NEWPASSWORD,
+					OLDPASSWORD,
 					EMAIL
 				} = payload.payload;
 
 
-				if (resettoken == undefined || resettoken == 'null') {
-					const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"
+				if (EMAIL) {
+					const query1 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
+					const statement1 = await db.preparePromisified(query1)
+					const result1 = await db.statementExecPromisified(statement1, [])
+
+					if (result1[0].PASSWORD == OLDPASSWORD) {
+						const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"
 					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
-					const statement = await db.preparePromisified(query)
-					const result = await db.statementExecPromisified(statement, [])
-					if (result) {
-						resolve('updated');
-					} else {
-						resolve('Updation Failed, Please Check');
+						const statement = await db.preparePromisified(query)
+						const result = await db.statementExecPromisified(statement, [])
+						if (result) {
+							resolve('updated');
+						} else {
+							resolve('Updation Failed, Current Password Not matched');
+						}
+					}
+					else {
+						resolve('Updation Failed');
 					}
 				} else {
 					const resettokenforpass = resettoken.TOKEN
@@ -267,7 +277,6 @@ module.exports = () => {
 					} else {
 						// the payload body contains new PASSWORD to be reset
 						const EMAIL = decoderesettoken.sub;
-
 						const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"
 					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
 						const statement = await db.preparePromisified(query)
