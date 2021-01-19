@@ -28,7 +28,7 @@ module.exports = () => {
 				if (result.length == 0) {
 					resolve("incorrectuser")
 				} else {
-					const query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where PASSWORD='${PASSWORD}'`
+					const query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where PASSWORD='${PASSWORD}' AND USERNAME = '${EMAIL}'`
 					const statement2 = await db.preparePromisified(query2)
 					const result2 = await db.statementExecPromisified(statement2, [])
 					if (result2.length == 0) {
