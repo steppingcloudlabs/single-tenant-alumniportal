@@ -26,4 +26,9 @@ expressrouter
 	.route("/maps/userids/get")
 	.get((req, res, next) => searchContoller.userids(req, res, next));
 
+// For map 
+expressrouter
+	.route("/maps/userprofile/get")
+	.get((req, res, next) => searchContoller.getMapsProfile(req, res, next));
+
 module.exports = expressrouter;

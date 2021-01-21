@@ -25,7 +25,7 @@ module.exports = () => {
 						A1."PERSONAL_EMAIL_ID",
 						A1."FIRST_NAME_PERSONAL_INFORMATION",
 						A1."LAST_NAME_PERSONAL_INFORMATION",
-						A1."MIDDLE_NAME_PERSONAL_INFORMATION",
+						IFNULL(A1.MIDDLE_NAME_PERSONAL_INFORMATION,'') "MIDDLE_NAME_PERSONAL_INFORMATION",
 						A1."NATIONALITY_PERSONAL_INFORMATION",
 						A1."SALUTATION_PERSONAL_INFORMATION",
 						IFNULL(A1.CITY_ADDRESSES,'') "CITY_ADDRESSES",
@@ -216,11 +216,34 @@ module.exports = () => {
 			}
 		});
 	};
+	const getMapsProfile = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				let USERID = payload.USERID
+				const query = `SELECT "ID", "USER_ID", "PERSONAL_EMAIL_ID", "FIRST_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION", IFNULL(MIDDLE_NAME_PERSONAL_INFORMATION,'') "MIDDLE_NAME_PERSONAL_INFORMATION", "SALUTATION_PERSONAL_INFORMATION", "CITY_ADDRESSES" "LINKEDIN", "PROFILEIMAGE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE "USER_ID" = '${USERID}'`
+				console.log(query);
+				const statement = await db.preparePromisified(query)
+				const results = await db.statementExecPromisified(statement, [])
+				resolve(results);
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
 	return {
 		searchUser,
 		searchSkill,
 		searchAdmin,
 		searchJob,
-		searchUserids
+		searchUserids,
+		getMapsProfile
 	}
 };

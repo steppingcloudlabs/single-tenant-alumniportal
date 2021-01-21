@@ -207,10 +207,40 @@ module.exports = {
 				});
 			}
 		} catch (error) {
-			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/search/job ${error}`);
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/map/userid ${error}`);
 			res.status(400).send({
 				status: "400",
-				result: error
+				result: error.message
+			});
+		}
+	},
+
+	getMapsProfile: async (req, res) => {
+		try {
+			const payload = req.query;
+			let db = new dbClass(req.db);
+			let response = await searchService.getMapsProfile({
+				payload,
+				db
+			});
+			if (response) {
+				res.status(200).send({
+					status: "200",
+					result: response,
+					pagination: {}
+				});
+			} else {
+				res.status(400).send({
+					status: "400",
+					result: response
+				});
+			}
+
+		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/map/profile ${error}`);
+			res.status(500).send({
+				status: "400",
+				result: error.message
 			});
 		}
 	}
