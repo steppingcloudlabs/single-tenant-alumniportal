@@ -15,5 +15,6 @@ COLUMN TABLE SCLABS_ALUMNIPORTAL_JOB_JOB (
   postingStatus NVARCHAR(5000),
   postingstartdate NVARCHAR(5000),
   postingenddate NVARCHAR(5000),
+  applylink NVARCHAR(5000),
   PRIMARY KEY(ID)
 )
