@@ -49,7 +49,7 @@ module.exports = {
 			});
 			if (response) {
 				if (response.length == 0) response = response
-				
+
 				res.type("application/json").status(200).send({
 					status: "200",
 					result: response
@@ -83,7 +83,7 @@ module.exports = {
 
 			if (response) {
 				if (response.length == 0) response = response
-				
+
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				tablename = "SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"
@@ -153,4 +153,34 @@ module.exports = {
 		}
 	},
 
+	createuserbulk: async (req, res) => {
+		try {
+			const payload = req;
+			let db = new dbClass(req.db);
+			let response = await adminserivce.createuserbulk({
+				payload,
+				db
+			});
+
+			if (response == "userexists") {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: "User Id already exists"
+				});
+			} else {
+
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response
+				});
+			}
+
+		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/userindex/create/_bulk ${error}`);
+			res.status(500).send({
+				status: "500",
+				result: error.message
+			});
+		}
+	}
 }

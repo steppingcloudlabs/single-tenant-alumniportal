@@ -13,5 +13,7 @@ expressrouter
 expressrouter
 	.route("/user/delete")
 	.post((req, res, next) => admincontroller.deleteuser(req, res, next));
-
+expressrouter
+	.route("/user/create/_bulk")
+	.post((req, res, next) => admincontroller.createuserbulk(req, res, next));
 module.exports = expressrouter;

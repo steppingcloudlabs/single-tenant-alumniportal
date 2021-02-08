@@ -19,7 +19,7 @@ module.exports =
             try {
                 const tokendetails = JWT.verify(token, JWT_SECRET);
                 const expirytimefromtoken = tokendetails.exp;
-                console.log(tokendetails);
+                // console.log(tokendetails);
                 const usertype = tokendetails.usertype;
                 if (Date.now() > expirytimefromtoken) {
                     res.type("application/json").status(200).send({

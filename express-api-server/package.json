@@ -20,9 +20,12 @@
 		"morgan": "^1.10.0",
 		"nodemon": "",
 		"passport": "^0.4.1",
-		"prom-client": "^13.0.0",
+		"csvtojson": "latest",
 		"sap-hdbext-promisfied": "^2.202004.1",
-		"nodemailer": "6.4.17"
+		"nodemailer": "6.4.17",
+		"express-fileupload": "^1.2.1",
+		"data-forge": "^1.8.17",
+		"data-forge-fs": "0.0.9"
 	},
 	"description": "my description",
 	"devDependencies": {

@@ -1,5 +1,8 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
+require('data-forge-fs');
+const csv = require('csvtojson')
+const dataForge = require('data-forge');
 module.exports = () => {
 	const getuser = ({
 		payload,
@@ -30,6 +33,7 @@ module.exports = () => {
 		db
 	}) => {
 		return new Promise(async (resolve, reject) => {
+			console.log('creae user:' + payload)
 			try {
 				if (payload.payload.ID) {
 					try {
@@ -297,11 +301,145 @@ module.exports = () => {
 		});
 	};
 
+	const createuserbulk = ({ payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				if (payload.files && payload.files.filename.mimetype == 'text/csv') {
+					let file = payload.files.filename,
+						filename = file.name;
+					file.mv("./uploads/" + filename, function (err) {
+						if (err) {
+							console.log(err);
+							reject(err);
+						}
+					})
+
+
+					// for (let i = 0; i < array.length; i++) {
+					// 	console.log(array[i]);
+					// 	const createdat = new Date().toISOString();
+					// 	const createdby = "admin";
+					// 	const modifiedby = "admin";
+					// 	const modifiedat = new Date().toISOString();
+					// 	array[i].ID = uuid();
+					// 	array[i].createdat = createdat;
+					// 	array[i].createdby = createdby;
+					// 	array[i].modifiedat = modifiedat;
+					// 	array[i].modifiedby = modifiedby;
+					// }
+					// console.log(array);
+
+					// df.asCSV().writeFileSync("./uploads/" + filename);
+
+					// array = csv().fromFile("./uploads/" + filename);
+					let array = await csv().fromFile("./uploads/" + filename);
+					// df = new dataForge.DataFrame(array);
+					// console.log(array.length);
+					for (let i = 0; i < array.length; i++) {
+
+						payload = array[i];
+						// console.log(payload)
+						let { USER_ID, DATE_OF_RELIEVING, DATE_OF_RESIGNATION, LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD, PERSONAL_EMAIL_ID, FIRST_NAME_PERSONAL_INFORMATION, LAST_NAME_PERSONAL_INFORMATION, MIDDLE_NAME_PERSONAL_INFORMATION, NATIONALITY_PERSONAL_INFORMATION, SALUTATION_PERSONAL_INFORMATION, CITY_ADDRESSES, PHONE_NUMBER_PHONE_INFORMATION, MANAGER_JOB_INFORMATION, DESIGNATION_JOB_INFORMATION, GENDER, DATE_OF_BIRTH, STATE, COUNTRY } = payload;
+						DATE_OF_RELIEVING = DATE_OF_RELIEVING == undefined ? " " : DATE_OF_RELIEVING;
+						USER_ID = USER_ID == undefined ? " " : USER_ID;
+						DATE_OF_RESIGNATION = DATE_OF_RESIGNATION == undefined ? " " : DATE_OF_RESIGNATION;
+						LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD = LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD == undefined ? " " : LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD;
+						PERSONAL_EMAIL_ID = PERSONAL_EMAIL_ID == undefined ? " " : PERSONAL_EMAIL_ID;
+						FIRST_NAME_PERSONAL_INFORMATION = FIRST_NAME_PERSONAL_INFORMATION == undefined ? " " : FIRST_NAME_PERSONAL_INFORMATION;
+						LAST_NAME_PERSONAL_INFORMATION = LAST_NAME_PERSONAL_INFORMATION == undefined ? " " : LAST_NAME_PERSONAL_INFORMATION;
+						MIDDLE_NAME_PERSONAL_INFORMATION = MIDDLE_NAME_PERSONAL_INFORMATION == undefined ? " " : MIDDLE_NAME_PERSONAL_INFORMATION;
+						NATIONALITY_PERSONAL_INFORMATION = NATIONALITY_PERSONAL_INFORMATION == undefined ? " " : NATIONALITY_PERSONAL_INFORMATION;
+						SALUTATION_PERSONAL_INFORMATION = SALUTATION_PERSONAL_INFORMATION == undefined ? " " : SALUTATION_PERSONAL_INFORMATION;
+						CITY_ADDRESSES = CITY_ADDRESSES == undefined ? " " : CITY_ADDRESSES;
+						PHONE_NUMBER_PHONE_INFORMATION = PHONE_NUMBER_PHONE_INFORMATION == undefined ? " " : PHONE_NUMBER_PHONE_INFORMATION;
+						MANAGER_JOB_INFORMATION = MANAGER_JOB_INFORMATION == undefined ? " " : MANAGER_JOB_INFORMATION;
+						DESIGNATION_JOB_INFORMATION = DESIGNATION_JOB_INFORMATION == undefined ? " " : DESIGNATION_JOB_INFORMATION;
+						GENDER = GENDER == undefined ? " " : GENDER;
+						DATE_OF_BIRTH = DATE_OF_BIRTH == undefined ? " " : DATE_OF_BIRTH;
+						STATE = STATE == undefined ? " " : STATE;
+						COUNTRY = COUNTRY == undefined ? " " : COUNTRY;
+						const schema = await utils.currentSchema({
+							db
+						});
+
+						DATE_OF_BIRTH = new Date(DATE_OF_BIRTH).getTime().toString() == "NaN" ? DATE_OF_BIRTH : new Date(DATE_OF_BIRTH).getTime();
+						DATE_OF_RESIGNATION = new Date(DATE_OF_RESIGNATION).getTime().toString() == "NaN" ? DATE_OF_RESIGNATION : new Date(DATE_OF_RESIGNATION).getTime();
+						LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD = new Date(LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD).getTime().toString() == "NaN" ? LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD : new Date(LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD).getTime();
+						DATE_OF_RELIEVING = new Date(DATE_OF_RELIEVING).getTime().toString() == "NaN" ? DATE_OF_RELIEVING : new Date(DATE_OF_RELIEVING).getTime();
+
+						const createdat = new Date().toISOString();
+						const createdby = "admin";
+						const modifiedby = "admin";
+						const modifiedat = new Date().toISOString();
+						const date = new Date().toISOString();
+						const ID = uuid()
+						const query1 = `SELECT USER_ID FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" WHERE USER_ID='${USER_ID}'`
+
+						const statement1 = await db.preparePromisified(query1)
+
+						const results1 = await db.statementExecPromisified(statement1, [])
+						if (results1.length != 0) {
+							array[i].status = "duplicate"
+						} else {
+							const query =
+								`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" VALUES(	
+				        '${createdat}',
+						'${createdby}',
+						'${modifiedat}',
+						'${modifiedby}',
+						'${ID}',
+						'${USER_ID}',
+						'${GENDER}',
+						'${DATE_OF_BIRTH}',
+						'${DATE_OF_RELIEVING}',
+						'${DATE_OF_RESIGNATION}',
+						'${LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD}',
+						'${PERSONAL_EMAIL_ID}',
+					    '${FIRST_NAME_PERSONAL_INFORMATION}',
+						'${LAST_NAME_PERSONAL_INFORMATION}',
+						'${MIDDLE_NAME_PERSONAL_INFORMATION}',
+						'${NATIONALITY_PERSONAL_INFORMATION}',
+						'${SALUTATION_PERSONAL_INFORMATION}',
+						'${CITY_ADDRESSES}',
+						'${PHONE_NUMBER_PHONE_INFORMATION}',
+						'${MANAGER_JOB_INFORMATION}',
+						'${DESIGNATION_JOB_INFORMATION}',
+						'${STATE}',
+						'${COUNTRY}'
+						)`
+
+							const statement = await db.preparePromisified(query)
+							let results = await db.statementExecPromisified(statement, [])
+							console.log("results: " + results)
+							if (results == 1) {
+								array[i].status = 'success';
+							} else {
+								array[i].status = "failed";
+							}
+							// console.log(array[i]);
+						}
+					}
+					df = new dataForge.DataFrame(array);
+					// df.asCSV().writeFileSync("./uploads/" + filename);
+					// console.log(JSON.parse(new dataForge.DataFrame(array).toJSON()))
+					resolve(JSON.parse(new dataForge.DataFrame(array).toJSON()));
+				}
+				else {
+					resolve("Not Uploaded, csv file expected");
+				}
+
+			} catch (error) {
+				reject(error);
+			}
+
+		})
+	}
 	return {
 		createuser,
 		updateuser,
 		getuser,
 		deleteuser,
+		createuserbulk
 	};
 
 };

@@ -12,9 +12,9 @@ const port = process.env.PORT || 8000;
 const helmet = require('helmet');
 const cors = require("cors");
 const log = require("cf-nodejs-logging-support");
+const upload = require('express-fileupload')
 
 const app = express();
-
 //---------------------------------------------------------------------------------------------
 // middlewares for CORS, bodyParser, helmet, compress responses.
 //---------------------------------------------------------------------------------------------
@@ -23,6 +23,7 @@ app.use(cors());
 app.use(bodyParser.json({ limit: '1024mb' }));
 app.use(bodyParser.urlencoded({ limit: '1024mb', extended: true }));
 app.disable('x-powered-by');
+app.use(upload())
 app.use(helmet());
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard());
