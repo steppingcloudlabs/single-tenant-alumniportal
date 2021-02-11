@@ -8,6 +8,11 @@
 			"destination": "single-tenant-alumniportal-sap-srv"
 		},
 		{
+			"source": "^/search/(.*)$",
+			"authenticationType": "none",
+			"destination": "single-tenant-alumniportal-sap-srv"
+		},
+		{
 			"source": "^/auth/(.*)$",
 			"authenticationType": "none",
 			"destination": "single-tenant-alumniportal-sap-srv"
