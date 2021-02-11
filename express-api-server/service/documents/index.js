@@ -180,6 +180,16 @@ module.exports = () => {
 		});
 	};
 
+	const createdocumentsbulk = ({ payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+
+			} catch (error) {
+				reject(error);
+			}
+		})
+	}
+
 	return {
 		viewdocuments,
 		createdocuments,

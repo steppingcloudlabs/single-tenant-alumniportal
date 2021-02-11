@@ -44,3 +44,4 @@ cp.project.properties.json
 .vscode/*
 .vscode/settings.json
 .vscode/launch.json
+express-api-server/service/documents/index.js

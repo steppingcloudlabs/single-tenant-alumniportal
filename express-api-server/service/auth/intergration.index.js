@@ -1,10 +1,4 @@
 const uuid = require("uuid");
-const bcrypt = require('bcryptjs');
-const {
-    JWT_SECRET
-} = require('../../config');
-const JWT = require('jsonwebtoken');
-const config = require('../../config');
 const utils = require("../../utils/database/index.js")();
 module.exports = () => {
     const addIntegrationUser = ({ payload, logger, db }) => {
@@ -15,19 +9,19 @@ module.exports = () => {
                 });
                 const {
                     EMAIL,
-                    PASSWORD,
-                    USERTYPE
+                    PASSWORD
                 } = payload;
+                let USERTYPE = "integrationuser"
 
                 /**
                  * Check if Integration user is already added to the system ?
                  */
-                let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where EMAIL='${EMAIL}'`
+                let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
 
                 let statement = await db.preparePromisified(query)
 
                 let result = await db.statementExecPromisified(statement, [])
-                if (result.length > 0) {
+                if (result.length == 0) {
                     let createdat = new Date().toISOString();
                     let createdby = "admin";
                     let modifiedby = "admin";
@@ -87,7 +81,7 @@ module.exports = () => {
                             let result3 = await db.statementExecPromisified(statement3, [])
                             resolve(result3)
                         } else {
-                            resolve("notadded");
+                            reject(result);
                         }
                     }
                 }
@@ -96,8 +90,24 @@ module.exports = () => {
             }
         });
     }
+    const getIntegrationUsers = ({ payload, db }) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const schema = await utils.currentSchema({
+                    db
+                });
+                let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"`
+                let statement = await db.preparePromisified(query)
+                let result = await db.statementExecPromisified(statement, [])
+                resolve(result);
+            } catch (error) {
+                reject(error);
+            }
+        })
+    }
     return {
         addIntegrationUser,
-        loginIntegrationUser
+        loginIntegrationUser,
+        getIntegrationUsers
     }
 }

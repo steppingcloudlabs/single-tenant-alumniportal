@@ -304,7 +304,7 @@ module.exports = () => {
 	const createuserbulk = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				if (payload.files && payload.files.filename.mimetype == 'text/csv') {
+				if (payload.files) {
 					let file = payload.files.filename,
 						filename = file.name;
 					file.mv("./uploads/" + filename, function (err) {
@@ -410,7 +410,7 @@ module.exports = () => {
 
 							const statement = await db.preparePromisified(query)
 							let results = await db.statementExecPromisified(statement, [])
-							console.log("results: " + results)
+							// console.log("results: " + results)
 							if (results == 1) {
 								array[i].status = 'success';
 							} else {

@@ -130,11 +130,8 @@ app.post("/initialize", async (req, res, next) => {
                         )`
 
     let statement = await db.preparePromisified(query)
-    let results = await db.statementExecPromisified(statement, [])
-    let result = JSON.stringify({
-      Objects: "results"
-    })
-    return res.type("application/json").status(200).send(result)
+    let result = await db.statementExecPromisified(statement, [])
+    return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
   } catch (e) {
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
   }
@@ -142,11 +139,18 @@ app.post("/initialize", async (req, res, next) => {
 
 
 //---------------------------------------------------------------------------------------------
-// Commong Authentication and Authorization routes for User, Admin and HR.
+// Common Authentication and Authorization routes for User, Admin and HR.
 //---------------------------------------------------------------------------------------------
 const auth = require('./router/auth/main');
 app.use("/auth", auth);
+//---------------------------------------------------------------------------------------------
+//  Authentication  routes for Integration users.
+//---------------------------------------------------------------------------------------------
+const integrationAuth = require('./router/auth/integration.auth');
+app.use("/integration/auth", integrationAuth);
 
+const bulkjobs = require("./router/job");
+app.use("/integration", bulkjobs);
 //---------------------------------------------------------------------------------------------
 // Admin Routes that for managing Alumni portal data.
 //---------------------------------------------------------------------------------------------

@@ -70,8 +70,8 @@ module.exports = () => {
 						'${modifiedat}',
 						'${modifiedby}',
 						'${ID}',
-						'${payload.payload.TITLE}',
-						'${payload.payload.CONTENT}',
+						'${escape(escape(payload.payload.TITLE))}',
+						'${escape(escape(payload.payload.CONTENT))}',
 						'${payload.payload.PHOTO}',
 						'${payload.payload.DATE}'
 						)`
@@ -109,11 +109,11 @@ module.exports = () => {
 				let query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS"
 					SET "TITLE" = CASE
-								WHEN '${payload.payload.TITLE}' != 'undefined' THEN '${payload.payload.TITLE}'
+								WHEN '${escape(payload.payload.TITLE)}' != 'undefined' THEN '${escape(payload.payload.TITLE)}'
 								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.ID}')
 								END,
 					    "CONTENT" = CASE
-								WHEN '${payload.payload.CONTENT}' != 'undefined' THEN '${payload.payload.CONTENT}'
+								WHEN '${escape(payload.payload.CONTENT)}' != 'undefined' THEN '${escape(payload.payload.CONTENT)}'
 								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" where "ID"='${payload.payload.ID}')
 								END,
 						"DATE" = CASE
@@ -233,7 +233,7 @@ module.exports = () => {
 					let modifiedat = new Date().toISOString().split('T')[0];
 					let ID = uuid();
 					let query =
-						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${ID}', '${payload.payload.QUESTION}', '${payload.payload.ANSWER}')`
+						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${ID}', '${escape(payload.payload.QUESTION)}', '${escape(payload.payload.ANSWER)}')`
 					let statement = await db.preparePromisified(query)
 					let results = await db.statementExecPromisified(statement, [])
 					if (results == 1) {
@@ -264,7 +264,7 @@ module.exports = () => {
 				let query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ"
 					SET "QUESTION" = CASE 
-				    	WHEN '${payload.payload.QUESTION}' != 'undefined' THEN '${payload.payload.QUESTION}'
+				    	WHEN '${escape(payload.payload.QUESTION)}' != 'undefined' THEN '${escape(payload.payload.QUESTION)}'
 					    ELSE (select "QUESTION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.ID}')
 					    END,
 					"ANSWER" = CASE
@@ -370,8 +370,8 @@ module.exports = () => {
 						'${modifiedat}',
 						'${modifiedby}',
 						'${ID}',
-						'${payload.payload.TITLE}',
-						'${payload.payload.CONTENT}',
+						'${escape(payload.payload.TITLE)}',
+						'${escape(payload.payload.CONTENT)}',
 						'${payload.payload.PHOTO}',
 						'${payload.payload.DATE}')
 						`
@@ -410,11 +410,11 @@ module.exports = () => {
 				let query =
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS"
 					SET "TITLE" = CASE
-								WHEN '${payload.payload.TITLE}' != 'undefined' THEN '${payload.payload.TITLE}'
+								WHEN '${escape(payload.payload.TITLE)}' != 'undefined' THEN '${escape(payload.payload.TITLE)}'
 								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.payload.ID}')
 								END,
 					   "CONTENT" = CASE
-								WHEN '${payload.payload.CONTENT}' != 'undefined' THEN '${payload.payload.CONTENT}'
+								WHEN '${escape(payload.payload.CONTENT)}' != 'undefined' THEN '${escape(payload.payload.CONTENT)}'
 								ELSE (select "CONTENT" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" where "ID"='${payload.payload.ID}')
 								END,
 						"DATE" = CASE

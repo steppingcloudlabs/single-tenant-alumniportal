@@ -1,5 +1,11 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
+function EscapeApostrophe(context) {
+	return JSON.parse(JSON.stringify(context).replace("'", "''"));
+}
+function UnescapeApostrophe(context) {
+	return JSON.parse(JSON.stringify(context).replace("''", "'"));
+}
 module.exports = () => {
 
 	const getjob = ({
@@ -27,7 +33,7 @@ module.exports = () => {
 		});
 	};
 
-	const createjob = ({
+	let createjob = ({
 		payload,
 		db
 	}) => {
@@ -42,17 +48,19 @@ module.exports = () => {
 				const modifiedat = new Date().toISOString();
 				const date = new Date().toISOString();
 				const ID = uuid();
+				// payload = escape(payload);
 				const requisition_id = payload.payload.REQUISITIONID;
 				const posting_end_date = payload.payload.POSTINGENDDATE;
 				const posting_start_date = payload.payload.POSTINGSTARTDATE;
 				const job_posting_status = payload.payload.JOBPOSTINGSTATUS;
 				const department = payload.payload.DEPARTMENT;
-				const title = payload.payload.TITLE;
-				const jobdescription = payload.payload.JOBDESCRIPTION;
+				const title = escape(payload.payload.TITLE);
+				const jobdescription = escape(payload.payload.JOBDESCRIPTION);
 				const jobpostingid = payload.payload.JOBPOSTINGID;
 				const boardid = payload.payload.BOARDID;
 				const country = payload.payload.COUNTRY;
 				const city = payload.payload.CITY;
+				const link = payload.payload.LINK;
 				const query =
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" VALUES(
 					'${createdat}'/*CREATEDAT <TIMESTAMP>*/,
@@ -70,7 +78,8 @@ module.exports = () => {
 					'${city}'/*LOCATION <NVARCHAR(5000)>*/,
 					'${job_posting_status}'/*POSTINGSTATUS <NVARCHAR(5000)>*/,
 					'${posting_start_date}'/*POSTINGSTARTDATE <DATE>*/,
-					'${posting_end_date}'/*POSTINGENDDATE <DATE>*/
+					'${posting_end_date}'/*POSTINGENDDATE <DATE>*/,
+					'${link}'
 					)`
 
 				const statement = await db.preparePromisified(query);
