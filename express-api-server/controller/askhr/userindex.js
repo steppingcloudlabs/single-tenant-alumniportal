@@ -294,6 +294,36 @@ module.exports = {
                 result: "Element Not Found"
             });
         }
+    },
+
+    esclate: async (req, res) => {
+        try {
+            const payload = req.body;
+            let db = new dbClass(req.db);
+            let response = await ticketserivce.esclate({
+                payload,
+                db
+            });
+            if (response) {
+                res.type("application/json").status(200).send({
+                    status: "200",
+                    result: response
+                });
+            } else {
+                res.type("application/json").status(200).send({
+                    status: "500",
+                    result: response
+                });
+
+            }
+        } catch (error) {
+            req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/askhr/index/deletemessage ${error}`);
+
+            res.status(200).send({
+                status: "400",
+                result: "Element Not Found"
+            });
+        }
     }
 
 }

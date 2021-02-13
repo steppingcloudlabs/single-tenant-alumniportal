@@ -25,4 +25,7 @@ expressrouter
 expressrouter
 	.route("/ticket/message/delete")
 	.post((req, res, next) => askhrusercontroller.deletemessage(req, res, next));
+expressrouter
+	.route("/ticket/esclate")
+	.post((req, res, next) => askhrusercontroller.esclate(req, res, next));
 module.exports = expressrouter;

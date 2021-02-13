@@ -1,11 +1,6 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
-function EscapeApostrophe(context) {
-	return JSON.parse(JSON.stringify(context).replace("'", "''"));
-}
-function UnescapeApostrophe(context) {
-	return JSON.parse(JSON.stringify(context).replace("''", "'"));
-}
+const undoEscape = require("../../middleware/unescape/index")
 module.exports = () => {
 
 	const getjob = ({
@@ -24,7 +19,8 @@ module.exports = () => {
 					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  LIMIT ${LIMIT} offset ${offset}`
 
 				const statement = await db.preparePromisified(query)
-				const results = await db.statementExecPromisified(statement, [])
+				let results = await db.statementExecPromisified(statement, [])
+				results = undoEscape(results)
 				resolve(results);
 
 			} catch (error) {

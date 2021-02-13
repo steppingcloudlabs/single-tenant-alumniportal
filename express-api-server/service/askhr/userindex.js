@@ -79,6 +79,7 @@ module.exports = () => {
             }
         });
     };
+
     const getticket = ({
         payload,
         db
@@ -98,6 +99,13 @@ module.exports = () => {
 
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
+                console.log(results)
+                for (var i = 0; i < results.length; i++) {
+                    let TICKETID = results[i].ID;
+                    console.log(TICKETID);
+                    let response = await checkEscalation({ TICKETID, db });
+                    results[i]["ESCLATION"] = response;
+                }
                 resolve(results);
             } catch (error) {
                 reject(error);
@@ -122,24 +130,24 @@ module.exports = () => {
                 const query =
                     `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET"
 					SET "TITLE" = CASE
-								WHEN '${payload.payload.TITLE}'!= 'undefined' THEN '${payload.payload.TITLE}'
-								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.ID}')
+								WHEN '${payload.payload.TITLE}' != 'undefined' THEN '${payload.payload.TITLE}'
+								ELSE(select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID" = '${payload.payload.ID}')
 								END,
-					   "ESCLATION" = CASE
-								WHEN  ${payload.payload.ESCLATATION}!= 'undefined' THEN  ${payload.payload.ESCLATATION}
-								ELSE (select "ESCLATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.ID}')
+                        "ESCLATION" = CASE
+								WHEN  ${payload.payload.ESCLATATION} != 'undefined' THEN  ${payload.payload.ESCLATATION}
+								ELSE(select "ESCLATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID" = '${payload.payload.ID}')
 								END,
-						"RESOLVED" = case
-								WHEN ${payload.payload.RESOLVED}!= 'undefined' THEN ${payload.payload.RESOLVED}
-								ELSE (select "RESOLVED" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.ID}')
+                        "RESOLVED" = case
+                        WHEN ${payload.payload.RESOLVED} != 'undefined' THEN ${payload.payload.RESOLVED}
+								ELSE(select "RESOLVED" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID" = '${payload.payload.ID}')
 								END,
-						"ESCLATATIONMANAGER" = case
-								WHEN '${payload.payload.ESCLATATIONMANAGER}'!= 'undefined' THEN '${payload.payload.ESCLATATIONMANAGER}'
-								ELSE (select "ESCLATATIONMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.ID}')
+                        "ESCLATATIONMANAGER" = case
+                        WHEN '${payload.payload.ESCLATATIONMANAGER}' != 'undefined' THEN '${payload.payload.ESCLATATIONMANAGER}'
+								ELSE(select "ESCLATATIONMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID" = '${payload.payload.ID}')
 								END,
-						
-						"MODIFIEDBY" = '${modifiedby}',
-					    "MODIFIEDAT" = '${modifiedat}'
+
+                        "MODIFIEDBY" = '${modifiedby}',
+                        "MODIFIEDAT" = '${modifiedat}'
 					where
 					"ID" = '${payload.payload.ID}'`
 
@@ -199,15 +207,15 @@ module.exports = () => {
                 const ID = uuid();
                 const query =
                     `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" VALUES(
-	'${createdat}'/*CREATEDAT <TIMESTAMP>*/,
-	'${createdby}'/*CREATEDBY <NVARCHAR(255)>*/,
-	'${modifiedat}'/*MODIFIEDAT <TIMESTAMP>*/,
-	'${modifiedby}'/*MODIFIEDBY <NVARCHAR(255)>*/,
-	'${ID}'/*ID <NVARCHAR(36)>*/,
-	'${USERTYPE}'/*USERTYPE <NVARCHAR(5000)>*/,
-	'${MESSAGE}'/*MESSAGE <NVARCHAR(5000)>*/,
-	'${TICKETID}'/*TICKETID <NVARCHAR(36)>*/
-)`
+                            '${createdat}'/*CREATEDAT <TIMESTAMP>*/,
+                            '${createdby}'/*CREATEDBY <NVARCHAR(255)>*/,
+                            '${modifiedat}'/*MODIFIEDAT <TIMESTAMP>*/,
+                            '${modifiedby}'/*MODIFIEDBY <NVARCHAR(255)>*/,
+                            '${ID}'/*ID <NVARCHAR(36)>*/,
+                            '${USERTYPE}'/*USERTYPE <NVARCHAR(5000)>*/,
+                            '${MESSAGE}'/*MESSAGE <NVARCHAR(5000)>*/,
+                            '${TICKETID}'/*TICKETID <NVARCHAR(36)>*/
+                        )`
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
                 resolve(results);
@@ -278,6 +286,55 @@ module.exports = () => {
         });
     };
 
+    const esclate = ({
+        payload,
+        db
+    }) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const {
+                    TICKETID
+                } = payload.paylaod;
+
+                const schema = await utils.currentSchema({
+                    db
+                })
+                const query = `DELETE FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE ID == ${TICKETID} `
+                const statement = await db.preparePromisified(query);
+                const result = await db.statementExecPromisified(statement, []);
+                resolve(result);
+            } catch (error) {
+                reject(error);
+            }
+        });
+    };
+
+    const checkEscalation = ({
+        TICKETID,
+        db
+    }) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const schema = await utils.currentSchema({
+                    db
+                })
+                const query = `SELECT TOP 1 "CREATEDAT", "USERTYPE", "TICKETID" FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID = '${TICKETID}' `
+                const statement = await db.preparePromisified(query);
+                const result = await db.statementExecPromisified(statement, []);
+                let lastMessage = new Date(result[0].CREATEDAT)
+                let today = new Date()
+                let diffDays = (today.getDay() - lastMessage.getDay())
+                if (result[0].USERTYPE === "user" && diffDays > 7)
+                    resolve(true);
+                else {
+                    resolve(false);
+                }
+            } catch (error) {
+                reject(error);
+            }
+        });
+    };
+
 
     return {
         createticket,
@@ -287,6 +344,7 @@ module.exports = () => {
         createMESSAGE,
         updateMESSAGE,
         getMESSAGE,
-        deleteMESSAGE
+        deleteMESSAGE,
+        esclate
     };
 }
