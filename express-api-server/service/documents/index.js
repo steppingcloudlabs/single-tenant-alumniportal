@@ -204,11 +204,11 @@ module.exports = () => {
 		})
 	}
 
-	const bulkuploadstatus = ({ payload, db }) => {
+	const getdocumentsStatus = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
 
-				const response = await bulkService.bulkuploadstatus({ db });
+				const response = await bulkService.getdocumentsStatus({ db });
 				resolve(response)
 			} catch (error) {
 				reject(error);

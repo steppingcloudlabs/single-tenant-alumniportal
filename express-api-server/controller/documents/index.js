@@ -255,7 +255,7 @@ module.exports = {
 		try {
 			let db = new dbClass(req.db);
 
-			let response = await documentserivce.bulkuploadstatus({
+			let response = await documentserivce.getdocumentsStatus({
 				db
 			});
 
