@@ -125,14 +125,13 @@ module.exports = () => {
                 const modifiedby = "admin";
                 const modifiedat = new Date().toISOString();
                 const ID = uuid()
-                const file_name = payload.payload.DOCUMENT;
+                const file_name = payload.DOCUMENT;
                 const status = "failed"
-                const userid = payload.payload.USERID
+                const userid = payload.USERID
 
                 const statement = await db.preparePromisified(
                     `INSERT INTO "${schema}"."DOCUMENTUPLOADSTATUS" VALUES(
 						'${ID}',
-						'${stream}',
 						'${userid}',
 						'${file_name}', 
                         '${status}')`)
