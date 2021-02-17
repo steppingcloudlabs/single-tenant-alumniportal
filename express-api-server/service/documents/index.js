@@ -225,7 +225,7 @@ module.exports = () => {
 		statusdocuments,
 		triggerSFTPDownload,
 		triggerbulkupload,
-		bulkuploadstatus
+		getdocumentsStatus
 	};
 
 };
