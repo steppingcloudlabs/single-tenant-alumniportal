@@ -16,5 +16,14 @@ expressrouter
 expressrouter
 	.route("/documents/status")
 	.get((req, res, next) => documentcontroller.statusdocuments(req, res, next));
+expressrouter
+	.route("/documents/create/sftp/count")
+	.get((req, res, next) => documentcontroller.triggersftpdownload(req, res, next));
+expressrouter
+	.route("/documents/create/sftp/trigger")
+	.get((req, res, next) => documentcontroller.triggerbulkupload(req, res, next));
+expressrouter
+	.route("/documents/create/sftp/status")
+	.get((req, res, next) => documentcontroller.bulkuploadstatus(req, res, next));
 
 module.exports = expressrouter;

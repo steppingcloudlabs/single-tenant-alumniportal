@@ -1,0 +1,10 @@
+COLUMN TABLE sftp (
+    createdAt TIMESTAMP,
+    ID NVARCHAR(36) NOT NULL,
+    url NVARCHAR(5000) NOT NULL,
+    username NVARCHAR(5000) NOT NULL,
+    password NVARCHAR(5000) NOT NULL,
+    port NVARCHAR(5000),
+    path NVARCHAR(5000),
+    PRIMARY KEY(ID)
+)

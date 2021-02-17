@@ -1,0 +1,7 @@
+COLUMN TABLE documentuploadstatus (
+    ID NVARCHAR(36) NOT NULL,
+    userid NVARCHAR(5000) NOT NULL,
+    documentid NVARCHAR(5000) NOT NULL,
+    status NVARCHAR(5000) NOT NULL,
+    PRIMARY KEY(ID)
+) 

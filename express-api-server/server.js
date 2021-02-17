@@ -164,6 +164,7 @@ const searchRoutes = require("./router/search/adminindex");
 const successfactorsRoutes = require("./router/successfactors");
 const askhradminroutes = require("./router/askhr")
 const adminauthRoutes = require("./router/auth/index.js");
+const adminsftp = require("./router/sftp/index")
 
 app.use("/admin/auth", adminauthRoutes);
 app.use("/admin/action", admintokenchecker, adminactionRoutes);
@@ -173,8 +174,9 @@ app.use("/admin/action", admintokenchecker, adminnefRoutes);
 app.use("/admin/action", admintokenchecker, adminuseractionRoutes)
 app.use("/admin/action", admintokenchecker, admindocumentRoutes);
 app.use("/admin/action/search", admintokenchecker, searchRoutes);
-app.use("/admin/action", admintokenchecker, successfactorsRoutes)
-app.use("/admin/action/askhr", admintokenchecker, askhradminroutes)
+app.use("/admin/action", admintokenchecker, successfactorsRoutes);
+app.use("/admin/action/askhr", admintokenchecker, askhradminroutes);
+app.use("/admin/action/sftp", admintokenchecker, adminsftp);
 //USER ROUTES
 
 //app.use(JWTtoken)     // express middleware for usertoken verfication

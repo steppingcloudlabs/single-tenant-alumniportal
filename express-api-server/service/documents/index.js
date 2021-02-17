@@ -1,5 +1,6 @@
 const uuid = require("uuid");
-const util = require("../../utils/index.js")
+const util = require("../../utils/index.js");
+const bulkService = require("../bulk/index.js")();
 const utils = require("../../utils/database/index.js")();
 module.exports = () => {
 	/*
@@ -180,22 +181,51 @@ module.exports = () => {
 		});
 	};
 
-	const createdocumentsbulk = ({ payload, db }) => {
+	const triggerSFTPDownload = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
 
+				const response = await bulkService.downloadDirSftp({ payload, db });
+				resolve(response)
+			} catch (error) {
+				reject(error);
+			}
+		})
+	}
+	const triggerbulkupload = ({ req }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+
+				const response = await bulkService.documentBase64ToRabbitMQ({ req });
+				resolve(response)
 			} catch (error) {
 				reject(error);
 			}
 		})
 	}
 
+	const bulkuploadstatus = ({ payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+
+				const response = await bulkService.bulkuploadstatus({ db });
+				resolve(response)
+			} catch (error) {
+				reject(error);
+			}
+		})
+	}
+
+
 	return {
 		viewdocuments,
 		createdocuments,
 		updatedocuments,
 		deletedocuments,
-		statusdocuments
+		statusdocuments,
+		triggerSFTPDownload,
+		triggerbulkupload,
+		bulkuploadstatus
 	};
 
 };

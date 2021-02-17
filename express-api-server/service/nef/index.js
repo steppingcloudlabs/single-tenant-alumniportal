@@ -1,11 +1,7 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
-function EscapeApostrophe(context) {
-	return JSON.parse(JSON.stringify(context).replace("'", "''"));
-}
-function UnescapeApostrophe(context) {
-	return JSON.parse(JSON.stringify(context).replace("''", "'"));
-}
+const undoEscape = require("../../middleware/unescape/index")
+
 module.exports = () => {
 	/*
 	SERVICE FUNCTIONS FOR NEWS 
@@ -32,7 +28,7 @@ module.exports = () => {
 					"DATE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
 				)
 				let results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				resolve(undoEscape(results));
 			} catch (error) {
 				console.log(error)
 				reject(error);
@@ -46,7 +42,6 @@ module.exports = () => {
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				payload = EscapeApostrophe(payload);
 				let schema = await utils.currentSchema({
 					db
 				})
@@ -70,15 +65,15 @@ module.exports = () => {
 						'${modifiedat}',
 						'${modifiedby}',
 						'${ID}',
-						'${escape(escape(payload.payload.TITLE))}',
-						'${escape(escape(payload.payload.CONTENT))}',
+						'${escape(payload.payload.TITLE)}',
+						'${escape(payload.payload.CONTENT)}',
 						'${payload.payload.PHOTO}',
 						'${payload.payload.DATE}'
 						)`
 					let statement = await db.preparePromisified(query)
 					let results = await db.statementExecPromisified(statement, [])
 					if (results == 1) {
-						data = UnescapeApostrophe(payload.payload);
+						data = payload.payload;
 						data.ID = ID;
 						resolve(data);
 					} else {
@@ -202,7 +197,7 @@ module.exports = () => {
 				let statement = await db.preparePromisified(query)
 				let results = await db.statementExecPromisified(statement, [])
 
-				resolve(results);
+				resolve(undoEscape(results));
 
 			} catch (error) {
 				reject(error);
@@ -237,7 +232,7 @@ module.exports = () => {
 					let statement = await db.preparePromisified(query)
 					let results = await db.statementExecPromisified(statement, [])
 					if (results == 1) {
-						data = UnescapeApostrophe(payload.payload);
+						data = payload.payload;
 						data.ID = ID;
 						resolve(data);
 					} else {
@@ -334,7 +329,7 @@ module.exports = () => {
 				let query = `SELECT "ID", "TITLE", "CONTENT", "PHOTO", "DATE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
 				let statement = await db.preparePromisified(query)
 				let results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				resolve(undoEscape(results));
 
 			} catch (error) {
 				reject(error);

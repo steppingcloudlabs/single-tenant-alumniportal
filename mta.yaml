@@ -7,8 +7,8 @@ modules:
     type: hdb
     path: db
     parameters:
-      memory: 256M
-      disk-quota: 512M
+      memory: 150M
+      disk-quota: 256M
     requires:
       - name: single-tenant-alumniportal-sap-db-hdi-container
 # Nodejs backend
@@ -24,8 +24,8 @@ modules:
       - name: single-tenant-alumniportal-sap-uaa
       - name: sfsdkdest
     parameters:
-      memory: 500M
-      disk-quota: 1024M
+      memory: 700M
+      disk-quota: 2024M
     properties:
       apiDest: 'sfsdkdest'
 # App Router and 
@@ -33,7 +33,7 @@ modules:
     type: html5
     path: app
     parameters:
-      memory: 250M
+      memory: 150M
       disk-quota: 512M
     requires:
       - name: single-tenant-alumniportal-sap-uaa
