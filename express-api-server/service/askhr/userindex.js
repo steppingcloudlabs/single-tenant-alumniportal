@@ -323,7 +323,8 @@ module.exports = () => {
                 const result = await db.statementExecPromisified(statement, []);
                 let lastMessage = new Date(result[0].CREATEDAT)
                 let today = new Date()
-                let diffDays = (today.getDay() - lastMessage.getDay())
+                let diffDays = (today.getDate() - lastMessage.getDate())
+
                 if (result[0].USERTYPE === "user" && diffDays > 7)
                     resolve(true);
                 else {
