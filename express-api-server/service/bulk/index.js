@@ -55,6 +55,11 @@ module.exports = () => {
                         });
                         console.log("Resuults: for ", userid, documentType, response)
                         if (response != 1) {
+                            payload.STATUS = "failed"
+                            result = await updatedocumentsStatus({ payload, db });
+                            console.log("updating the status", result);
+                        } else {
+                            payload.STATUS = "success"
                             result = await updatedocumentsStatus({ payload, db });
                             console.log("updating the status", result);
                         }
@@ -126,7 +131,7 @@ module.exports = () => {
                 const modifiedat = new Date().toISOString();
                 const ID = uuid()
                 const file_name = payload.DOCUMENT;
-                const status = "failed"
+                const status = payload.STATUS
                 const userid = payload.USERID
 
                 const statement = await db.preparePromisified(
