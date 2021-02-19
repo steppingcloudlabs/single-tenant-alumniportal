@@ -149,30 +149,30 @@ module.exports = {
 
                     if (response == "foundemail") {
                         res.type("application/json").status(200).send({
-                            status: "200",
+                            status: "400",
                             result: "Email already exists"
                         });
                     }
                     if (response == "founduserid") {
                         res.type("application/json").status(200).send({
-                            status: "200",
+                            status: "400",
                             result: "UserId already exists"
                         });
                     }
                     if (response == "notalumni") {
                         res.type("application/json").status(200).send({
-                            status: "200",
+                            status: "400",
                             result: "User is not an Alumni"
                         });
                     }
                     if (response == "onlyhrsandadmins") {
                         res.type("application/json").status(200).send({
-                            status: "401",
+                            status: "400",
                             result: "Only admin and hr users allowed"
                         });
                     } else if (response == "nothr") {
                         res.type("application/json").status(200).send({
-                            status: "401",
+                            status: "400",
                             result: "Hr not recognised in the database. Admin add hr action required"
                         })
                     } else {
@@ -202,17 +202,17 @@ module.exports = {
 
                     if (response == "foundemail") {
                         res.type("application/json").status(200).send({
-                            status: "200",
+                            status: "400",
                             result: "Email already exists"
                         });
                     } else if (response == "founduserid") {
                         res.type("application/json").status(200).send({
-                            status: "200",
+                            status: "400",
                             result: "UserId already exists"
                         });
                     } else if (response == "notalumni") {
                         res.type("application/json").status(200).send({
-                            status: "200",
+                            status: "400",
                             result: "User is not an Alumni"
                         });
                     } else {
