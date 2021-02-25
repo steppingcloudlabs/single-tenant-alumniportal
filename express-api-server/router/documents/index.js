@@ -25,5 +25,14 @@ expressrouter
 expressrouter
 	.route("/documents/create/sftp/status")
 	.get((req, res, next) => documentcontroller.bulkuploadstatus(req, res, next));
+expressrouter
+	.route("/documents/create/_bulk/getuploadid")
+	.get((req, res, next) => documentcontroller.getuploadid(req, res, next));
+expressrouter
+	.route("/documents/create/_bulk/getuploadurl")
+	.get((req, res, next) => documentcontroller.getuploadurl(req, res, next));
+expressrouter
+	.route("/documents/create/_bulk/complete")
+	.post((req, res, next) => documentcontroller.complete(req, res, next));
 
 module.exports = expressrouter;
