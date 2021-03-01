@@ -4,6 +4,7 @@ const util = require("../../utils/index.js");
 const bulkService = require("../bulk/index.js")();
 const utils = require("../../utils/database/index.js")();
 const AWS = require("aws-sdk")
+const axios = require("axios")
 
 module.exports = () => {
 
@@ -321,7 +322,7 @@ module.exports = () => {
 				let params = {
 					Bucket: xsService.objectstore.bucket,
 					Key: payload.payload.filename,
-					MultipartPartUpload: {
+					MultipartUpload: {
 						Parts: payload.payload.parts
 					},
 					UploadId: payload.payload.uploadid
@@ -335,7 +336,19 @@ module.exports = () => {
 			}
 		})
 	}
+	const uploadSignedURL = ({payload}) =>{
+		return new Promise(async(resolve, reject)=>{
+			try {
+				let response = await axios.put(payload.payload.url,payload.payload.chunk)
+				
+				resolve(response.headers)
+			} catch (error) {
+				reject(error)
+			}
+			
 
+		});
+	}
 
 	return {
 		viewdocuments,
@@ -348,7 +361,8 @@ module.exports = () => {
 		getdocumentsStatus,
 		getuploadid,
 		getuploadurl,
-		complete
+		complete,
+		uploadSignedURL
 	};
 
 };

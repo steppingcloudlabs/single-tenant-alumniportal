@@ -1,7 +1,7 @@
 const AWS = require("aws-sdk");
 const uuid = require("uuid");
 const xsenv = require("@sap/xsenv");
-const utils = require("../../utils/database/index.js")();
+// const utils = require("../../utils/database/index.js")();
 
 module.exports = () => {
 
