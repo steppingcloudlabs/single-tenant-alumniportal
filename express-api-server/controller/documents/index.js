@@ -4,6 +4,7 @@ const bulkService = require("../../service/bulk/index")();
 const utils = require("../../utils/database/index")();
 const sftpservice = require("../../service/sftp")();
 const dbClass = require("sap-hdbext-promisfied");
+const objectstorserivce = require("../../service/bulk/docuemts/jobschedulder")();
 
 module.exports = {
 	// News Controllers
@@ -369,11 +370,72 @@ module.exports = {
 			});
 		}
 	},
-	jobSchedule: async (req, res, next) => {
+
+	jobScheduleETL: async (req, res, next) => {
 		try {
 			let db = new dbClass(req.db);
 			let payload = req.body;
-			let response = await documentserivce.jobSchedule({
+			let response = await objectstorserivce.createExtractionJob({
+				payload,
+				db
+			});
+
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response,
+				});
+			} else {
+				res.type("application/json").status(400).send({
+					status: "400",
+					result: response
+				});
+			}
+
+		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/documents/index/complete ${error}`);
+			res.type("application/json").status(500).send({
+				status: "500",
+				error: error.message
+			});
+		}
+	},
+
+	getAllJobs: async (req, res, next) => {
+		try {
+			let db = new dbClass(req.db);
+			let payload = req.body;
+			let response = await objectstorserivce.getAllJobs({
+				payload,
+				db
+			});
+
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response,
+				});
+			} else {
+				res.type("application/json").status(400).send({
+					status: "400",
+					result: response
+				});
+			}
+
+		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/documents/index/complete ${error}`);
+			res.type("application/json").status(500).send({
+				status: "500",
+				error: error.message
+			});
+		}
+	},
+
+	getJobLogs: async (req, res) => {
+		try {
+			let db = new dbClass(req.db);
+			let payload = req.query;
+			let response = await objectstorserivce.getJobLogs({
 				payload,
 				db
 			});

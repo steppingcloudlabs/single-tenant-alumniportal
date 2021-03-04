@@ -1,5 +1,6 @@
 const expressrouter = require("express").Router();
 const documentcontroller = require("../../controller/documents/index");
+
 //document routers
 expressrouter
 	.route("/documents/get")
@@ -39,6 +40,12 @@ expressrouter
 	.post((req, res, next) => documentcontroller.complete(req, res, next));
 expressrouter
 	.route("/documents/create/jobs/trigger")
-	.get((req, res, next) => documentcontroller.jobSchedule(req, res, next));
+	.post((req, res, next) => documentcontroller.jobScheduleETL(req, res, next));
+expressrouter
+	.route("/documents/create/jobs/get")
+	.get((req, res, next) => documentcontroller.getAllJobs(req, res, next));
+expressrouter
+	.route("/documents/create/jobs/logs")
+	.get((req, res, next) => documentcontroller.getJobLogs(req, res, next));
 
 module.exports = expressrouter;

@@ -2,6 +2,7 @@ const uuid = require("uuid");
 const xsenv = require("@sap/xsenv");
 const util = require("../../utils/index.js");
 const bulkService = require("../bulk/index.js")();
+const jobScheduleService = require("../bulk/docuemts/jobschedulder")();
 const utils = require("../../utils/database/index.js")();
 const AWS = require("aws-sdk")
 const axios = require("axios")
@@ -336,19 +337,21 @@ module.exports = () => {
 			}
 		})
 	}
-	const uploadSignedURL = ({payload}) =>{
-		return new Promise(async(resolve, reject)=>{
+	const uploadSignedURL = ({ payload }) => {
+		return new Promise(async (resolve, reject) => {
 			try {
-				let response = await axios.put(payload.payload.url,payload.payload.chunk)
-				
+				let response = await axios.put(payload.payload.url, payload.payload.chunk)
+
 				resolve(response.headers)
 			} catch (error) {
 				reject(error)
 			}
-			
+
 
 		});
 	}
+
+
 
 	return {
 		viewdocuments,
