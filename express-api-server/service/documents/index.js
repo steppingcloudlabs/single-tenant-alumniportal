@@ -1,13 +1,14 @@
 const uuid = require("uuid");
+const xsenv = require("@sap/xsenv");
 const util = require("../../utils/index.js");
 const bulkService = require("../bulk/index.js")();
+const jobScheduleService = require("../bulk/docuemts/jobschedulder")();
 const utils = require("../../utils/database/index.js")();
+const AWS = require("aws-sdk")
+const axios = require("axios")
+
 module.exports = () => {
-	/*
-	SERVICE FUNCTIONS FOR NEWS 
-	
-	REPONSIBILITY: HAMZA
-	*/
+
 	const viewdocuments = ({
 		payload,
 		db
@@ -216,6 +217,141 @@ module.exports = () => {
 		})
 	}
 
+	//Zip file to SAP Object Store (S3)
+
+	const getuploadid = ({ payload, bucketname }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+
+				let xsService = xsenv.getServices(
+					{
+						objectstore: {
+							tag: "objectStore"
+						}
+					});
+				let accessKeyId = xsService.objectstore.access_key_id;
+				let secretAccessKey = xsService.objectstore.secret_access_key;
+				let host = xsService.objectstore.host;
+				let region = xsService.objectstore.region;
+
+				//S3 configuration
+				const s3 = new AWS.S3({
+					accessKeyId: accessKeyId,
+					secretAccessKey: secretAccessKey,
+					region: region
+				});
+
+
+				let params = {
+					Bucket: xsService.objectstore.bucket,
+					Key: payload.query.filename,
+					ContentType: payload.query.filetype
+				};
+
+				let response = await s3.createMultipartUpload(params).promise();
+				resolve({ KEY: response.Key, UPLOADID: response.UploadId })
+
+			} catch (error) {
+				reject(error)
+			}
+		})
+	}
+
+	const getuploadurl = ({ payload, bucketname }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+
+				let xsService = xsenv.getServices(
+					{
+						objectstore: {
+							tag: "objectStore"
+						}
+					});
+				let accessKeyId = xsService.objectstore.access_key_id;
+				let secretAccessKey = xsService.objectstore.secret_access_key;
+				let host = xsService.objectstore.host;
+				let region = xsService.objectstore.region;
+
+				//S3 configuration
+				const s3 = new AWS.S3({
+					accessKeyId: accessKeyId,
+					secretAccessKey: secretAccessKey,
+					region: region
+				});
+
+
+				let params = {
+					Bucket: xsService.objectstore.bucket,
+					Key: payload.filename,
+					PartNumber: payload.partnumber,
+					UploadId: payload.uploadid
+				};
+
+				console.log(params)
+				let response = await s3.getSignedUrlPromise('uploadPart', params)
+				console.log(response)
+				resolve({ URL: response })
+
+			} catch (error) {
+				reject(error)
+			}
+		})
+	}
+	const complete = ({ payload }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+
+				let xsService = xsenv.getServices(
+					{
+						objectstore: {
+							tag: "objectStore"
+						}
+					});
+				let accessKeyId = xsService.objectstore.access_key_id;
+				let secretAccessKey = xsService.objectstore.secret_access_key;
+				let host = xsService.objectstore.host;
+				let region = xsService.objectstore.region;
+
+				//S3 configuration
+				const s3 = new AWS.S3({
+					accessKeyId: accessKeyId,
+					secretAccessKey: secretAccessKey,
+					region: region
+				});
+
+
+				let params = {
+					Bucket: xsService.objectstore.bucket,
+					Key: payload.payload.filename,
+					MultipartUpload: {
+						Parts: payload.payload.parts
+					},
+					UploadId: payload.payload.uploadid
+				};
+
+				let response = await s3.completeMultipartUpload(params).promise()
+				resolve(response)
+
+			} catch (error) {
+				reject(error)
+			}
+		})
+	}
+	const uploadSignedURL = ({ payload }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let response = await axios.put(payload.payload.url, payload.payload.chunk)
+
+				resolve(response.headers)
+			} catch (error) {
+				reject(error)
+			}
+
+
+		});
+	}
+
+
 
 	return {
 		viewdocuments,
@@ -225,7 +361,11 @@ module.exports = () => {
 		statusdocuments,
 		triggerSFTPDownload,
 		triggerbulkupload,
-		getdocumentsStatus
+		getdocumentsStatus,
+		getuploadid,
+		getuploadurl,
+		complete,
+		uploadSignedURL
 	};
 
 };

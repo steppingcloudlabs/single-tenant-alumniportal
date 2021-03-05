@@ -1,5 +1,5 @@
 const path = require('path');
-const SftpClient = require('ssh2-sftp-client');
+// const SftpClient = require('ssh2-sftp-client');
 const fs = require('fs');
 const uuid = require('uuid');
 const utils = require("../../utils/database/index.js")();

@@ -1,5 +1,6 @@
 const expressrouter = require("express").Router();
 const documentcontroller = require("../../controller/documents/index");
+
 //document routers
 expressrouter
 	.route("/documents/get")
@@ -25,5 +26,26 @@ expressrouter
 expressrouter
 	.route("/documents/create/sftp/status")
 	.get((req, res, next) => documentcontroller.bulkuploadstatus(req, res, next));
+expressrouter
+	.route("/documents/create/_bulk/getuploadid")
+	.get((req, res, next) => documentcontroller.getuploadid(req, res, next));
+expressrouter
+	.route("/documents/create/_bulk/getuploadurl")
+	.get((req, res, next) => documentcontroller.getuploadurl(req, res, next));
+expressrouter
+	.route("/documents/create/_bulk/uploadsignedurl")
+	.put((req, res, next) => documentcontroller.uploadSignedURL(req, res, next));
+expressrouter
+	.route("/documents/create/_bulk/complete")
+	.post((req, res, next) => documentcontroller.complete(req, res, next));
+expressrouter
+	.route("/documents/create/jobs/trigger")
+	.post((req, res, next) => documentcontroller.jobScheduleETL(req, res, next));
+expressrouter
+	.route("/documents/create/jobs/get")
+	.get((req, res, next) => documentcontroller.getAllJobs(req, res, next));
+expressrouter
+	.route("/documents/create/jobs/logs")
+	.get((req, res, next) => documentcontroller.getJobLogs(req, res, next));
 
 module.exports = expressrouter;
