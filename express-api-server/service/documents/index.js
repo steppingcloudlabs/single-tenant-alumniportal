@@ -217,7 +217,7 @@ module.exports = () => {
 		})
 	}
 
-	//Zip file to SAP Object Store (S3)
+	//Zip file to SAP Object Store (S3 xsService.objectstore.bucket)
 
 	const getuploadid = ({ payload, bucketname }) => {
 		return new Promise(async (resolve, reject) => {
@@ -235,15 +235,22 @@ module.exports = () => {
 				let region = xsService.objectstore.region;
 
 				//S3 configuration
+				// const s3 = new AWS.S3({
+				// 	accessKeyId: accessKeyId,
+				// 	secretAccessKey: secretAccessKey,
+				// 	region: region,
+				// 	signatureVersion: 'v4'
+				// });
+
 				const s3 = new AWS.S3({
-					accessKeyId: accessKeyId,
-					secretAccessKey: secretAccessKey,
-					region: region
+					accessKeyId: 'AKIA53DDMX5YBG4OUAMF',
+					secretAccessKey: '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',
+					region: 'us-east-2',
+					signatureVersion: 'v4'
 				});
 
-
 				let params = {
-					Bucket: xsService.objectstore.bucket,
+					Bucket: "alumx",
 					Key: payload.query.filename,
 					ContentType: payload.query.filetype
 				};
@@ -273,15 +280,22 @@ module.exports = () => {
 				let region = xsService.objectstore.region;
 
 				//S3 configuration
+				// const s3 = new AWS.S3({
+				// 	accessKeyId: accessKeyId,
+				// 	secretAccessKey: secretAccessKey,
+				// 	region: region,
+				// 	signatureVersion: 'v4'
+				// });
+
 				const s3 = new AWS.S3({
-					accessKeyId: accessKeyId,
-					secretAccessKey: secretAccessKey,
-					region: region
+					accessKeyId: 'AKIA53DDMX5YBG4OUAMF',
+					secretAccessKey: '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',
+					region: 'us-east-2',
+					signatureVersion: 'v4'
 				});
 
-
 				let params = {
-					Bucket: xsService.objectstore.bucket,
+					Bucket: "alumx",
 					Key: payload.filename,
 					PartNumber: payload.partnumber,
 					UploadId: payload.uploadid
@@ -313,15 +327,22 @@ module.exports = () => {
 				let region = xsService.objectstore.region;
 
 				//S3 configuration
+				// const s3 = new AWS.S3({
+				// 	accessKeyId: accessKeyId,
+				// 	secretAccessKey: secretAccessKey,
+				// 	region: region,
+				// 	signatureVersion: 'v4'
+				// });
+
 				const s3 = new AWS.S3({
-					accessKeyId: accessKeyId,
-					secretAccessKey: secretAccessKey,
-					region: region
+					accessKeyId: 'AKIA53DDMX5YBG4OUAMF',
+					secretAccessKey: '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',
+					region: 'us-east-2',
+					signatureVersion: 'v4'
 				});
-
-
+				// "alumx"
 				let params = {
-					Bucket: xsService.objectstore.bucket,
+					Bucket: "alumx",
 					Key: payload.payload.filename,
 					MultipartUpload: {
 						Parts: payload.payload.parts
@@ -337,13 +358,30 @@ module.exports = () => {
 			}
 		})
 	}
-	const uploadSignedURL = ({ payload }) => {
+	const uploadSignedURL = ({ payload, query, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				let response = await axios.put(payload.payload.url, payload.payload.chunk)
+				console.log('   Presigned URL : ' + payload.payload.url + ' filetype ' + payload.payload.type + 'blob :' + payload.payload.chunk)
+				// const axiosConstructor = axios.create()
+				// delete axiosConstructor.defaults.headers.put['Content-Type']
+				// var signedUrl = query.url;
+
+				// var options = {
+				// 	headers: {
+				// 		'Content-Type': query.type
+				// 	}
+				// };
+
+				// let response = await axios.put(signedUrl, payload, options);
+				let response = axios.put(payload.payload.url, payload.payload.chunk, {
+					headers: {
+						'Content-Type': payload.payload.type
+					}
+				});
 
 				resolve(response.headers)
 			} catch (error) {
+				// console.log(error)
 				reject(error)
 			}
 

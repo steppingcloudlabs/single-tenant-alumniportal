@@ -1,8 +1,10 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
+const emailservice = require("../ses/index")();
 require('data-forge-fs');
 const csv = require('csvtojson')
 const dataForge = require('data-forge');
+const AWS = require('aws-sdk');
 module.exports = () => {
 	const getuser = ({
 		payload,
@@ -65,7 +67,8 @@ module.exports = () => {
 							GENDER,
 							DATE_OF_BIRTH,
 							STATE,
-							COUNTRY
+							COUNTRY,
+							URL
 						} = payload.payload;
 						DATE_OF_RELIEVING = DATE_OF_RELIEVING == undefined ? " " : DATE_OF_RELIEVING;
 						USER_ID = USER_ID == undefined ? " " : USER_ID;
@@ -110,34 +113,35 @@ module.exports = () => {
 						} else {
 							const query =
 								`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" VALUES(	
-				        '${createdat}',
-						'${createdby}',
-						'${modifiedat}',
-						'${modifiedby}',
-						'${ID}',
-						'${USER_ID}',
-						'${GENDER}',
-						'${DATE_OF_BIRTH}',
-						'${DATE_OF_RELIEVING}',
-						'${DATE_OF_RESIGNATION}',
-						'${LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD}',
-						'${PERSONAL_EMAIL_ID}',
-					    '${FIRST_NAME_PERSONAL_INFORMATION}',
-						'${LAST_NAME_PERSONAL_INFORMATION}',
-						'${MIDDLE_NAME_PERSONAL_INFORMATION}',
-						'${NATIONALITY_PERSONAL_INFORMATION}',
-						'${SALUTATION_PERSONAL_INFORMATION}',
-						'${CITY_ADDRESSES}',
-						'${PHONE_NUMBER_PHONE_INFORMATION}',
-						'${MANAGER_JOB_INFORMATION}',
-						'${DESIGNATION_JOB_INFORMATION}',
-						'${STATE}',
-						'${COUNTRY}'
-						)`
+									'${createdat}',
+									'${createdby}',
+									'${modifiedat}',
+									'${modifiedby}',
+									'${ID}',
+									'${USER_ID}',
+									'${GENDER}',
+									'${DATE_OF_BIRTH}',
+									'${DATE_OF_RELIEVING}',
+									'${DATE_OF_RESIGNATION}',
+									'${LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD}',
+									'${PERSONAL_EMAIL_ID}',
+									'${FIRST_NAME_PERSONAL_INFORMATION}',
+									'${LAST_NAME_PERSONAL_INFORMATION}',
+									'${MIDDLE_NAME_PERSONAL_INFORMATION}',
+									'${NATIONALITY_PERSONAL_INFORMATION}',
+									'${SALUTATION_PERSONAL_INFORMATION}',
+									'${CITY_ADDRESSES}',
+									'${PHONE_NUMBER_PHONE_INFORMATION}',
+									'${MANAGER_JOB_INFORMATION}',
+									'${DESIGNATION_JOB_INFORMATION}',
+									'${STATE}',
+									'${COUNTRY}'
+								)`
 
 							const statement = await db.preparePromisified(query)
 							let results = await db.statementExecPromisified(statement, [])
-							resolve(results);
+							let res = await emailservice.sendEmail({ PERSONAL_EMAIL_ID, FIRST_NAME_PERSONAL_INFORMATION, URL });
+							resolve(results)
 						}
 
 					} catch (error) {
@@ -433,6 +437,25 @@ module.exports = () => {
 			}
 
 		})
+	}
+
+	const bounces = () => {
+
+	}
+
+	const sendEmail = ({ payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+
+				AWS.config.update({
+					accessKeyId: process.env.accessKeyId,
+					secretAccessKey: process.env.secretAccessKey,
+					region: "us-east-1"
+				});
+			} catch (error) {
+				reject(error);
+			}
+		});
 	}
 	return {
 		createuser,

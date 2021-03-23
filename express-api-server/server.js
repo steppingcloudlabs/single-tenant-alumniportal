@@ -21,14 +21,16 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '1024mb' }));
-app.use(bodyParser.urlencoded({ limit: '1024mb', extended: true }));
+app.use(bodyParser.urlencoded({ limit: '1024mb', extended: true, parameterLimit: Infinity }));
+app.use(express.json({ limit: '1024mb' }));
+app.use(express.urlencoded({ limit: '1024mb' }));
 app.disable('x-powered-by');
 app.use(upload())
 app.use(helmet());
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard());
 app.use(helmet.referrerPolicy({ policy: "no-referrer" }));
-app.use(require("compression")({ threshold: "1024b" }));
+app.use(require("compression")({ threshold: "1024mb" }));
 app.use(compression());
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -154,6 +156,15 @@ app.use("/integration", bulkjobs);
 
 const documentsjobs = require("./router/bulk");
 app.use("/integration", documentsjobs);
+
+const ses = require('./router/ses');
+app.use("/aws", ses);
+app.use(function (req, res, next) {
+  if (req.get("x-amz-sns-message-type")) {
+    req.headers["content-type"] = "application/json"; //IMPORTANT, otherwise content-type is text for topic confirmation reponse, and body is empty
+  }
+  next();
+});
 
 //---------------------------------------------------------------------------------------------
 // Admin Routes that for managing Alumni portal data.
