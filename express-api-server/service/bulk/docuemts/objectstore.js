@@ -45,10 +45,15 @@ module.exports = () => {
                 let region = xsService.objectstore.region;
 
                 //S3 configuration
-                const s3 = new AWS.S3({
-                    accessKeyId: accessKeyId,
-                    secretAccessKey: secretAccessKey,
-                    region: region
+                // const s3 = new AWS.S3({
+                //     accessKeyId: accessKeyId,
+                //     secretAccessKey: secretAccessKey,
+                //     region: region
+                // });
+                AWS.config.update({
+                    accessKeyId: 'AKIA53DDMX5YBG4OUAMF',
+                    secretAccessKey: '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',
+                    region: 'us-east-2',
                 });
                 params = {
                     Bucket: xsService.objectstore.bucket,

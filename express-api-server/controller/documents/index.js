@@ -465,8 +465,12 @@ module.exports = {
 		try {
 			let db = new dbClass(req.db);
 			let payload = req.body;
+			// console.log(payload);
+			let query = req.query;
+			// console.log(query);
 			let response = await documentserivce.uploadSignedURL({
 				payload,
+				query,
 				db
 			});
 
