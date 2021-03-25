@@ -1,5 +1,6 @@
 "use strict";
 const express = require("express");
+require('dotenv').config()
 const bodyParser = require("body-parser");
 const compression = require("compression");
 const xsenv = require("@sap/xsenv");
@@ -20,6 +21,8 @@ const app = express();
 //---------------------------------------------------------------------------------------------
 
 app.use(cors());
+app.use(bodyParser.urlencoded());
+app.use(bodyParser.json());
 app.use(bodyParser.json({ limit: '1024mb' }));
 app.use(bodyParser.urlencoded({ limit: '1024mb', extended: true, parameterLimit: Infinity }));
 app.use(express.json({ limit: '1024mb' }));

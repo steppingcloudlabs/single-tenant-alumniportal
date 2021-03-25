@@ -4,9 +4,10 @@ const AWS = require("aws-sdk");
 
 module.exports = () => {
     AWS.config.update({
-        accessKeyId: 'AKIA53DDMX5YBG4OUAMF',
-        secretAccessKey: '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',
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
         region: 'us-east-2',
+        signatureVersion: 'v4'
     });
 
     const sns = new AWS.SNS();

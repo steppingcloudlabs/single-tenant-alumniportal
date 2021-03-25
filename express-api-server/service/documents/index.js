@@ -243,14 +243,14 @@ module.exports = () => {
 				// });
 
 				const s3 = new AWS.S3({
-					accessKeyId: 'AKIA53DDMX5YBG4OUAMF',
-					secretAccessKey: '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',
+					accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+					secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 					region: 'us-east-2',
 					signatureVersion: 'v4'
 				});
 
 				let params = {
-					Bucket: "alumx",
+					Bucket: process.env.AWS_BUCKET_NAME,
 					Key: payload.query.filename,
 					ContentType: payload.query.filetype
 				};
@@ -288,14 +288,14 @@ module.exports = () => {
 				// });
 
 				const s3 = new AWS.S3({
-					accessKeyId: 'AKIA53DDMX5YBG4OUAMF',
-					secretAccessKey: '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',
+					accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+					secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 					region: 'us-east-2',
 					signatureVersion: 'v4'
 				});
 
 				let params = {
-					Bucket: "alumx",
+					Bucket: process.env.AWS_BUCKET_NAME,
 					Key: payload.filename,
 					PartNumber: payload.partnumber,
 					UploadId: payload.uploadid
@@ -335,14 +335,14 @@ module.exports = () => {
 				// });
 
 				const s3 = new AWS.S3({
-					accessKeyId: 'AKIA53DDMX5YBG4OUAMF',
-					secretAccessKey: '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',
+					accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+					secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 					region: 'us-east-2',
 					signatureVersion: 'v4'
 				});
-				// "alumx"
+				// process.env.AWS_BUCKET_NAME
 				let params = {
-					Bucket: "alumx",
+					Bucket: process.env.AWS_BUCKET_NAME,
 					Key: payload.payload.filename,
 					MultipartUpload: {
 						Parts: payload.payload.parts
