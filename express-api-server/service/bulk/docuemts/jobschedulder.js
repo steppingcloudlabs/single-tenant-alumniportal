@@ -1,27 +1,26 @@
 const objectStoreSerice = require("./objectstore");
-const JobSchedulerClient = require('@sap/jobs-client');
+const jobsc = require('@sap/jobs-client');
 const xsenv = require("@sap/xsenv");
 
 module.exports = () => {
-    const createExtractionJob = () => {
+    const createExtractionJob = ({ payload }) => {
         return new Promise(async (resolve, reject) => {
             try {
-                let action = payload.payload.action;
+                let action = payload.payload.filename;
                 // creating a onetime job for this upload.
-                var jobOptions = xsenv.getServices({
-                    jobs: {
-                        tag: "jobscheduler"
-                    }
-                });
+                // var jobOptions = xsenv.getServices({
+                //     jobs: {
+                //         tag: "jobscheduler"
+                //     }
+                // });
                 var schedulerOptions = {
-                    baseURL: jobOptions.jobs.url,
-                    user: jobOptions.jobs.user,
-                    password: jobOptions.jobs.password,
+                    baseURL: "https://jobscheduler-rest.cfapps.us10.hana.ondemand.com",
+                    user: "sbss_fdxu8hkahvoyqybrvpge+njo+l46zwz8pemmexwnmim/bltdfdayarlkp9abftjbnjs=",
+                    password: "aa_6wO1dHeAJYeoyzkMJ10P8qdC2hc=",
                     timeout: 15000
                 };
                 var scheduler = new jobsc.Scheduler(schedulerOptions);
-                var thisApp = JSON.parse(process.env.VCAP_APPLICATION);
-                var thisAppURI = thisApp.full_application_uris[0];
+                var thisAppURI = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
                 let myJob = {
                     job: {
                         "name": "myJob",
@@ -32,7 +31,11 @@ module.exports = () => {
                         "schedules": [{
                             "description": "This will run once",
                             "time": "1 minutes from now",
-                            "data": {},
+                            "data": {
+                                "payload": {
+                                    "key": action
+                                }
+                            },
                             "active": true
                         }]
                     }
