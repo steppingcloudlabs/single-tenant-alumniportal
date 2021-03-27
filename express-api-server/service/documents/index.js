@@ -2,10 +2,10 @@ const uuid = require("uuid");
 const xsenv = require("@sap/xsenv");
 const util = require("../../utils/index.js");
 const bulkService = require("../bulk/index.js")();
-const jobScheduleService = require("../bulk/docuemts/jobschedulder")();
 const utils = require("../../utils/database/index.js")();
 const AWS = require("aws-sdk")
 const axios = require("axios")
+const { fork } = require("child_process")
 
 module.exports = () => {
 
@@ -311,7 +311,7 @@ module.exports = () => {
 			}
 		})
 	}
-	const complete = ({ payload }) => {
+	const complete = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
 
@@ -351,6 +351,18 @@ module.exports = () => {
 				};
 
 				let response = await s3.completeMultipartUpload(params).promise()
+				const childProcess = fork("../jobscheduler/index.js");
+				childProcess.send({
+					filename: payload.payload.filename, db: db
+				})
+
+				childProcess.on("message", (message, db) => {
+					// TODO: if successfull then update statis and flip to inactive
+				})
+
+				childProcess.on('error', (err, db) => {
+					// TODO: if error then update the error message in Hana database. with explaination
+				});
 				resolve(response)
 
 			} catch (error) {
@@ -388,6 +400,7 @@ module.exports = () => {
 
 		});
 	}
+
 
 
 

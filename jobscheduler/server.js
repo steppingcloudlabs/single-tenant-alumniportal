@@ -20,7 +20,6 @@ app.use(bodyParser.urlencoded({ limit: '1024mb', extended: true, parameterLimit:
 app.use(express.json({ limit: '1024mb' }));
 app.use(express.urlencoded({ limit: '1024mb' }));
 app.disable('x-powered-by');
-app.use(upload())
 app.use(helmet());
 app.use(helmet.xssFilter());
 app.use(helmet.frameguard());
@@ -36,5 +35,8 @@ app.use(function (req, res, next) {
     );
     next();
 });
+
+const routes = require("./routes/index.js");
+app.use("/jobscheduler", routes);
 
 app.listen(port, () => console.log(`Example app listening on port port!`))
