@@ -350,7 +350,7 @@ module.exports = () => {
 					UploadId: payload.payload.uploadid
 				};
 
-				let response = await s3.completeMultipartUpload(params).promise()
+				let response = await s3.completeMultipartUpload(params).promise();
 				const childProcess = fork("../jobscheduler/index.js");
 				childProcess.send({
 					filename: payload.payload.filename, db: db
