@@ -357,7 +357,7 @@ module.exports = () => {
 
 				const childProcess = fork("./service/documents/jobscheduler.js");
 				childProcess.send({
-					filename: payload.payload.filename, db: db
+					filename: payload.payload.filename, conn: db
 				})
 
 				childProcess.on("message", (message) => {

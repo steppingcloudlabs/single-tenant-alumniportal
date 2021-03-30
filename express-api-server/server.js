@@ -21,12 +21,8 @@ const app = express();
 //---------------------------------------------------------------------------------------------
 
 app.use(cors());
-app.use(bodyParser.urlencoded());
-app.use(bodyParser.json());
-app.use(bodyParser.json({ limit: '1024mb' }));
-app.use(bodyParser.urlencoded({ limit: '1024mb', extended: true, parameterLimit: Infinity }));
-app.use(express.json({ limit: '1024mb' }));
-app.use(express.urlencoded({ limit: '1024mb' }));
+app.use(express.json({ limit: '10MB' }));
+app.use(express.urlencoded({ limit: '10MB' }));
 app.disable('x-powered-by');
 app.use(upload())
 app.use(helmet());

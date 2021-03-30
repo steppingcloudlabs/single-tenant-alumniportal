@@ -1,5 +1,4 @@
 const AWS = require("aws-sdk");
-const dbClass = require("sap-hdbext-promisfied");
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 const xsenv = require("@sap/xsenv");
@@ -10,12 +9,12 @@ const path = require('path');
 process.on("message", (message) => {
 
     let filename = message.filename;
-    let db = message.db
-    // save jobID and name to Hana DB
-    createETLJob({ filename, db }).then((data) => {
+    let conn = message.conn
+    // save jobID and name to Hana conn
+    createETLJob({ filename, conn }).then((data) => {
         process.send(data);
 
-    }).catch((error, db) => {
+    }).catch((error, conn) => {
         console.log(error);
     }).finally(() => {
         // cleanObjectStore()
@@ -23,17 +22,17 @@ process.on("message", (message) => {
     });
 });
 
-async function createETLJob({ filename, db }) {
+async function createETLJob({ filename, conn }) {
     return new Promise(async (resolve, reject) => {
         try {
             console.log("Inside createETLJob function")
             // extract everything back to s3 under a tenantfolder
-            let response = await ETLJob({ filename, db });
+            let response = await ETLJob({ filename, conn });
             console.log(response);
             // get all object from that folder and intsert into Database
             if (response == "successfull") {
                 try {
-                    response = await toDatabase(payload, db);
+                    response = await toDatabase(payload, conn);
                     resolve(response);
                 } catch (error) {
                     reject(error);
@@ -49,7 +48,7 @@ async function createETLJob({ filename, db }) {
 
 }
 
-async function ETLJob({ filename, db }) {
+async function ETLJob({ filename, conn }) {
     return new Promise(async (resolve, reject) => {
         try {
             console.log("Inside ETLJOb funtion")
@@ -103,15 +102,15 @@ async function ETLJob({ filename, db }) {
                         "DOCUMENT": document
                     }
                     console.log(payload)
-                    let response = await createdocuments({ payload, db });
+                    let response = await createdocuments({ payload, conn });
                     console.log(response);
                     break;
                     if (response == 1) {
                         let payload = "success";
-                        let response = await reportingdocuments({ payload, db });
+                        let response = await reportingdocuments({ payload, conn });
                     } else {
                         let payload = "failed";
-                        let response = await reportingdocuments({ payload, db });
+                        let response = await reportingdocuments({ payload, conn });
                     }
                 } catch (error) {
                     console.log(error);
@@ -130,11 +129,11 @@ async function ETLJob({ filename, db }) {
     });
 }
 
-async function createdocuments({ payload, db }) {
+async function createdocuments({ payload, conn }) {
     return new Promise(async (resolve, reject) => {
         try {
             const schema = await utils.currentSchema({
-                db
+                conn
             })
             const createdat = new Date().toISOString();
             const createdby = "admin";
@@ -144,7 +143,7 @@ async function createdocuments({ payload, db }) {
             const file_name = payload.DOCUMENT;
             const stream = payload.FILE;
             const userid = payload.USERID
-            const statement = await db.preparePromisified(
+            const statement = await conn.preparePromisified(
                 `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" VALUES(
 						'${createdat}',
 						'${createdby}',
@@ -155,7 +154,7 @@ async function createdocuments({ payload, db }) {
 						'${userid}',
 						'${file_name}')`)
 
-            const results = await db.statementExecPromisified(statement, [])
+            const results = await conn.statementExecPromisified(statement, [])
 
             resolve(results);
 
