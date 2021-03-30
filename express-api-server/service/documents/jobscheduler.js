@@ -1,11 +1,13 @@
 const AWS = require("aws-sdk");
+const dbClass = require("sap-hdbext-promisfied");
 const uuid = require("uuid");
+const utils = require("../../utils/database/index.js")();
 const xsenv = require("@sap/xsenv");
-const StreamZip = require('node-stream-zip');
+const unzipper = require('unzipper')
 const fs = require('fs').promises;
-const uuid = require("uuid");
+const path = require('path');
 
-process.on("message", (messageb) => {
+process.on("message", (message) => {
 
     let filename = message.filename;
     let db = message.db
@@ -14,24 +16,29 @@ process.on("message", (messageb) => {
         process.send(data);
 
     }).catch((error, db) => {
-
+        console.log(error);
     }).finally(() => {
-        cleanObjectStore()
-        process.end();
+        // cleanObjectStore()
+        process.exit();
     });
 });
 
 async function createETLJob({ filename, db }) {
     return new Promise(async (resolve, reject) => {
         try {
-
+            console.log("Inside createETLJob function")
             // extract everything back to s3 under a tenantfolder
             let response = await ETLJob({ filename, db });
-
+            console.log(response);
             // get all object from that folder and intsert into Database
             if (response == "successfull") {
-                response = await toDatabase(payload, db);
-                resolve(response);
+                try {
+                    response = await toDatabase(payload, db);
+                    resolve(response);
+                } catch (error) {
+                    reject(error);
+                }
+
             } else {
                 reject(error);
             }
@@ -45,6 +52,7 @@ async function createETLJob({ filename, db }) {
 async function ETLJob({ filename, db }) {
     return new Promise(async (resolve, reject) => {
         try {
+            console.log("Inside ETLJOb funtion")
             let xsService = xsenv.getServices(
                 {
                     objectstore: {
@@ -69,29 +77,35 @@ async function ETLJob({ filename, db }) {
                 Key: filename
             };
 
-            let { Body } = await s3.getObject(params).promise();
-            console.log(Body);
-            fs.writeFile(`./${filename}`, Body).then().catch(err => { reject(err); });
+            let stream = s3.getObject(params).createReadStream().pipe(unzipper.Parse({ forceStream: true }));
+            // fs.writeFile(`./${filename}`, Body).then().catch(err => { reject(err); });
 
-            const zip = new StreamZip.async({ file: `./${filename}` });
+            // const zip = new StreamZip.async({ file: `./${filename}` });
 
-            const entries = await zip.entries();
+            // const entries = await zip.entries();
 
-            for (const entry of Object.values(entries)) {
-                await zip.extract(entry.name, './');
+            for await (const entry of stream) {
+
                 try {
-                    let base64 = await fs.readFile('./' + entry.name, { encoding: 'base64' });
-                    console.log(entry.name)
-                    let userid = entry.name.split('_')[0]
-                    let document = entry.name.split('_')[1]
+                    const fileName = entry.path;
+
+                    const data = await entry.buffer();
+                    let base64 = data.toString('base64');
+                    console.log(base64);
+
+                    // let userid = fileName.split('_')[0]
+                    // let document = fileName.split('_')[1]
+                    let userid = "10"
+                    let document = "form16"
                     let payload = {
                         "FILE": "data:application/pdf;base64," + base64,
                         "USERID": userid,
                         "DOCUMENT": document
                     }
-
                     console.log(payload)
                     let response = await createdocuments({ payload, db });
+                    console.log(response);
+                    break;
                     if (response == 1) {
                         let payload = "success";
                         let response = await reportingdocuments({ payload, db });
@@ -99,16 +113,14 @@ async function ETLJob({ filename, db }) {
                         let payload = "failed";
                         let response = await reportingdocuments({ payload, db });
                     }
-                    fs.unlinkSync('./extracted' + entry.name);
-                    console.log("delete file")
                 } catch (error) {
                     console.log(error);
-                    await fs.unlink('./extracted' + entry.name);
                 }
+
 
             }
             // Do not forget to close the file once you're done
-            await zip.close();
+
             resolve("Process Completed")
             // await cleanObjectStore();
 
@@ -121,7 +133,6 @@ async function ETLJob({ filename, db }) {
 async function createdocuments({ payload, db }) {
     return new Promise(async (resolve, reject) => {
         try {
-
             const schema = await utils.currentSchema({
                 db
             })

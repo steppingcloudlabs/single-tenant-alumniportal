@@ -29,7 +29,8 @@
 		"node-stream-zip": "latest",
 		"amqplib": "^0.6.0",
 		"axios": "latest",
-		"@sap/jobs-client": "latest"
+		"@sap/jobs-client": "latest",
+		"unzipper": "^0.10.11"
 	},
 	"description": "my description",
 	"devDependencies": {

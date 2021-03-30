@@ -6,6 +6,7 @@ const utils = require("../../utils/database/index.js")();
 const AWS = require("aws-sdk")
 const axios = require("axios")
 const { fork } = require("child_process")
+let path = require('path')
 
 module.exports = () => {
 
@@ -301,9 +302,9 @@ module.exports = () => {
 					UploadId: payload.uploadid
 				};
 
-				console.log(params)
+				// console.log(params)
 				let response = await s3.getSignedUrlPromise('uploadPart', params)
-				console.log(response)
+				// console.log(response)
 				resolve({ URL: response })
 
 			} catch (error) {
@@ -350,20 +351,25 @@ module.exports = () => {
 					UploadId: payload.payload.uploadid
 				};
 
-				let response = await s3.completeMultipartUpload(params).promise()
-				const childProcess = fork("../jobscheduler/index.js");
+				let response = await s3.completeMultipartUpload(params).promise();
+				resolve(response);
+
+
+				const childProcess = fork("./service/documents/jobscheduler.js");
 				childProcess.send({
 					filename: payload.payload.filename, db: db
 				})
 
-				childProcess.on("message", (message, db) => {
-					// TODO: if successfull then update statis and flip to inactive
+				childProcess.on("message", (message) => {
+					// TODO: if successfull then update statis and flip to inactiveg()
+					console.log(message);
 				})
 
 				childProcess.on('error', (err, db) => {
 					// TODO: if error then update the error message in Hana database. with explaination
+					console.log(err);
 				});
-				resolve(response)
+
 
 			} catch (error) {
 				reject(error)
@@ -373,7 +379,7 @@ module.exports = () => {
 	const uploadSignedURL = ({ payload, query, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				console.log('   Presigned URL : ' + payload.payload.url + ' filetype ' + payload.payload.type + 'blob :' + payload.payload.chunk)
+				// console.log('   Presigned URL : ' + payload.payload.url + ' filetype ' + payload.payload.type + 'blob :' + payload.payload.chunk)
 				// const axiosConstructor = axios.create()
 				// delete axiosConstructor.defaults.headers.put['Content-Type']
 				// var signedUrl = query.url;
