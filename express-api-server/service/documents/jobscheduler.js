@@ -1,170 +1,99 @@
 const AWS = require("aws-sdk");
-const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 const xsenv = require("@sap/xsenv");
 const unzipper = require('unzipper')
 const fs = require('fs').promises;
 const path = require('path');
+const axios = require('axios');
+const dbClass = require("sap-hdbext-promisfied")
+const hdbext = require("@sap/hdbext");
+
+
+// -------------------------------------UTIL Function for connecting with database-----------------------------------
+
+async function connectClient(credentials) {
+    try {
+        let hanaOptions = credentials
+        hdbext.createConnection(hanaOptions, function (err, db) {
+            if (err) {
+                console.log(err.message);
+                return;
+            } else {
+                return db;
+            }
+        });
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 process.on("message", (message) => {
 
     let filename = message.filename;
-    let conn = message.conn
-    // save jobID and name to Hana conn
-    createETLJob({ filename, conn }).then((data) => {
-        process.send(data);
+    let uuid = message.uuid;
 
-    }).catch((error, conn) => {
+    (async () => {
+        const s3 = new AWS.S3({
+            accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+            secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+            region: 'us-east-2',
+            signatureVersion: 'v4'
+        });
+        params = {
+            Bucket: process.env.AWS_BUCKET_NAME,
+            Key: filename
+        };
+
+        let stream = s3.getObject(params).createReadStream().pipe(unzipper.Parse({ forceStream: true }));
+
+        for await (const entry of stream) {
+            try {
+                const fileName = entry.path;
+
+                const data = await entry.buffer();
+                let base64 = data.toString('base64');
+
+                // let userid = fileName.split('_')[0]
+                // let document = fileName.split('_')[1]
+                let userid = "76545678"
+                let document = "form16"
+                let payload = {
+                    "payload": {
+                        "FILE": "data:application/pdf;base64," + base64,
+                        "USERID": userid,
+                        "DOCUMENT": document,
+                        "UUID": uuid
+                    }
+                }
+                // let credentials = xsenv.getServices(
+                //     {
+                //         hana: {
+                //             tag: "hana"
+                //         }
+                //     }
+                // );
+                // credentials.hana.pooling = true;
+
+                // // making conneciton with db 
+                // const conn = await connectClient({ credentials });
+                // let db = new dbClass(conn);
+                // const response = await createdocuments({ payload, db });
+                process.send(payload);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+    })().catch((error) => {
         console.log(error);
     }).finally(() => {
-        // cleanObjectStore()
         process.exit();
+        console.log("process exited")
     });
 });
 
-async function createETLJob({ filename, conn }) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            console.log("Inside createETLJob function")
-            // extract everything back to s3 under a tenantfolder
-            let response = await ETLJob({ filename, conn });
-            console.log(response);
-            // get all object from that folder and intsert into Database
-            if (response == "successfull") {
-                try {
-                    response = await toDatabase(payload, conn);
-                    resolve(response);
-                } catch (error) {
-                    reject(error);
-                }
 
-            } else {
-                reject(error);
-            }
-        } catch (error) {
-            reject(error)
-        }
-    })
-
-}
-
-async function ETLJob({ filename, conn }) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            console.log("Inside ETLJOb funtion")
-            let xsService = xsenv.getServices(
-                {
-                    objectstore: {
-                        tag: "objectStore"
-                    }
-                });
-            let accessKeyId = xsService.objectstore.access_key_id;
-            let secretAccessKey = xsService.objectstore.secret_access_key;
-            let host = xsService.objectstore.host;
-            let region = xsService.objectstore.region;
-
-            //S3 configuration
-            const s3 = new AWS.S3({
-                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-                region: 'us-east-2',
-                signatureVersion: 'v4'
-            });
-
-            params = {
-                Bucket: process.env.AWS_BUCKET_NAME,
-                Key: filename
-            };
-
-            let stream = s3.getObject(params).createReadStream().pipe(unzipper.Parse({ forceStream: true }));
-            // fs.writeFile(`./${filename}`, Body).then().catch(err => { reject(err); });
-
-            // const zip = new StreamZip.async({ file: `./${filename}` });
-
-            // const entries = await zip.entries();
-
-            for await (const entry of stream) {
-
-                try {
-                    const fileName = entry.path;
-
-                    const data = await entry.buffer();
-                    let base64 = data.toString('base64');
-                    console.log(base64);
-
-                    // let userid = fileName.split('_')[0]
-                    // let document = fileName.split('_')[1]
-                    let userid = "10"
-                    let document = "form16"
-                    let payload = {
-                        "FILE": "data:application/pdf;base64," + base64,
-                        "USERID": userid,
-                        "DOCUMENT": document
-                    }
-                    console.log(payload)
-                    let response = await createdocuments({ payload, conn });
-                    console.log(response);
-                    break;
-                    if (response == 1) {
-                        let payload = "success";
-                        let response = await reportingdocuments({ payload, conn });
-                    } else {
-                        let payload = "failed";
-                        let response = await reportingdocuments({ payload, conn });
-                    }
-                } catch (error) {
-                    console.log(error);
-                }
-
-
-            }
-            // Do not forget to close the file once you're done
-
-            resolve("Process Completed")
-            // await cleanObjectStore();
-
-        } catch (error) {
-            reject(error)
-        }
-    });
-}
-
-async function createdocuments({ payload, conn }) {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const schema = await utils.currentSchema({
-                conn
-            })
-            const createdat = new Date().toISOString();
-            const createdby = "admin";
-            const modifiedby = "admin";
-            const modifiedat = new Date().toISOString();
-            const ID = uuid()
-            const file_name = payload.DOCUMENT;
-            const stream = payload.FILE;
-            const userid = payload.USERID
-            const statement = await conn.preparePromisified(
-                `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" VALUES(
-						'${createdat}',
-						'${createdby}',
-						'${modifiedat}',
-						'${modifiedby}',
-						'${ID}',
-						'${stream}',
-						'${userid}',
-						'${file_name}')`)
-
-            const results = await conn.statementExecPromisified(statement, [])
-
-            resolve(results);
-
-        } catch (error) {
-            reject(error);
-        }
-    });
-}
-
-async function reportingdocuments({ payload, db }) {
+async function createdocuments({ payload, db }) {
     return new Promise(async (resolve, reject) => {
         try {
 
@@ -176,9 +105,9 @@ async function reportingdocuments({ payload, db }) {
             const modifiedby = "admin";
             const modifiedat = new Date().toISOString();
             const ID = uuid()
-            const file_name = payload.DOCUMENT;
-            const stream = payload.FILE;
-            const userid = payload.USERID
+            const file_name = payload.payload.DOCUMENT;
+            const stream = payload.payload.FILE;
+            const userid = payload.payload.USERID
             const statement = await db.preparePromisified(
                 `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_DOCUMENTS_DOCUMENTS" VALUES(
 						'${createdat}',
@@ -199,13 +128,3 @@ async function reportingdocuments({ payload, db }) {
         }
     });
 };
-async function cleanETL() {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let response = await createdocuments({ payload, db });
-            resolve(response);
-        } catch (error) {
-            reject(error)
-        }
-    });
-}

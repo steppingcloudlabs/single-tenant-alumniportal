@@ -1,7 +1,7 @@
 "use strict";
 const express = require("express");
 require('dotenv').config()
-const bodyParser = require("body-parser");
+const bodyParser = require("body-parser")
 const compression = require("compression");
 const xsenv = require("@sap/xsenv");
 const xssec = require("@sap/xssec");
@@ -21,8 +21,8 @@ const app = express();
 //---------------------------------------------------------------------------------------------
 
 app.use(cors());
-app.use(express.json({ limit: '10MB' }));
-app.use(express.urlencoded({ limit: '10MB' }));
+app.use(bodyParser.json({ limit: '1024MB' }));
+app.use(bodyParser.urlencoded({ limit: '1024MB', extended: true }));
 app.disable('x-powered-by');
 app.use(upload())
 app.use(helmet());
@@ -44,7 +44,7 @@ app.use(function (req, res, next) {
 //---------------------------------------------------------------------------------------------
 // Passport injection for app router integration and secure Hana Database connection.
 //---------------------------------------------------------------------------------------------
-
+xsenv.loadEnv();
 app.use(passport.initialize());
 passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
   uaa: {

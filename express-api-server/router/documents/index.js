@@ -33,14 +33,11 @@ expressrouter
 	.route("/documents/create/_bulk/getuploadurl")
 	.get((req, res, next) => documentcontroller.getuploadurl(req, res, next));
 expressrouter
-	.route("/documents/create/_bulk/uploadsignedurl")
-	.put((req, res, next) => documentcontroller.uploadSignedURL(req, res, next));
+	.route("/documents/create/jobs/trigger")
+	.post((req, res, next) => documentcontroller.uploadSignedURL(req, res, next));
 expressrouter
 	.route("/documents/create/_bulk/complete")
 	.post((req, res, next) => documentcontroller.complete(req, res, next));
-expressrouter
-	.route("/documents/create/jobs/trigger")
-	.post((req, res, next) => documentcontroller.jobScheduleETL(req, res, next));
 expressrouter
 	.route("/documents/create/jobs/get")
 	.get((req, res, next) => documentcontroller.getAllJobs(req, res, next));

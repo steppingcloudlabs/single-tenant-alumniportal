@@ -217,9 +217,6 @@ module.exports = () => {
 			}
 		})
 	}
-
-	//Zip file to SAP Object Store (S3 xsService.objectstore.bucket)
-
 	const getuploadid = ({ payload, bucketname }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -322,6 +319,9 @@ module.exports = () => {
 							tag: "objectStore"
 						}
 					});
+				// Need to change this when migratring this for multitenant.
+
+
 				let accessKeyId = xsService.objectstore.access_key_id;
 				let secretAccessKey = xsService.objectstore.secret_access_key;
 				let host = xsService.objectstore.host;
@@ -354,29 +354,72 @@ module.exports = () => {
 				let response = await s3.completeMultipartUpload(params).promise();
 				resolve(response);
 
-
-				const childProcess = fork("./service/documents/jobscheduler.js");
-				childProcess.send({
-					filename: payload.payload.filename, conn: db
-				})
-
-				childProcess.on("message", (message) => {
-					// TODO: if successfull then update statis and flip to inactiveg()
-					console.log(message);
-				})
-
-				childProcess.on('error', (err, db) => {
-					// TODO: if error then update the error message in Hana database. with explaination
-					console.log(err);
-				});
-
-
 			} catch (error) {
 				reject(error)
 			}
 		})
 	}
-	const uploadSignedURL = ({ payload, query, db }) => {
+
+	const errorReport = ({ error, payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const ID = uuid()
+				const file_name = payload.payload.DOCUMENT;
+				const jobid = payload.payload.UUID;
+				const userid = payload.payload.USERID;
+				const statement = await db.preparePromisified(
+					`INSERT INTO "${schema}"."JOBSCHEDULDER" VALUES(
+						'${ID}',
+						'${jobid}',
+						'${userid}',
+						'${file_name}',
+						'${escape(error)}'
+						)`)
+
+				const results = await db.statementExecPromisified(statement, [])
+
+				resolve(results);
+			} catch (error) {
+				reject(error)
+			}
+
+
+		});
+	}
+
+	const successReport = ({ payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const ID = uuid()
+				const file_name = payload.payload.DOCUMENT;
+				const jobid = payload.payload.UUID;
+				const userid = payload.payload.USERID;
+				const statement = await db.preparePromisified(
+					`INSERT INTO "${schema}"."JOBSCHEDULDER" VALUES(
+						'${ID}',
+						'${jobid}',
+						'${userid}',
+						'${file_name}',
+						'success'
+						)`)
+
+				const results = await db.statementExecPromisified(statement, [])
+
+				resolve(results);
+
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
+
+	const cleanS3afterprocessing = ({ payload, query, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
 				// console.log('   Presigned URL : ' + payload.payload.url + ' filetype ' + payload.payload.type + 'blob :' + payload.payload.chunk)
@@ -398,6 +441,59 @@ module.exports = () => {
 				});
 
 				resolve(response.headers)
+			} catch (error) {
+				// console.log(error)
+				reject(error)
+			}
+
+
+		});
+	}
+
+
+	const uploadSignedURL = ({ payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let id = uuid();
+				const childProcess = fork("./service/documents/jobscheduler.js");
+
+				childProcess.send({
+					filename: payload.payload.filename, uuid: id
+				})
+
+				childProcess.on("message", payload => {
+					(async (payload) => {
+						console.log(payload);
+						let response = await createdocuments({ payload, db });
+						return response;
+					})(payload).then((response) => {
+						(async (response) => {
+							if (response == 1) {
+								let response = await successReport({ payload, db });
+								console.log("data in response" + response);
+							} else {
+								console.log(response);
+							}
+						})(response).catch(error => {
+							console.log(error);
+						})
+
+					}).catch((error) => {
+						(async (error) => {
+							let response = await errorReport({ error, payload, db });
+							console.log(response);
+						})(error).catch(error => {
+							console.log(error);
+						})
+
+					});
+				})
+
+				childProcess.on('error', (err) => {
+					// let response = await errorReport({ error, db });
+					console.log(response);
+				});
+				// resolve("triggered")
 			} catch (error) {
 				// console.log(error)
 				reject(error)
