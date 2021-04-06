@@ -21,8 +21,32 @@ module.exports = () => {
         })
     }
 
+    const getJobLogs = ({ payload, db }) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const schema = await utils.currentSchema({
+                    db
+                })
+                if (payload.jobid === undefined) {
+
+                    const statement = await db.preparePromisified(`SELECT * from "${schema}"."JOBSCHEDULDER"`)
+                    const results = await db.statementExecPromisified(statement, [])
+                    resolve(results);
+                } else {
+                    let query = `SELECT * from "${schema}"."JOBSCHEDULDER" where JOBID = '${payload.jobid}'`
+                    const statement = await db.preparePromisified(query)
+                    const results = await db.statementExecPromisified(statement, [])
+                    resolve(results);
+                }
+
+            } catch (error) {
+                reject(error)
+            }
+        })
+    }
 
     return {
         getAllJobs,
+        getJobLogs
     }
 }
