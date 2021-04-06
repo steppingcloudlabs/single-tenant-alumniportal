@@ -390,6 +390,37 @@ module.exports = () => {
 		});
 	}
 
+	const jobtoDatabase = ({ payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const isactive = payload.payload.ISACTIVE;
+				const jobid = payload.payload.ID;
+				const status = payload.payload.STATUS;
+				const error = payload.payload.ERROR;
+				const createdat = new Date().toISOString();
+				const statement = await db.preparePromisified(
+					`INSERT INTO "${schema}"."UPLOADDOCUMENTJOBSTATUS" VALUES(
+						'${jobid}',
+						'${isactive}',
+						'${status}',
+						'${error}',
+						'${createdat}'
+						)`)
+
+				const results = await db.statementExecPromisified(statement, [])
+
+				resolve(results);
+			} catch (error) {
+				reject(error)
+			}
+
+
+		});
+	}
+
 	const successReport = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -422,18 +453,7 @@ module.exports = () => {
 	const cleanS3afterprocessing = ({ payload, query, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				// console.log('   Presigned URL : ' + payload.payload.url + ' filetype ' + payload.payload.type + 'blob :' + payload.payload.chunk)
-				// const axiosConstructor = axios.create()
-				// delete axiosConstructor.defaults.headers.put['Content-Type']
-				// var signedUrl = query.url;
 
-				// var options = {
-				// 	headers: {
-				// 		'Content-Type': query.type
-				// 	}
-				// };
-
-				// let response = await axios.put(signedUrl, payload, options);
 				let response = axios.put(payload.payload.url, payload.payload.chunk, {
 					headers: {
 						'Content-Type': payload.payload.type
@@ -451,7 +471,7 @@ module.exports = () => {
 	}
 
 
-	const uploadSignedURL = ({ payload, db }) => {
+	const trigger = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
 				let id = uuid();
@@ -463,7 +483,6 @@ module.exports = () => {
 
 				childProcess.on("message", payload => {
 					(async (payload) => {
-						console.log(payload);
 						let response = await createdocuments({ payload, db });
 						return response;
 					})(payload).then((response) => {
@@ -490,9 +509,44 @@ module.exports = () => {
 				})
 
 				childProcess.on('error', (err) => {
-					// let response = await errorReport({ error, db });
-					console.log(response);
+					(async (message) => {
+						let payload = {
+							"payload": {
+								"ID": id,
+								"ISACTIVE": "false",
+								"STATUS": "error",
+								"ERROR": err,
+							}
+						}
+						let response = await jobtoDatabase({ payload, db })
+
+					})(message).catch((err) => {
+						console.log(err);
+					})
 				});
+
+				childProcess.on('close', (message) => {
+
+					(async (message,) => {
+						let payload = {
+							"payload": {
+								"ID": id,
+								"ISACTIVE": "false",
+								"STATUS": "submitted",
+								"ERROR": "",
+							}
+						}
+						// payload.payload.uuid = id
+						// payload.payload.status = "completed"
+						let response = await jobtoDatabase({ payload, db })
+
+
+					})(message).catch((err) => {
+						console.log(err);
+					})
+				})
+				// enter ID in 
+
 				// resolve("triggered")
 			} catch (error) {
 				// console.log(error)
@@ -518,7 +572,7 @@ module.exports = () => {
 		getuploadid,
 		getuploadurl,
 		complete,
-		uploadSignedURL
+		trigger
 	};
 
 };

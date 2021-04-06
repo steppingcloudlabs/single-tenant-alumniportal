@@ -34,7 +34,7 @@ expressrouter
 	.get((req, res, next) => documentcontroller.getuploadurl(req, res, next));
 expressrouter
 	.route("/documents/create/jobs/trigger")
-	.post((req, res, next) => documentcontroller.uploadSignedURL(req, res, next));
+	.post((req, res, next) => documentcontroller.trigger(req, res, next));
 expressrouter
 	.route("/documents/create/_bulk/complete")
 	.post((req, res, next) => documentcontroller.complete(req, res, next));

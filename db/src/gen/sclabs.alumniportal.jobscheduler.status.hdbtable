@@ -3,5 +3,6 @@ COLUMN TABLE uploaddocumentjobstatus (
     isactive NVARCHAR(5000) NOT NULL,
     status NVARCHAR(5000) NOT NULL,
     errormessage NVARCHAR(5000) NOT NULL,
+    createdAt TIMESTAMP,
     PRIMARY KEY(ID)
 ) 

@@ -405,7 +405,7 @@ module.exports = {
 	getAllJobs: async (req, res, next) => {
 		try {
 			let db = new dbClass(req.db);
-			let payload = req.body;
+			let payload = req.params;
 			let response = await objectstorserivce.getAllJobs({
 				payload,
 				db
@@ -462,11 +462,11 @@ module.exports = {
 		}
 	},
 
-	uploadSignedURL: async (req, res, next) => {
+	trigger: async (req, res, next) => {
 		try {
 			let db = new dbClass(req.db);
 			let payload = req.body;
-			let response = await documentserivce.uploadSignedURL({
+			let response = await documentserivce.trigger({
 				payload,
 				db
 			});
