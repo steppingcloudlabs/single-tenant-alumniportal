@@ -30,11 +30,11 @@ module.exports = () => {
 
                 if (payload.jobid.length <= 0 || payload === undefined) {
                     console.log(payload)
-                    const statement = await db.preparePromisified(`SELECT * from "${schema}"."JOBSCHEDULDER"`)
+                    const statement = await db.preparePromisified(`SELECT "JOBID", "USERID", "DOCUMENTID", "STATUS" from "${schema}"."JOBSCHEDULDER"`)
                     const results = await db.statementExecPromisified(statement, [])
                     resolve(results);
                 } else {
-                    let query = `SELECT * from "${schema}"."JOBSCHEDULDER" where JOBID = '${payload.jobid}'`
+                    let query = `SELECT "JOBID", "USERID", "DOCUMENTID", "STATUS" from "${schema}"."JOBSCHEDULDER" where JOBID = '${payload.jobid}'`
                     const statement = await db.preparePromisified(query)
                     const results = await db.statementExecPromisified(statement, [])
                     resolve(results);
