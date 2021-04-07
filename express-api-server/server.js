@@ -191,8 +191,8 @@ app.use("/admin/action/search", admintokenchecker, searchRoutes);
 app.use("/admin/action", admintokenchecker, successfactorsRoutes);
 app.use("/admin/action/askhr", admintokenchecker, askhradminroutes);
 app.use("/admin/action/sftp", admintokenchecker, adminsftp);
-//USER ROUTES
 
+//USER ROUTES
 //app.use(JWTtoken)     // express middleware for usertoken verfication
 const userauthRoutes = require("./router/auth/userindex.js");
 const userskillsRoutes = require("./router/skills/userindex.js");
@@ -210,6 +210,13 @@ app.use("/user/action", usertokenchecker, userdocumentRoutes);
 app.use("/user/action", usertokenchecker, useractionRoutes);
 app.use("/user/action/askhr", usertokenchecker, askhruserroutes);
 app.use("/search", usertokenchecker, searchuserRoutes);
+
+//---------------------------------------------------------------------------------------------
+// Reporting and stats routes of application.
+//---------------------------------------------------------------------------------------------
+
+const reportingRoutes = require("./router/reporting/index.js");
+app.use("/admin/reports", admintokenchecker, reportingRoutes);
 app.listen(port, () => {
   console.log(`Server listening on port: ${port}`);
 });

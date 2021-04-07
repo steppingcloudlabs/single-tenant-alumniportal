@@ -35,7 +35,6 @@ module.exports = () => {
 		db
 	}) => {
 		return new Promise(async (resolve, reject) => {
-			console.log('creae user:' + payload)
 			try {
 				if (payload.payload.ID) {
 					try {
@@ -88,7 +87,7 @@ module.exports = () => {
 						DATE_OF_BIRTH = DATE_OF_BIRTH == undefined ? " " : DATE_OF_BIRTH;
 						STATE = STATE == undefined ? " " : STATE;
 						COUNTRY = COUNTRY == undefined ? " " : COUNTRY;
-						ISACTIVE = "false";
+						ISACTIVE = "unregistered";
 						const schema = await utils.currentSchema({
 							db
 						});
