@@ -160,6 +160,13 @@ module.exports = () => {
 
 							const statement5 = await db.preparePromisified(query5)
 							const result5 = await db.statementExecPromisified(statement5, [])
+
+							let query6 = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" SET "ISACTIVE" = 'registered' WHERE "USER_ID" = '${USERID}'`
+
+							const statement6 = await db.preparePromisified(query6)
+							const result6 = await db.statementExecPromisified(statement6, [])
+							console.log(result6)
+
 							resolve(result5)
 						}
 					} else {

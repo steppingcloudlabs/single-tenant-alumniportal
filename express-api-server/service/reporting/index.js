@@ -11,7 +11,6 @@ module.exports = () => {
                 let statement = await db.preparePromisified(query);
 
                 let result = await db.statementExecPromisified(statement);
-                console.log(result)
                 resolve(result);
             } catch (error) {
                 reject(error);
