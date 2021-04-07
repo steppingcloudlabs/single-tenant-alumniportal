@@ -88,6 +88,7 @@ module.exports = () => {
 						DATE_OF_BIRTH = DATE_OF_BIRTH == undefined ? " " : DATE_OF_BIRTH;
 						STATE = STATE == undefined ? " " : STATE;
 						COUNTRY = COUNTRY == undefined ? " " : COUNTRY;
+						ISACTIVE = "false";
 						const schema = await utils.currentSchema({
 							db
 						});
@@ -135,7 +136,8 @@ module.exports = () => {
 									'${MANAGER_JOB_INFORMATION}',
 									'${DESIGNATION_JOB_INFORMATION}',
 									'${STATE}',
-									'${COUNTRY}'
+									'${COUNTRY}',
+									'${ISACTIVE}'
 								)`
 
 							const statement = await db.preparePromisified(query)

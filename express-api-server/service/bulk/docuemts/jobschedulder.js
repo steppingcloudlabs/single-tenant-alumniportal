@@ -27,8 +27,9 @@ module.exports = () => {
                 const schema = await utils.currentSchema({
                     db
                 })
-                if (payload.jobid === undefined) {
 
+                if (payload.jobid.length <= 0 || payload === undefined) {
+                    console.log(payload)
                     const statement = await db.preparePromisified(`SELECT * from "${schema}"."JOBSCHEDULDER"`)
                     const results = await db.statementExecPromisified(statement, [])
                     resolve(results);

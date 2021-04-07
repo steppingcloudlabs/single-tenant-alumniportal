@@ -100,10 +100,30 @@ module.exports = () => {
 		});
 	};
 
+	const getActiveUserStats = ({ payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const query =
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"'`
+				const statement = await db.preparePromisified(query);
+				const results = await db.statementExecPromisified(statement, [])
+				resolve(results);
+			} catch (error) {
+				reject(error);
+			}
+
+
+		})
+	};
+
 	return {
 		createuser,
 		getuser,
 		deleteuser,
+		getActiveUserStats
 	};
 
 };

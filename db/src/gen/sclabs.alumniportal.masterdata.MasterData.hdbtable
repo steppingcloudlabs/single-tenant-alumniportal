@@ -22,5 +22,6 @@ COLUMN TABLE sclabs_alumniportal_masterdata_MasterData (
   designation_job_information NVARCHAR(5000),
   state NVARCHAR(5000),
   country NVARCHAR(5000),
+  isActive NVARCHAR(5000),
   PRIMARY KEY(ID)
 )
