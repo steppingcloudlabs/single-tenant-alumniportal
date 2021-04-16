@@ -32,20 +32,28 @@
 	},
 	"description": "my description",
 	"devDependencies": {
+		"chai": "^4.3.4",
+		"chai-http": "^4.3.0",
 		"jest": "^26.6.3",
 		"jest-junit": "^12.0.0",
-		"nodemon": "^2.0.6"
+		"mocha": "^8.3.2",
+		"nodemon": "^2.0.6",
+		"supertest": "^6.1.3"
 	},
 	"files": [],
 	"main": "server.js",
 	"name": "express-api-server",
 	"scripts": {
-		"test": "node node_modules/jest/bin/jest --config jest.json",
+		"test": "mocha",
 		"test-coverage": "node node_modules/jest/bin/jest --coverage --config jest.json",
-		"start": "nodemon server.js"
+		"start": "nodemon server.js",
+		"runClinic": "clinic doctor -- node server.js",
+		"bubbleprof": "clinic bubbleprof -- node server.js",
+		"flame": "clinic flame -- node server.js",
+		"cluster": "node-pm server.js"
 	},
 	"engines": {
-		"node": "10.x"
+		"node": "12.x"
 	},
 	"version": "1.0.0"
 }
