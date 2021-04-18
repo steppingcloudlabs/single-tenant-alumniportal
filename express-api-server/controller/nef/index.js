@@ -20,7 +20,7 @@ module.exports = {
 
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				tablename = "SCLABS_ALUMNIPORTAL_USERS_USERS"
+				tablename = "SCLABS_ALUMNIPORTAL_NEWS_NEWS"
 				const schema = await utils.currentSchema({
 					db
 				})
@@ -30,6 +30,7 @@ module.exports = {
 					tablename,
 					db
 				})
+
 				paginationobject = {
 					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
 					'LIMIT': parseInt(LIMIT),
@@ -43,14 +44,14 @@ module.exports = {
 			} else {
 				res.status(400).send({
 					status: "400",
-					result: `${e.toString()}`
+					result: response
 				});
 			}
-		} catch {
+		} catch (error) {
 			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/updatenews ${error}`);
 			res.type("application/json").status(400).send({
 				status: "400",
-				result: response
+				result: error.message
 			})
 		}
 	},

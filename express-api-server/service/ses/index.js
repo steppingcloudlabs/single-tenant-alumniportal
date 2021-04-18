@@ -1,7 +1,5 @@
 const AWS = require("aws-sdk");
 
-
-
 module.exports = () => {
     AWS.config.update({
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -31,12 +29,12 @@ module.exports = () => {
 
     sns.subscribe(paramsTopicBounces, function (error, data) {
         if (error) throw new Error(`Unable to set up SNS subscription: ${error}`);
-        console.log(`SNS subscription set up successfully: ${JSON.stringify(data)}`);
+
     });
 
     sns.subscribe(paramsTopicComplaints, function (error, data) {
         if (error) throw new Error(`Unable to set up SNS subscription: ${error}`);
-        console.log(`SNS subscription set up successfully: ${JSON.stringify(data)}`);
+
     });
 
     const handleResponse = async (topicArn, req, res) => {
@@ -63,53 +61,57 @@ module.exports = () => {
         return new Promise(async (resolve, reject) => {
             try {
                 const SES_CONFIG = {
-                    accessKeyId: 'AKIA53DDMX5YBG4OUAMF',
-                    secretAccessKey: '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',
-                    region: 'us-east-2',
+                    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                    region: 'us-east-2'
                 };
-                // let params = {
-                //     Destination: { /* required */
-                //         CcAddresses: [
-
-                //         ],
-                //         ToAddresses: [
-                //             PERSONAL_EMAIL_ID,
-                //             /* more items */
-                //         ]
-                //     },
-                //     Message: { /* required */
-                //         Body: { /* required */
-                //             Html: {
-                //                 Charset: "UTF-8",
-                //                 Data: "HTML_FORMAT_BODY"
-                //             },
-                //             Text: {
-                //                 Charset: "UTF-8",
-                //                 Data: "TEXT_FORMAT_BODY"
-                //             }
-                //         },
-                //         Subject: {
-                //             Charset: 'UTF-8',
-                //             Data: 'Test email'
-                //         }
-                //     },
-                //     Source: 'daraksha@steppingcloud.com', /* required */
-                //     ReplyToAddresses: [
-
-                //     ],
-                // };
-                var thisApp = JSON.parse(process.env.VCAP_APPLICATION);
-                console.log(thisApp)
                 let params = {
+                    Destination: { /* required */
+                        CcAddresses: [
+
+                        ],
+                        ToAddresses: [
+                            PERSONAL_EMAIL_ID,
+                            /* more items */
+                        ]
+                    },
+                    Message: { /* required */
+                        Body: { /* required */
+                            Html: {
+                                Charset: "UTF-8",
+                                Data: "HTML_FORMAT_BODY"
+                            },
+                            Text: {
+                                Charset: "UTF-8",
+                                Data: "TEXT_FORMAT_BODY"
+                            }
+                        },
+                        Subject: {
+                            Charset: 'UTF-8',
+                            Data: 'Test email'
+                        }
+                    },
+                    Source: 'daraksha@steppingcloud.com', /* required */
+                    ReplyToAddresses: [
+
+                    ],
+                };
+
+                let endpoint = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
+                endpoint = endpoint.replace('-srv', "");
+                console.log(endpoint)
+                let paramsTemplate = {
                     Source: 'daraksha@steppingcloud.com',
                     Template: 'WelcomeMail',
                     Destination: {
                         ToAddresses: [PERSONAL_EMAIL_ID]
                     },
-                    TemplateData: JSON.stringify({ name: FIRST_NAME_PERSONAL_INFORMATION, link: URL })
+                    TemplateData: JSON.stringify({ name: FIRST_NAME_PERSONAL_INFORMATION, link: 'https://' + endpoint + '/index.html#/signup' })
                 };
 
-                let sendPromise = new AWS.SES(SES_CONFIG).sendTemplatedEmail(params).promise();
+                // console.log(paramsTemplate)
+                // let sendPromise = new AWS.SES(SES_CONFIG).sendEmail(params).promise();
+                sendPromise = new AWS.SES(SES_CONFIG).sendTemplatedEmail(paramsTemplate).promise();
                 resolve(sendPromise);
 
             } catch (error) {

@@ -217,7 +217,7 @@ app.use("/search", usertokenchecker, searchuserRoutes);
 
 const reportingRoutes = require("./router/reporting/index.js");
 app.use("/admin/reports", admintokenchecker, reportingRoutes);
-app.listen(port, () => {
+
+module.exports = app.listen(port, () => {
   console.log(`Server listening on port: ${port}`);
 });
-module.exports = app;
