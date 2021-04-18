@@ -141,7 +141,9 @@ module.exports = () => {
 
 							const statement = await db.preparePromisified(query)
 							let results = await db.statementExecPromisified(statement, [])
+
 							let res = await emailservice.sendEmail({ PERSONAL_EMAIL_ID, FIRST_NAME_PERSONAL_INFORMATION, URL });
+							console.log(res);
 							resolve(results)
 						}
 
