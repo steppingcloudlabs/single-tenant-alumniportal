@@ -98,13 +98,15 @@ module.exports = () => {
                 };
 
                 let endpoint = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
+                endpoint = endpoint.replace('-srv', "");
+                console.log(endpoint)
                 let paramsTemplate = {
                     Source: 'daraksha@steppingcloud.com',
                     Template: 'WelcomeMail',
                     Destination: {
                         ToAddresses: [PERSONAL_EMAIL_ID]
                     },
-                    TemplateData: JSON.stringify({ name: FIRST_NAME_PERSONAL_INFORMATION, link: endpoint })
+                    TemplateData: JSON.stringify({ name: FIRST_NAME_PERSONAL_INFORMATION, link: 'https://' + endpoint + '/index.html#/signup' })
                 };
 
                 // console.log(paramsTemplate)
