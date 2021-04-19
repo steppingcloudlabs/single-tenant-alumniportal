@@ -212,10 +212,10 @@ module.exports = () => {
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-				payload = EscapeApostrophe(payload);
 				let schema = await utils.currentSchema({
 					db
 				})
+
 				if (payload.payload.ID) {
 					let result = await updatefaq({
 						payload,
@@ -228,6 +228,7 @@ module.exports = () => {
 					let modifiedby = "admin";
 					let modifiedat = new Date().toISOString().split('T')[0];
 					let ID = uuid();
+					console.log(ID)
 					let query =
 						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" VALUES('${createdat}', '${createdby}','${modifiedat}','${modifiedby}', '${ID}', '${escape(payload.payload.QUESTION)}', '${escape(payload.payload.ANSWER)}')`
 					let statement = await db.preparePromisified(query)
@@ -235,6 +236,7 @@ module.exports = () => {
 					if (results == 1) {
 						data = payload.payload;
 						data.ID = ID;
+
 						resolve(data);
 					} else {
 						reject(results);
@@ -264,7 +266,7 @@ module.exports = () => {
 					    ELSE (select "QUESTION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.ID}')
 					    END,
 					"ANSWER" = CASE
-				         WHEN '${payload.payload.ANSWER}' != 'undefined' THEN '${payload.payload.ANSWER}'
+				         WHEN '${payload.payload.ANSWER}' != 'undefined' THEN '${escape(payload.payload.ANSWER)}'
 					     ELSE (select "ANSWER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_FAQ_FAQ" where "ID"='${payload.payload.ID}')
 					     end,
 					"MODIFIEDBY" = '${modifiedby}',
