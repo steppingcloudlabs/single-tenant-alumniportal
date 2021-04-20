@@ -198,6 +198,7 @@ module.exports = {
 	createfaq: async (req, res) => {
 		try {
 			const payload = req.body;
+
 			let db = new dbClass(req.db);
 			let response = await nefserivce.createfaq({
 				payload,
@@ -216,9 +217,9 @@ module.exports = {
 				});
 			}
 		} catch (error) {
-			res.status(200).send({
-				status: "400",
-				result: error
+			res.status(500).send({
+				status: "500",
+				result: error.message
 			});
 		}
 
