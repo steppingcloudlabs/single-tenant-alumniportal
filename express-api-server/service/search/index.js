@@ -35,7 +35,8 @@ module.exports = () => {
 						IFNULL(A1.STATE, '') "STATE", 
 						IFNULL(A1.COUNTRY, '') "COUNTRY",
 						IFNULL(A1.PROFILEIMAGE, '') "PROFILEIMAGE",
-						IFNULL(LINKEDIN, '') "LINKEDIN"
+						IFNULL(LINKEDIN, '') "LINKEDIN",
+						"isActive"
 					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${searchquery}', FUZZY(0.5)) LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const obj = await db.statementExecPromisified(statement, [])
@@ -185,7 +186,6 @@ module.exports = () => {
 				})
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				let country = payload.COUNTRY == undefined ? "" : payload.COUNTRY
 				const query =
 					`SELECT 
 				    A1."ID",
@@ -205,11 +205,14 @@ module.exports = () => {
 					IFNULL(A1.MANAGER_JOB_INFORMATION, '') "MANAGER_JOB_INFORMATION",
 					IFNULL(A1.DESIGNATION_JOB_INFORMATION, '') "DESIGNATION_JOB_INFORMATION",
 					IFNULL(A1.STATE, '') "STATE", 
-					IFNULL(A1.COUNTRY, '') "COUNTRY"
+					IFNULL(A1.COUNTRY, '') "COUNTRY",
+					"isActive"
 					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" as A1 LIMIT ${LIMIT} offset ${offset}`
 
+				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
+
 				resolve(results);
 			} catch (error) {
 				reject(error);

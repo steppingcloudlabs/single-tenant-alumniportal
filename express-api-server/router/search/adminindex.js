@@ -13,8 +13,8 @@ expressrouter
 
 //  Admin search routers
 expressrouter
-    .route("/admin")
-    .get((req, res, next) => searchContoller.admin(req, res, next));
+    .route("/masterdata")
+    .get((req, res, next) => searchContoller.masterdata(req, res, next));
 
 //	Job Search routers
 expressrouter
