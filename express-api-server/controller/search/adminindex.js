@@ -113,7 +113,7 @@ module.exports = {
                 let query = `
                     SELECT COUNT(*) as TOTALROWS FROM (Select  "USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"
                     FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" 
-					WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.6)))`
+					WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.8)))`
                 const statement = await db.preparePromisified(query)
                 const pagecount = await db.statementExecPromisified(statement, [])
 

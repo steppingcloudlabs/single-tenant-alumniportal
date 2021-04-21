@@ -19,24 +19,16 @@ module.exports = () => {
 						A1."ID",
 						A1."USER_ID",
 						A1."GENDER",
-						A1."DATE_OF_BIRTH",
-						A1."DATE_OF_RESIGNATION",
-						A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
 						A1."PERSONAL_EMAIL_ID",
 						A1."FIRST_NAME_PERSONAL_INFORMATION",
 						A1."LAST_NAME_PERSONAL_INFORMATION",
 						IFNULL(A1.MIDDLE_NAME_PERSONAL_INFORMATION,'') "MIDDLE_NAME_PERSONAL_INFORMATION",
-						A1."NATIONALITY_PERSONAL_INFORMATION",
 						A1."SALUTATION_PERSONAL_INFORMATION",
 						IFNULL(A1.CITY_ADDRESSES,'') "CITY_ADDRESSES",
-						IFNULL(A1.PHONE_NUMBER_PHONE_INFORMATION, '') "PHONE_NUMBER_PHONE_INFORMATION",
-						IFNULL(A1.MANAGER_JOB_INFORMATION, '') "MANAGER_JOB_INFORMATION",
-						IFNULL(A1.DESIGNATION_JOB_INFORMATION, '') "DESIGNATION_JOB_INFORMATION",
 						IFNULL(A1.STATE, '') "STATE", 
 						IFNULL(A1.COUNTRY, '') "COUNTRY",
 						IFNULL(A1.PROFILEIMAGE, '') "PROFILEIMAGE",
-						IFNULL(LINKEDIN, '') "LINKEDIN",
-						"isActive"
+						IFNULL(LINKEDIN, '') "LINKEDIN"
 					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${searchquery}', FUZZY(0.5)) LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const obj = await db.statementExecPromisified(statement, [])
@@ -128,7 +120,7 @@ module.exports = () => {
 						FROM "${schema}".
 						"SCLABS_ALUMNIPORTAL_USERS_USERS"
 						as A1
-						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
+						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.8)) LIMIT ${LIMIT} offset ${offset}`
 
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
@@ -191,25 +183,16 @@ module.exports = () => {
 				    A1."ID",
 				    A1."USER_ID",
 					A1."GENDER",
-					A1."DATE_OF_BIRTH",
-					A1."DATE_OF_RESIGNATION",
-					A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
 					A1."PERSONAL_EMAIL_ID",
 					A1."FIRST_NAME_PERSONAL_INFORMATION",
 					A1."LAST_NAME_PERSONAL_INFORMATION",
 					A1."MIDDLE_NAME_PERSONAL_INFORMATION",
-					A1."NATIONALITY_PERSONAL_INFORMATION",
 					A1."SALUTATION_PERSONAL_INFORMATION",
 					IFNULL(A1.CITY_ADDRESSES,'') "CITY_ADDRESSES",
-					IFNULL(A1.PHONE_NUMBER_PHONE_INFORMATION, '') "PHONE_NUMBER_PHONE_INFORMATION",
-					IFNULL(A1.MANAGER_JOB_INFORMATION, '') "MANAGER_JOB_INFORMATION",
-					IFNULL(A1.DESIGNATION_JOB_INFORMATION, '') "DESIGNATION_JOB_INFORMATION",
 					IFNULL(A1.STATE, '') "STATE", 
-					IFNULL(A1.COUNTRY, '') "COUNTRY",
-					"isActive"
-					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" as A1 LIMIT ${LIMIT} offset ${offset}`
+					IFNULL(A1.COUNTRY, '') "COUNTRY"
+					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 LIMIT ${LIMIT} offset ${offset}`
 
-				console.log(query)
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 
@@ -228,14 +211,23 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
-				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				let USERID = payload.USERID
-				const query = `SELECT "ID", "USER_ID", "PERSONAL_EMAIL_ID", "FIRST_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION", IFNULL(MIDDLE_NAME_PERSONAL_INFORMATION,'') "MIDDLE_NAME_PERSONAL_INFORMATION", "SALUTATION_PERSONAL_INFORMATION", "CITY_ADDRESSES" "LINKEDIN", "PROFILEIMAGE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE "USER_ID" = '${USERID}'`
-				console.log(query);
+				const query = `SELECT "ID", "USER_ID", 
+				"PERSONAL_EMAIL_ID",
+				"FIRST_NAME_PERSONAL_INFORMATION",
+				"LAST_NAME_PERSONAL_INFORMATION",
+				IFNULL(MIDDLE_NAME_PERSONAL_INFORMATION,'') "MIDDLE_NAME_PERSONAL_INFORMATION",
+				"SALUTATION_PERSONAL_INFORMATION",
+				"CITY_ADDRESSES",
+				IFNULL(STATE, '') "STATE", 
+				IFNULL(COUNTRY, '') "COUNTRY",
+				"LINKEDIN",
+				"PROFILEIMAGE"
+				FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE "USER_ID" = '${USERID}'`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				resolve(results)
+
 			} catch (error) {
 				reject(error);
 			}
