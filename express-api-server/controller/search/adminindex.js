@@ -110,24 +110,45 @@ module.exports = {
                 const schema = await utils.currentSchema({
                     db
                 })
-                let query = `
+                if (payload.QUERY == "null" || payload.QUERY == "undefined" || payload.QUERY == undefined || payload.QUERY == "" || payload.QUERY.length == 0) {
+                    let query = `
+                    SELECT COUNT(*) as TOTALROWS FROM (Select  "USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"
+                    FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA")`
+                    const statement = await db.preparePromisified(query)
+                    const pagecount = await db.statementExecPromisified(statement, [])
+
+                    paginationobject = {
+                        'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+                        'LIMIT': parseInt(LIMIT),
+                        'OFFSET': parseInt(OFFSET)
+                    }
+
+                    res.status(200).send({
+                        status: "200",
+                        result: response,
+                        pagination: paginationobject
+                    });
+                } else {
+                    let query = `
                     SELECT COUNT(*) as TOTALROWS FROM (Select  "USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"
                     FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" 
-					WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.8)))`
-                const statement = await db.preparePromisified(query)
-                const pagecount = await db.statementExecPromisified(statement, [])
+					WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.6)))`
+                    const statement = await db.preparePromisified(query)
+                    const pagecount = await db.statementExecPromisified(statement, [])
 
-                paginationobject = {
-                    'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
-                    'LIMIT': parseInt(LIMIT),
-                    'OFFSET': parseInt(OFFSET)
+                    paginationobject = {
+                        'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+                        'LIMIT': parseInt(LIMIT),
+                        'OFFSET': parseInt(OFFSET)
+                    }
+
+                    res.status(200).send({
+                        status: "200",
+                        result: response,
+                        pagination: paginationobject
+                    });
                 }
 
-                res.status(200).send({
-                    status: "200",
-                    result: response,
-                    pagination: paginationobject
-                });
             } else {
                 res.status(400).send({
                     status: "400",
