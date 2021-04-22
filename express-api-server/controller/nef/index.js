@@ -300,6 +300,7 @@ module.exports = {
 					tablename,
 					db
 				})
+				console.log(pagecount)
 				paginationobject = {
 					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
 					'LIMIT': parseInt(LIMIT),
@@ -315,7 +316,7 @@ module.exports = {
 			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/updateevent ${error}`);
 			res.type("application/json").status(400).send({
 				status: "400",
-				result: error
+				result: error.message
 			});
 		}
 	},
