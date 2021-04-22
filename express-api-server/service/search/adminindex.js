@@ -108,7 +108,7 @@ module.exports = () => {
             }
         });
     };
-    const searchAdmin = ({
+    const searchmasterdata = ({
         payload,
         db
     }) => {
@@ -117,34 +117,33 @@ module.exports = () => {
                 const schema = await utils.currentSchema({
                     db
                 })
-                const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
-                const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
+
+                const LIMIT = (payload.LIMIT == undefined || payload.LIMIT == '') ? 10 : payload.LIMIT
+                const OFFSET = (payload.OFFSET == undefined || payload.OFFSET == '') ? 0 : payload.OFFSET
                 const query =
-                    `SELECT 
-				    A1."ID",
-				    A1."USER_ID",
-					A1."GENDER",
-					A1."DATE_OF_BIRTH",
-					A1."DATE_OF_RESIGNATION",
-					A1."LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
-					A1."PERSONAL_EMAIL_ID",
-					A1."FIRST_NAME_PERSONAL_INFORMATION",
-					A1."LAST_NAME_PERSONAL_INFORMATION",
-					A1."MIDDLE_NAME_PERSONAL_INFORMATION",
-					A1."NATIONALITY_PERSONAL_INFORMATION",
-					A1."SALUTATION_PERSONAL_INFORMATION",
-					IFNULL(A1.CITY_ADDRESSES,'') "CITY_ADDRESSES",
-					IFNULL(A1.PHONE_NUMBER_PHONE_INFORMATION, '') "PHONE_NUMBER_PHONE_INFORMATION",
-					IFNULL(A1.MANAGER_JOB_INFORMATION, '') "MANAGER_JOB_INFORMATION",
-					IFNULL(A1.DESIGNATION_JOB_INFORMATION, '') "DESIGNATION_JOB_INFORMATION",
-					IFNULL(A1.SKILL_ID, '') "SKILL_ID", 
-					IFNULL(A1.LINKEDIN, '') "LINKEDIN",
-					IFNULL(A1.USERTYPE, '') "USERTYPE", 
-					IFNULL(A1.PROFILEIMAGE, '') "PROFILEIMAGE",
-					IFNULL(A1.STATE, '') "STATE", 
-					IFNULL(A1.COUNTRY, '') "COUNTRY"
-					FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" as A1 
-						WHERE CONTAINS ((A1."USER_ID", A1."FIRST_NAME_PERSONAL_INFORMATION", A1."MIDDLE_NAME_PERSONAL_INFORMATION", A1."LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.4)) LIMIT ${LIMIT} offset ${offset}`
+                    `SELECT
+				    	"ID",
+	                    "USER_ID",
+                        "GENDER",
+                        "DATE_OF_BIRTH",
+                        "DATE_OF_RELIEVING",
+                        "DATE_OF_RESIGNATION",
+                        "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
+                        "PERSONAL_EMAIL_ID",
+                        "FIRST_NAME_PERSONAL_INFORMATION",
+                        "LAST_NAME_PERSONAL_INFORMATION",
+                        "MIDDLE_NAME_PERSONAL_INFORMATION",
+                        "NATIONALITY_PERSONAL_INFORMATION",
+                        "SALUTATION_PERSONAL_INFORMATION",
+                        IFNULL(CITY_ADDRESSES,'') "CITY_ADDRESSES",
+                        IFNULL(PHONE_NUMBER_PHONE_INFORMATION, '') "PHONE_NUMBER_PHONE_INFORMATION",
+                        IFNULL(MANAGER_JOB_INFORMATION, '') "MANAGER_JOB_INFORMATION",
+                        IFNULL(DESIGNATION_JOB_INFORMATION, '') "DESIGNATION_JOB_INFORMATION",
+                        IFNULL(STATE, '') "STATE",
+                        IFNULL(COUNTRY, '') "COUNTRY",
+                        "ISACTIVE"
+					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" 
+					WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.6)) LIMIT ${LIMIT} offset ${OFFSET}`
 
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
@@ -223,7 +222,7 @@ module.exports = () => {
 					IFNULL(A1.STATE, '') "STATE", 
 					IFNULL(A1.COUNTRY, '') "COUNTRY"
 					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" as A1  LIMIT ${LIMIT} offset ${offset}`
-
+                console.log(query)
                 const statement = await db.preparePromisified(query)
                 const results = await db.statementExecPromisified(statement, [])
                 resolve(results);
@@ -235,7 +234,7 @@ module.exports = () => {
     return {
         searchUser,
         searchSkill,
-        searchAdmin,
+        searchmasterdata,
         searchJob,
         searchUserids
     }

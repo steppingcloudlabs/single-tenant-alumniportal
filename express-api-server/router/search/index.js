@@ -11,11 +11,6 @@ expressrouter
 	.route("/skill")
 	.get((req, res, next) => searchContoller.skill(req, res, next));
 
-//  Admin search routers
-expressrouter
-	.route("/admin")
-	.get((req, res, next) => searchContoller.admin(req, res, next));
-
 //	Job Search routers
 expressrouter
 	.route("/job")

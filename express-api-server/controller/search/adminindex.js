@@ -95,19 +95,38 @@ module.exports = {
         }
 
     },
-    admin: async (req, res) => {
+    masterdata: async (req, res) => {
         try {
             const payload = req.query;
             let db = new dbClass(req.db);
-            let response = await searchService.searchAdmin({
+            let response = await searchService.searchmasterdata({
                 payload,
                 db
             });
             if (response) {
+                const LIMIT = (payload.LIMIT == undefined || payload.LIMIT == '') ? 10 : payload.LIMIT
+                const OFFSET = (payload.OFFSET == undefined || payload.OFFSET == '') ? 0 : payload.OFFSET
+                tablename = "SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"
+                const schema = await utils.currentSchema({
+                    db
+                })
+                let query = `
+                    SELECT COUNT(*) as TOTALROWS FROM (Select  "USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"
+                    FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" 
+					WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.8)))`
+                const statement = await db.preparePromisified(query)
+                const pagecount = await db.statementExecPromisified(statement, [])
+
+                paginationobject = {
+                    'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+                    'LIMIT': parseInt(LIMIT),
+                    'OFFSET': parseInt(OFFSET)
+                }
 
                 res.status(200).send({
                     status: "200",
                     result: response,
+                    pagination: paginationobject
                 });
             } else {
                 res.status(400).send({
@@ -116,9 +135,9 @@ module.exports = {
                 });
             }
         } catch (error) {
-            res.status(400).send({
-                status: "400",
-                result: error
+            res.status(500).send({
+                status: "500",
+                result: error.message
             });
         }
 
