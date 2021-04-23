@@ -146,7 +146,7 @@ module.exports = () => {
 				let searchquery = (payload.QUERY == "null" || payload.QUERY == undefined) ? "" : payload.QUERY
 				searchquery = searchquery + " " + country
 
-				if (searchquery == " ") {
+				if (searchquery == "") {
 					let results = await jobService.getjob({
 						payload,
 						db
