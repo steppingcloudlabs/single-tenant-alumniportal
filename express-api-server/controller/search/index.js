@@ -166,7 +166,7 @@ module.exports = {
 				let searchquery = (payload.QUERY == "null" || payload.QUERY == undefined) ? "" : payload.QUERY
 				searchquery = searchquery + " " + country
 
-				if (searchquery == "") {
+				if (searchquery == " ") {
 					const query =
 						` select count(*) as TOTALROWS from (SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB")`
 

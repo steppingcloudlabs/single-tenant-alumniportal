@@ -20,7 +20,16 @@ module.exports = () => {
 
 				const statement = await db.preparePromisified(query)
 				let results = await db.statementExecPromisified(statement, [])
-				results = undoEscape(results)
+				for (var i = 0; i < results.length; i++) {
+					try {
+						// results[i].CONTENT = unescape(results[i].CONTENT).replace("\n", "\n")
+						// results[i].TITLE = unescape(results[i].TITLE).replace("\n", "\n")
+						results[i] = JSON.parse(unescape(JSON.stringify(results[i])))
+					} catch (error) {
+						console.log(error);
+					}
+
+				}
 				resolve(results);
 
 			} catch (error) {
