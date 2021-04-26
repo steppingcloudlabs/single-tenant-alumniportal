@@ -85,6 +85,7 @@ app.use(
 
 app.get("/", async (req, res) => {
   try {
+    console.log(req.user)
     const dbClass = require("sap-hdbext-promisfied")
     let db = new dbClass(req.db);
     const statement = await db.preparePromisified(`SELECT SESSION_USER, CURRENT_SCHEMA FROM "DUMMY"`)
@@ -98,6 +99,46 @@ app.get("/", async (req, res) => {
   }
 });
 
+
+//---------------------------------------------------------------------------------------------
+// Applcation init route, created a ROOT admin user which can be used for creating admin.
+// Planing is to improve this thing ( In new deployment this api is the only way to create admin, this api has no security checks) 
+//---------------------------------------------------------------------------------------------
+app.get("/initialize", async (req, res, next) => {
+  try {
+    const dbClass = require("sap-hdbext-promisfied")
+    const uuid = require("uuid");
+    const utils = require("./utils/database/index.js")();
+    let db = new dbClass(req.db);
+    let createdat = new Date().toISOString();
+    let createdby = "admin";
+    let modifiedby = "admin";
+    let modifiedat = new Date().toISOString();
+    let USERTYPE = req.body.USERTYPE;
+    let PASSWORD = req.body.PASSWORD;
+    let USERID = uuid();
+    let EMAIL = req.body.EMAIL;
+    let ID = uuid();
+    const schema = await utils.currentSchema({ db });
+    let query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
+	                    '${createdat}',
+	                    '${createdby}',
+	                    '${modifiedat}',
+	                    '${modifiedby}',
+                      '${ID}'/*ID <NVARCHAR(36)>*/,
+                      '${USERID}',
+	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
+                      '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
+                      '${USERTYPE}'
+                        )`
+
+    let statement = await db.preparePromisified(query)
+    let result = await db.statementExecPromisified(statement, [])
+    return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
+  } catch (e) {
+    return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
+  }
+})
 //---------------------------------------------------------------------------------------------
 // Applcation init route, created a ROOT admin user which can be used for creating admin.
 // Planing is to improve this thing ( In new deployment this api is the only way to create admin, this api has no security checks) 
@@ -138,6 +179,45 @@ app.post("/initialize", async (req, res, next) => {
   }
 })
 
+//---------------------------------------------------------------------------------------------
+// Applcation init route, created a ROOT admin user which can be used for creating admin.
+// Planing is to improve this thing ( In new deployment this api is the only way to create admin, this api has no security checks) 
+//---------------------------------------------------------------------------------------------
+app.delete("/initialize", async (req, res, next) => {
+  try {
+    const dbClass = require("sap-hdbext-promisfied")
+    const uuid = require("uuid");
+    const utils = require("./utils/database/index.js")();
+    let db = new dbClass(req.db);
+    let createdat = new Date().toISOString();
+    let createdby = "admin";
+    let modifiedby = "admin";
+    let modifiedat = new Date().toISOString();
+    let USERTYPE = req.body.USERTYPE;
+    let PASSWORD = req.body.PASSWORD;
+    let USERID = uuid();
+    let EMAIL = req.body.EMAIL;
+    let ID = uuid();
+    const schema = await utils.currentSchema({ db });
+    let query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
+	                    '${createdat}',
+	                    '${createdby}',
+	                    '${modifiedat}',
+	                    '${modifiedby}',
+                      '${ID}'/*ID <NVARCHAR(36)>*/,
+                      '${USERID}',
+	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
+                      '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
+                      '${USERTYPE}'
+                        )`
+
+    let statement = await db.preparePromisified(query)
+    let result = await db.statementExecPromisified(statement, [])
+    return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
+  } catch (e) {
+    return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
+  }
+})
 
 //---------------------------------------------------------------------------------------------
 // Common Authentication and Authorization routes for User, Admin and HR.
