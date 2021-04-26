@@ -1,4 +1,3 @@
-const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 const jobService = require("../job/index")();
 module.exports = () => {
@@ -154,10 +153,20 @@ module.exports = () => {
 					resolve(results);
 				} else {
 					const query =
-						`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${searchquery}', FUZZY(0.5))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
+						`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${escape(searchquery)}', FUZZY(0.5))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
 
 					const statement = await db.preparePromisified(query)
 					const results = await db.statementExecPromisified(statement, [])
+					for (var i = 0; i < results.length; i++) {
+						try {
+							// results[i].CONTENT = unescape(results[i].CONTENT).replace("\n", "\n")
+							// results[i].TITLE = unescape(results[i].TITLE).replace("\n", "\n")
+							results[i] = JSON.parse(unescape(JSON.stringify(results[i])))
+						} catch (error) {
+							console.log(error);
+						}
+
+					}
 					resolve(results);
 				}
 

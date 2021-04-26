@@ -1,4 +1,4 @@
 {
-    "codewindProfiling.showProfiling": true,
+    "codewindProfiling.showProfiling": false,
     "powershell.codeFormatting.addWhitespaceAroundPipe": true
 }

@@ -120,8 +120,37 @@ module.exports = () => {
 
                 const LIMIT = (payload.LIMIT == undefined || payload.LIMIT == '') ? 10 : payload.LIMIT
                 const OFFSET = (payload.OFFSET == undefined || payload.OFFSET == '') ? 0 : payload.OFFSET
-                const query =
-                    `SELECT
+                if (payload.QUERY == "null" || payload.QUERY == "undefined" || payload.QUERY == undefined || payload.QUERY == "" || payload.QUERY.length == 0) {
+                    const query =
+                        `SELECT
+				    	"ID",
+	                    "USER_ID",
+                        "GENDER",
+                        "DATE_OF_BIRTH",
+                        "DATE_OF_RELIEVING",
+                        "DATE_OF_RESIGNATION",
+                        "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD",
+                        "PERSONAL_EMAIL_ID",
+                        "FIRST_NAME_PERSONAL_INFORMATION",
+                        "LAST_NAME_PERSONAL_INFORMATION",
+                        "MIDDLE_NAME_PERSONAL_INFORMATION",
+                        "NATIONALITY_PERSONAL_INFORMATION",
+                        "SALUTATION_PERSONAL_INFORMATION",
+                        IFNULL(CITY_ADDRESSES,'') "CITY_ADDRESSES",
+                        IFNULL(PHONE_NUMBER_PHONE_INFORMATION, '') "PHONE_NUMBER_PHONE_INFORMATION",
+                        IFNULL(MANAGER_JOB_INFORMATION, '') "MANAGER_JOB_INFORMATION",
+                        IFNULL(DESIGNATION_JOB_INFORMATION, '') "DESIGNATION_JOB_INFORMATION",
+                        IFNULL(STATE, '') "STATE",
+                        IFNULL(COUNTRY, '') "COUNTRY",
+                        "ISACTIVE"
+					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"`
+
+                    const statement = await db.preparePromisified(query)
+                    const results = await db.statementExecPromisified(statement, [])
+                    resolve(results);
+                } else {
+                    const query =
+                        `SELECT
 				    	"ID",
 	                    "USER_ID",
                         "GENDER",
@@ -145,9 +174,11 @@ module.exports = () => {
 					FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" 
 					WHERE CONTAINS (("USER_ID", "FIRST_NAME_PERSONAL_INFORMATION", "MIDDLE_NAME_PERSONAL_INFORMATION", "LAST_NAME_PERSONAL_INFORMATION"),'${payload.QUERY}', FUZZY(0.6)) LIMIT ${LIMIT} offset ${OFFSET}`
 
-                const statement = await db.preparePromisified(query)
-                const results = await db.statementExecPromisified(statement, [])
-                resolve(results);
+                    const statement = await db.preparePromisified(query)
+                    const results = await db.statementExecPromisified(statement, [])
+                    resolve(results);
+                }
+
             } catch (error) {
                 reject(error);
             }

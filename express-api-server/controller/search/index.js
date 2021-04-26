@@ -89,11 +89,10 @@ module.exports = {
 					db
 				})
 
-				let pagecount = await utils.getPageCount({
-					schema,
-					tablename,
-					db
-				})
+				const query =
+					` SELECT count (*) as TOTALROWS FROM ( SELECT ID, SKILL FROM "${schema}"."SCLABS_ALUMNIPORTAL_SKILLS_SKILLS" WHERE CONTAINS ((SKILL),'${payload.QUERY}', FUZZY(0.2)))`
+				const statement = await db.preparePromisified(query)
+				const pagecount = await db.statementExecPromisified(statement, [])
 				paginationobject = {
 					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
 					'LIMIT': parseInt(LIMIT),
@@ -107,7 +106,7 @@ module.exports = {
 			} else {
 				res.status(200).send({
 					status: "400",
-					result: response
+					result: response.message
 				});
 			}
 		} catch (error) {
@@ -163,21 +162,44 @@ module.exports = {
 					db
 				})
 
-				let pagecount = await utils.getPageCount({
-					schema,
-					tablename,
-					db
-				})
-				paginationobject = {
-					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
-					'LIMIT': parseInt(LIMIT),
-					'OFFSET': parseInt(OFFSET)
+				let country = (payload.COUNTRY == "null" || payload.COUNTRY == undefined) ? "" : payload.COUNTRY
+				let searchquery = (payload.QUERY == "null" || payload.QUERY == undefined) ? "" : payload.QUERY
+				searchquery = searchquery + " " + country
+
+				if (searchquery == " ") {
+					const query =
+						` select count(*) as TOTALROWS from (SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB")`
+
+					const statement = await db.preparePromisified(query)
+					const pagecount = await db.statementExecPromisified(statement, [])
+					paginationobject = {
+						'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+						'LIMIT': parseInt(LIMIT),
+						'OFFSET': parseInt(OFFSET)
+					}
+					res.status(200).send({
+						status: "200",
+						result: response,
+						pagination: paginationobject
+					});
+				} else {
+					const query =
+						` select count(*) as TOTALROWS from (SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${searchquery}', FUZZY(0.5)))`
+
+					const statement = await db.preparePromisified(query)
+					const pagecount = await db.statementExecPromisified(statement, [])
+					paginationobject = {
+						'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+						'LIMIT': parseInt(LIMIT),
+						'OFFSET': parseInt(OFFSET)
+					}
+					res.status(200).send({
+						status: "200",
+						result: response,
+						pagination: paginationobject
+					});
 				}
-				res.status(200).send({
-					status: "200",
-					result: response,
-					pagination: paginationobject
-				});
+
 			} else {
 				res.status(400).send({
 					status: "400",
