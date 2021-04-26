@@ -143,7 +143,7 @@ module.exports = () => {
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				let country = (payload.COUNTRY == "null" || payload.COUNTRY == undefined) ? "" : payload.COUNTRY
 				let searchquery = (payload.QUERY == "null" || payload.QUERY == undefined) ? "" : payload.QUERY
-				searchquery = searchquery + " " + country
+				searchquery = escape(searchquery) + " " + escape(country)
 
 				if (searchquery == " ") {
 					let results = await jobService.getjob({
@@ -153,8 +153,8 @@ module.exports = () => {
 					resolve(results);
 				} else {
 					const query =
-						`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${escape(searchquery)}', FUZZY(0.5))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
-
+						`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE BOARDID = '_external' AND CONTAINS((jobTitle, location, country, jobDescription), '${searchquery}', FUZZY(0.6))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
+					console.log(query)
 					const statement = await db.preparePromisified(query)
 					const results = await db.statementExecPromisified(statement, [])
 					for (var i = 0; i < results.length; i++) {
