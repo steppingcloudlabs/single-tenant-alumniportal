@@ -98,14 +98,14 @@ module.exports = () => {
                     `SELECT ID, USERID, TITLE, ESCLATION, RESOLVED, ESCLATATIONMANAGER, DATE, CREATEDBY FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE USERID = '${USERID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
 
                 const statement = await db.preparePromisified(query)
-                const results = await db.statementExecPromisified(statement, [])
-                console.log(results)
+                let results = await db.statementExecPromisified(statement, [])
                 for (var i = 0; i < results.length; i++) {
                     let TICKETID = results[i].ID;
-                    console.log(TICKETID);
                     let response = await checkEscalation({ TICKETID, db });
-                    results[i]["ESCLATION"] = response;
+                    results[i]["ESCLATION"] = response.esclation;
+                    results[i]["LASTMODIFIEDAT"] = response.lastmodifiedby;
                 }
+
                 resolve(results);
             } catch (error) {
                 reject(error);
@@ -174,7 +174,9 @@ module.exports = () => {
                 const schema = await utils.currentSchema({
                     db
                 })
-                const query = `DELETE FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE ID = '${TICKETID}' `
+                const query = `DELETE FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE ID = '${TICKETID};' 
+                            DELETE FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE ID = '${TICKETID};
+                `
 
                 const statement = await db.preparePromisified(query);
                 const result = await db.statementExecPromisified(statement, []);
@@ -326,9 +328,9 @@ module.exports = () => {
                 let diffDays = (today.getDate() - lastMessage.getDate())
 
                 if (result[0].USERTYPE === "user" && diffDays > 7)
-                    resolve(true);
+                    resolve({ esclation: true, lastmodifiedby: new Date(result[0].CREATEDAT).getTime() });
                 else {
-                    resolve(false);
+                    resolve({ esclation: false, lastmodifiedby: new Date(result[0].CREATEDAT).getTime() });
                 }
             } catch (error) {
                 reject(error);

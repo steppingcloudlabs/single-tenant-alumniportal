@@ -89,11 +89,17 @@ module.exports = () => {
 				})
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				const query =
-					`SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE USERID = '${USERID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
-
+				const query = `SELECT * FROM ${schema}."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE USERID = '${USERID}' ORDER BY MODIFIEDAT DESC LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
-				const results = await db.statementExecPromisified(statement, [])
+				let results = await db.statementExecPromisified(statement, [])
+
+				for (var i = 0; i < results.length; i++) {
+					let TICKETID = results[i].ID;
+					let response = await checkEscalation({ TICKETID, db });
+					results[i]["ESCLATION"] = response.esclation;
+					results[i]["LASTMODIFIEDAT"] = response.lastmodifiedby;
+				}
+
 				resolve(results);
 			} catch (error) {
 				reject(error);
@@ -438,6 +444,34 @@ module.exports = () => {
 			}
 		});
 	};
+
+	const checkEscalation = ({
+		TICKETID,
+		db
+	}) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const query = `SELECT TOP 1 "CREATEDAT", "USERTYPE", "TICKETID" FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID = '${TICKETID}' `
+				const statement = await db.preparePromisified(query);
+				const result = await db.statementExecPromisified(statement, []);
+				let lastMessage = new Date(result[0].CREATEDAT)
+				let today = new Date()
+				let diffDays = (today.getDate() - lastMessage.getDate())
+
+				if (result[0].USERTYPE === "user" && diffDays > 7)
+					resolve({ esclation: true, lastmodifiedby: new Date(result[0].CREATEDAT).getTime() });
+				else {
+					resolve({ esclation: false, lastmodifiedby: new Date(result[0].CREATEDAT).getTime() });
+				}
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
+
 	return {
 		createticket,
 		updateticket,
