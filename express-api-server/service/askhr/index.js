@@ -371,14 +371,20 @@ module.exports = () => {
 				const results = await db.statementExecPromisified(statement, [])
 
 				if (results.length == 1) {
-					const query1 = `SELECT * from ${schema}.SCLABS_ALUMNIPORTAL_TICKET_TICKET WHERE ESCLATATIONMANAGER = '${results[0].LEVELMANAGER}' ORDER BY CREATEDAT DESC LIMIT ${LIMIT} OFFSET ${offset}`
+					const query1 = `SELECT ID, USERID, TITLE, ESCLATION, RESOLVED, ESCLATATIONMANAGER, DATE, CREATEDBY from ${schema}.SCLABS_ALUMNIPORTAL_TICKET_TICKET WHERE ESCLATATIONMANAGER = '${results[0].LEVELMANAGER}' ORDER BY CREATEDAT DESC LIMIT ${LIMIT} OFFSET ${offset}`
 
 					const statement1 = await db.preparePromisified(query1)
-					const result = await db.statementExecPromisified(statement1, [])
-
-					resolve(result);
+					let profile = await db.statementExecPromisified(statement1, [])
+					for (var i = 0; i < profile.length; i++) {
+						let TICKETID = profile[i].ID;
+						let response = await checkEscalation({ TICKETID, db });
+						profile[i]["ESCLATION"] = response.esclation;
+						profile[i]["LASTMODIFIEDAT"] = response.lastmodifiedby;
+						console.log(profile)
+					}
+					resolve(profile);
 				} else {
-					reject(results)
+					reject(profile)
 				}
 			} catch (error) {
 				reject(error);
@@ -458,16 +464,20 @@ module.exports = () => {
 
 				const statement = await db.preparePromisified(query);
 				const result = await db.statementExecPromisified(statement, []);
+				if (result.length != 0) {
+					let lastMessage = new Date(result[0].CREATEDAT)
+					let today = new Date()
+					let diffDays = (today.getDate() - lastMessage.getDate())
 
-				let lastMessage = new Date(result[0].CREATEDAT)
-				let today = new Date()
-				let diffDays = (today.getDate() - lastMessage.getDate())
-
-				if (result[0].USERTYPE === "user" && diffDays < 7)
-					resolve({ esclation: true, lastmodifiedby: new Date(result[0].CREATEDAT).getTime().toString() });
-				else {
-					resolve({ esclation: false, lastmodifiedby: new Date(result[0].CREATEDAT).getTime().toString() });
+					if (result[0].USERTYPE === "user" && diffDays < 7)
+						resolve({ esclation: true, lastmodifiedby: new Date(result[0].CREATEDAT).getTime().toString() });
+					else {
+						resolve({ esclation: false, lastmodifiedby: new Date(result[0].CREATEDAT).getTime().toString() });
+					}
+				} else {
+					resolve({ esclation: false, lastmodifiedby: new Date().getTime().toString() });
 				}
+
 			} catch (error) {
 				reject(error);
 			}
