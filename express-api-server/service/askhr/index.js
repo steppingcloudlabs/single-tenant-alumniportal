@@ -454,9 +454,11 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query = `SELECT TOP 1 "CREATEDAT", "USERTYPE", "TICKETID" FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID = '${TICKETID}' `
+				const query = `SELECT TOP 1 "CREATEDAT", "USERTYPE", "TICKETID" FROM ${schema}."SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES" WHERE TICKETID = '${TICKETID}' ORDER BY CREATEDAT DESC`
+
 				const statement = await db.preparePromisified(query);
 				const result = await db.statementExecPromisified(statement, []);
+				console.log(result)
 				let lastMessage = new Date(result[0].CREATEDAT)
 				let today = new Date()
 				let diffDays = (today.getDate() - lastMessage.getDate())
