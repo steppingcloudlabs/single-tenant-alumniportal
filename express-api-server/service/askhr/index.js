@@ -128,7 +128,7 @@ module.exports = () => {
 								ELSE (select "TITLE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.ID}')
 								END,
 					   "ESCLATION" = CASE
-								WHEN  ${payload.payload.ESCLATATION}!= 'undefined' THEN  ${payload.payload.ESCLATATION}
+								WHEN  ${payload.payload.ESCLATION}!= 'undefined' THEN  ${payload.payload.ESCLATION}
 								ELSE (select "ESCLATION" FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" where "ID"='${payload.payload.ID}')
 								END,
 						"RESOLVED" = case
