@@ -462,9 +462,9 @@ module.exports = () => {
 				let diffDays = (today.getDate() - lastMessage.getDate())
 
 				if (result[0].USERTYPE === "user" && diffDays > 7)
-					resolve({ esclation: true, lastmodifiedby: new Date(result[0].CREATEDAT).getTime() });
+					resolve({ esclation: true, lastmodifiedby: new Date(result[0].CREATEDAT).getTime().toString() });
 				else {
-					resolve({ esclation: false, lastmodifiedby: new Date(result[0].CREATEDAT).getTime() });
+					resolve({ esclation: false, lastmodifiedby: new Date(result[0].CREATEDAT).getTime().toString() });
 				}
 			} catch (error) {
 				reject(error);
