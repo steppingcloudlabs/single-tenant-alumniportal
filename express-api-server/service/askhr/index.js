@@ -458,12 +458,12 @@ module.exports = () => {
 
 				const statement = await db.preparePromisified(query);
 				const result = await db.statementExecPromisified(statement, []);
-				console.log(result)
+
 				let lastMessage = new Date(result[0].CREATEDAT)
 				let today = new Date()
 				let diffDays = (today.getDate() - lastMessage.getDate())
 
-				if (result[0].USERTYPE === "user" && diffDays > 7)
+				if (result[0].USERTYPE === "user" && diffDays < 7)
 					resolve({ esclation: true, lastmodifiedby: new Date(result[0].CREATEDAT).getTime().toString() });
 				else {
 					resolve({ esclation: false, lastmodifiedby: new Date(result[0].CREATEDAT).getTime().toString() });
