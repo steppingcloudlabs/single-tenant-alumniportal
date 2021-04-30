@@ -30,7 +30,8 @@ module.exports = () => {
 					const query2 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME = '${EMAIL}'`
 					const statement2 = await db.preparePromisified(query2)
 					const userSavedHashedPassword = await db.statementExecPromisified(statement2, [])
-					const match = await bcrypt.compare(userSavedHashedPassword, PASSWORD);
+					console.log(userSavedHashedPassword)
+					const match = await bcrypt.compare(userSavedHashedPassword[0].PASSWORD, PASSWORD);
 					if (!match) {
 						resolve("incorrectpassword")
 					} else {

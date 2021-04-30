@@ -23,7 +23,7 @@ describe('Admin Action Test Suite', () => {
             })
     });
 
-    it('Admin Should login successfully by calling POST /auth/login', () => {
+    it('Admin Should login successfully by calling POST /auth/login', (done) => {
         chai.request(server)
             .post('/auth/login')
             .set('Content-Type', 'application/json')
@@ -38,10 +38,11 @@ describe('Admin Action Test Suite', () => {
                 res.body.should.have.property('status').eql('200');
                 res.body.should.have.property('result');
                 res.body.should.have.property('token');
+                done();
             })
     });
 
-    it('Admin Should add user to application successfully by calling POST /admin/action/user/create', () => {
+    it('Admin Should add user to application successfully by calling POST /admin/action/user/create', (done) => {
         chai.request(server)
             .post('/auth/login')
             .set('Content-Type', 'application/json')
@@ -90,13 +91,14 @@ describe('Admin Action Test Suite', () => {
                         res.body.should.be.a('object');
                         res.body.should.have.property('status').eql('200');
                         res.body.should.have.property('result');
+                        done();
                     });
 
             })
 
     });
 
-    it('Should Delete user from the apllication either active or inactive', () => {
+    it('Should Delete user from the apllication either active or inactive', (done) => {
         chai.request(server)
             .post('/auth/login')
             .set('Content-Type', 'application/json')
@@ -130,7 +132,9 @@ describe('Admin Action Test Suite', () => {
                         res.body.should.be.a('object');
                         res.body.should.have.property('status').eql('200');
                         res.body.should.have.property('result');
+                        done();
                     });
+
             })
 
 

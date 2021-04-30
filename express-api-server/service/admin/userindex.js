@@ -22,7 +22,7 @@ module.exports = () => {
 				if (USERID) {
 					const statement = await db.preparePromisified(
 						`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION", IFNULL(STATE, '') "STATE",
-					IFNULL(COUNTRY, '') "COUNTRY", "ISACTIVE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" WHERE USER_ID = ${USERID} LIMIT ${LIMIT} offset ${offset} `
+					IFNULL(COUNTRY, '') "COUNTRY", "ISACTIVE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" WHERE USER_ID = '${USERID}' LIMIT ${LIMIT} offset ${offset} `
 					)
 					const results = await db.statementExecPromisified(statement, [])
 					resolve(results);
@@ -307,13 +307,36 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"  WHERE ID = '${payload.payload.ID}'`
 
-				const statement = await db.preparePromisified(query);
-				const results = await db.statementExecPromisified(statement, [])
+				// get USER_ID from Payload ID
+				let query = `SELECT USER_ID FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"  WHERE ID = '${payload.payload.ID}'`
+				let statement = await db.preparePromisified(query);
+				let user_id = await db.statementExecPromisified(statement, [])
+				if (user_id.length == 0) {
+					resolve("Invalid ID")
+				} else {
+					user_id = user_id[0].USER_ID
+					// DELETE all the data of USER_ID from the system except askhr. 
 
-				resolve(results);
+					query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"  WHERE USERID = '${user_id}'`
+					statement = await db.preparePromisified(query);
+					results = await db.statementExecPromisified(statement, [])
+
+
+					query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS"  WHERE USER_ID = '${user_id}'`
+					statement = await db.preparePromisified(query);
+					results = await db.statementExecPromisified(statement, [])
+
+
+					query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"  WHERE USER_ID = '${user_id}'`
+					statement = await db.preparePromisified(query);
+					results = await db.statementExecPromisified(statement, [])
+
+					resolve(results);
+				}
+
 			} catch (error) {
+
 				reject(error);
 			}
 		});
