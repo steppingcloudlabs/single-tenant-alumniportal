@@ -1,13 +1,12 @@
 const uuid = require("uuid");
-const bcrypt = require('bcryptjs');
-const AWS = require('aws-sdk');
 const nodemailer = require('nodemailer')
-const {
-	JWT_SECRET
-} = require('../../config');
+const { JWT_SECRET } = require('../../config');
 const JWT = require('jsonwebtoken');
-const config = require('../../config');
 const utils = require("../../utils/database/index.js")();
+// hashing algo.
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 module.exports = () => {
 	const login = ({
 		payload,
@@ -28,13 +27,14 @@ module.exports = () => {
 				if (result.length == 0) {
 					resolve("incorrectuser")
 				} else {
-					const query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where PASSWORD='${PASSWORD}' AND USERNAME = '${EMAIL}'`
+					const query2 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME = '${EMAIL}'`
 					const statement2 = await db.preparePromisified(query2)
-					const result2 = await db.statementExecPromisified(statement2, [])
-					if (result2.length == 0) {
+					const userSavedHashedPassword = await db.statementExecPromisified(statement2, [])
+					const match = await bcrypt.compare(userSavedHashedPassword, PASSWORD);
+					if (!match) {
 						resolve("incorrectpassword")
 					} else {
-						const query3 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where PASSWORD='${PASSWORD}' AND USERNAME='${EMAIL}'`
+						const query3 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" AND USERNAME='${EMAIL}'`
 						const statement3 = await db.preparePromisified(query3)
 						const result3 = await db.statementExecPromisified(statement3, [])
 						const USERID = result3[0].USERID;
@@ -111,6 +111,11 @@ module.exports = () => {
 						if (result3.length == 0) {
 							resolve("notalumni")
 						} else {
+
+							// computing hash of the password.
+							const HASHPASSWORD = await bcrypt.hash(PASSWORD, saltRounds);
+							console.log(HASHPASSWORD)
+
 							const createdat = new Date().toISOString();
 							const createdby = "admin";
 							const modifiedby = "admin";
@@ -125,7 +130,7 @@ module.exports = () => {
 									'${ID}',
 									'${USERID}',
 									'${EMAIL}',
-									'${PASSWORD}'
+									'${HASHPASSWORD}'
 									)`
 							const statement4 = await db.preparePromisified(query4)
 							const result4 = await db.statementExecPromisified(statement4, [])

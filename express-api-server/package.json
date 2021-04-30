@@ -9,6 +9,7 @@
 		"amqplib": "latest",
 		"aws-sdk": "latest",
 		"axios": "latest",
+		"bcrypt": "^5.0.1",
 		"bcryptjs": "latest",
 		"body-parser": "latest",
 		"cf-nodejs-logging-support": "latest",
@@ -46,7 +47,7 @@
 	"main": "server.js",
 	"name": "express-api-server",
 	"scripts": {
-		"test": "mocha --timeout 5000",
+		"test": "mocha --timeout 10000",
 		"test-coverage": "node node_modules/jest/bin/jest --coverage --config jest.json",
 		"start": "nodemon server.js",
 		"runClinic": "clinic doctor -- node server.js",

@@ -1,4 +1,8 @@
 const integrrationauthserviceauth = require("../../service/auth/intergration.index")();
+const JWT = require("jsonwebtoken");
+const {
+    JWT_SECRET
+} = require("../../config")
 const dbClass = require("sap-hdbext-promisfied");
 module.exports = {
     // Integratoin users 
@@ -43,17 +47,18 @@ module.exports = {
     deleteIntegrationUser: async (req, res, next) => {
         try {
             const payload = req.body;
-            const logger = req.logger;
+            console.log(payload)
+
             let db = new dbClass(req.db);
             let response = await integrrationauthserviceauth.deleteIntegrationUser({
                 payload,
-                logger,
+
                 db
             });
             if (response) {
                 if (response === 'exists') {
                     res.type("application/json").status(200).send({
-                        status: "200",
+                        status: "400",
                         result: "Integration user already exists"
                     });
 
@@ -80,27 +85,28 @@ module.exports = {
             });
         }
     },
+
     loginIntegrationUser: async (req, res, next) => {
         try {
             const payload = req.body;
-            const logger = req.logger;
+
             let db = new dbClass(req.db);
             let response = await integrrationauthserviceauth.loginIntegrationUser({
                 payload,
-                logger,
                 db
             });
+
             if (response == "incorrectuser") {
                 res.type("application/json").status(200).send({
-                    status: "200",
-                    result: "Incorrect Admin Email"
+                    status: "400",
+                    result: "Incorrect Email"
                 });
             } else if (response == "incorrectpassword") {
                 res.type("application/json").status(200).send({
-                    status: "200",
+                    status: "400",
                     result: "Incorrect password"
                 });
-            } else if (response == "login") {
+            } else {
                 const token = JWT.sign({
                     iss: "steppingcloudforuser",
                     sub: response[0].USER_ID,
@@ -116,13 +122,13 @@ module.exports = {
                 res.type("application/json").status(200).send({
                     status: "200",
                     result: response,
-
+                    token: token
                 });
             }
 
 
         } catch (error) {
-            req.logger.error(` Error for ${req.logger.getTenantId()} at auth/index/signup ${error.message}`);
+            req.logger.error(` Error for ${req.logger.getTenantId()} at auth/index/login ${error.message}`);
             res.type("application/json").status(500).send({
                 status: "500",
                 error: error.message

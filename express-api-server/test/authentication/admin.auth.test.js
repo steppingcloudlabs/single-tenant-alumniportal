@@ -8,12 +8,11 @@ let should = chai.should();
 chai.should();
 chai.use(chaiHttp);
 
-describe('Authentication APIs', () => {
+describe('Adding and testing Integration User ', () => {
 
     /**
      * TEST signup api
      */
-
 
 
 })

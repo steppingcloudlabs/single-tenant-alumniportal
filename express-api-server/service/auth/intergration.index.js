@@ -63,15 +63,19 @@ module.exports = () => {
                     EMAIL,
                     PASSWORD,
                 } = payload;
+
+
                 let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 let statement = await db.preparePromisified(query)
                 let result = await db.statementExecPromisified(statement, [])
+
                 if (result.length == 0) {
                     resolve("incorrectuser")
                 } else {
                     let query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL}' and PASSWORD ='${PASSWORD}'`
                     let statement2 = await db.preparePromisified(query2)
                     let result2 = await db.statementExecPromisified(statement2, [])
+
                     if (result2.length == 0) {
                         resolve("incorrectpassword")
                     } else {

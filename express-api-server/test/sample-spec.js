@@ -12,7 +12,7 @@ describe('Root route', () => {
      */
 
     describe('GET /', () => {
-        it('should get root route', (done) => {
+        it('It should call /', (done) => {
             chai.request(server)
                 .get('/')
                 .end((err, res) => {
