@@ -164,11 +164,11 @@ module.exports = {
 
 				let country = (payload.COUNTRY == "null" || payload.COUNTRY == undefined) ? "" : payload.COUNTRY
 				let searchquery = (payload.QUERY == "null" || payload.QUERY == undefined) ? "" : payload.QUERY
-				searchquery = searchquery + " " + country
+				searchquery = escape(searchquery) + " " + escape(country)
 
 				if (searchquery == " ") {
 					const query =
-						` select count(*) as TOTALROWS from (SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB")`
+						` select count(*) as TOTALROWS from (SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE BOARDID = '_external') `
 
 					const statement = await db.preparePromisified(query)
 					const pagecount = await db.statementExecPromisified(statement, [])
@@ -184,7 +184,7 @@ module.exports = {
 					});
 				} else {
 					const query =
-						` select count(*) as TOTALROWS from (SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE CONTAINS((jobTitle, location, country, jobDescription), '${searchquery}', FUZZY(0.5)))`
+						` select count(*) as TOTALROWS from (SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE BOARDID = '_external' AND CONTAINS((jobTitle, location, country, jobDescription), '${searchquery}', FUZZY(0.6)))`
 
 					const statement = await db.preparePromisified(query)
 					const pagecount = await db.statementExecPromisified(statement, [])
