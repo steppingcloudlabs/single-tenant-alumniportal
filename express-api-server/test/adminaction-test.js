@@ -1,0 +1,138 @@
+const chai = require('chai');
+const chaiHttp = require('chai-http');
+const server = require("../server.js");
+
+chai.should();
+chai.use(chaiHttp);
+
+describe('Admin Action Test Suite', () => {
+    it('Should add admin user by calling /initialize endpoint', (done) => {
+        chai.request(server)
+            .post('/initialize')
+            .set('content-type', 'application/json')
+            .send({
+                "EMAIL": "testadmin@steppingcloud.com",
+                "PASSWORD": "testadmin",
+                "USERTYPE": "admin"
+            })
+            .end((err, res) => {
+                if (err) done(err);
+                res.should.have.status(200);
+                res.body.should.be.a('object');
+                done();
+            })
+    });
+
+    it('Admin Should login successfully by calling POST /auth/login', () => {
+        chai.request(server)
+            .post('/auth/login')
+            .set('Content-Type', 'application/json')
+            .send({
+                "EMAIL": "testadmin@steppingcloud.com",
+                "PASSWORD": "testadmin"
+            })
+            .end((err, res) => {
+                if (err) done(err);
+                res.should.have.status(200)
+                res.body.should.be.a('object');
+                res.body.should.have.property('status').eql('200');
+                res.body.should.have.property('result');
+                res.body.should.have.property('token');
+            })
+    });
+
+    it('Admin Should add user to application successfully by calling POST /admin/action/user/create', () => {
+        chai.request(server)
+            .post('/auth/login')
+            .set('Content-Type', 'application/json')
+            .send({
+                "EMAIL": "testadmin@steppingcloud.com",
+                "PASSWORD": "testadmin"
+            })
+            .end((err, res) => {
+                if (err) done(err);
+                res.should.have.status(200)
+                res.body.should.be.a('object');
+                res.body.should.have.property('status').eql('200');
+                res.body.should.have.property('result');
+                res.body.should.have.property('token');
+                let token = res.body.token;
+
+                chai.request(server)
+                    .post('/admin/action/user/create')
+                    .set('Content-Type', 'application/json')
+                    .set('Authorization', 'Bearer ' + token)
+                    .send({
+                        "payload": {
+                            "USER_ID": "test",
+                            "GENDER": "female",
+                            "DATE_OF_BIRTH": "2012-02-10T13:19:11+0000",
+                            "DATE_OF_RELIEVING": "2012-02-10T13:19:11+0000",
+                            "DATE_OF_RESIGNATION": "2012-02-10T13:19:11+0000",
+                            "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD": "2012-02-10T13:19:11+0000",
+                            "PERSONAL_EMAIL_ID": "prakritidev@steppingcloud.com",
+                            "FIRST_NAME_PERSONAL_INFORMATION": "prakritidev",
+                            "LAST_NAME_PERSONAL_INFORMATION": "verma",
+                            "MIDDLE_NAME_PERSONAL_INFORMATION": "NaN",
+                            "NATIONALITY_PERSONAL_INFORMATION": "IND",
+                            "SALUTATION_PERSONAL_INFORMATION": "Mr.",
+                            "CITY_ADDRESSES": "New Delhi",
+                            "PHONE_NUMBER_PHONE_INFORMATION": "88927470237",
+                            "MANAGER_JOB_INFORMATION": "Tausif Rahman",
+                            "DESIGNATION_JOB_INFORMATION": "DM-Head IT (BCP & Oracle Admin)",
+                            "STATE": "New Delhi",
+                            "COUNTRY": "India"
+                        }
+                    })
+                    .end((err, res) => {
+                        if (err) done(err);
+                        res.should.have.status(200)
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('status').eql('200');
+                        res.body.should.have.property('result');
+                    });
+
+            })
+
+    });
+
+    it('Should Delete user from the apllication either active or inactive', () => {
+        chai.request(server)
+            .post('/auth/login')
+            .set('Content-Type', 'application/json')
+            .send({
+                "EMAIL": "testadmin@steppingcloud.com",
+                "PASSWORD": "testadmin"
+            })
+
+            .end((err, res) => {
+                if (err) done(err);
+                res.should.have.status(200)
+                res.body.should.be.a('object');
+                res.body.should.have.property('status').eql('200');
+                res.body.should.have.property('result');
+                res.body.should.have.property('token');
+                let token = res.body.token;
+                let ID = res.body.result[0].ID
+
+                chai.request(server)
+                    .post('/admin/action/user/create')
+                    .set('Content-Type', 'application/json')
+                    .set('Authorization', 'Bearer ' + token)
+                    .send({
+                        "payload": {
+                            "ID": ID
+                        }
+                    })
+                    .end((err, res) => {
+                        if (err) done(err);
+                        res.should.have.status(200)
+                        res.body.should.be.a('object');
+                        res.body.should.have.property('status').eql('200');
+                        res.body.should.have.property('result');
+                    });
+            })
+
+
+    });
+});

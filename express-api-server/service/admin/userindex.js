@@ -18,12 +18,23 @@ module.exports = () => {
 
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
-				const statement = await db.preparePromisified(
-					`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION", IFNULL(STATE, '') "STATE",
+				const USERID = (payload.USERID == undefined || payload.USERID == null || payload.USERID == "null") ? false : payload.USERID
+				if (USERID) {
+					const statement = await db.preparePromisified(
+						`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION", IFNULL(STATE, '') "STATE",
+					IFNULL(COUNTRY, '') "COUNTRY", "ISACTIVE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" WHERE USER_ID = ${USERID} LIMIT ${LIMIT} offset ${offset} `
+					)
+					const results = await db.statementExecPromisified(statement, [])
+					resolve(results);
+				} else {
+					const statement = await db.preparePromisified(
+						`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION", IFNULL(STATE, '') "STATE",
 					IFNULL(COUNTRY, '') "COUNTRY", "ISACTIVE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" rows LIMIT ${LIMIT} offset ${offset}`
-				)
-				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+					)
+					const results = await db.statementExecPromisified(statement, [])
+					resolve(results);
+				}
+
 			} catch (error) {
 				reject(error);
 			}
@@ -143,7 +154,7 @@ module.exports = () => {
 							let results = await db.statementExecPromisified(statement, [])
 
 							let res = await emailservice.sendEmail({ PERSONAL_EMAIL_ID, FIRST_NAME_PERSONAL_INFORMATION, URL });
-							console.log(res);
+
 							resolve(results)
 						}
 

@@ -1,7 +1,7 @@
 const chai = require('chai')
 const chaiHttp = require('chai-http');
 const server = require("../server.js");
-let should = chai.should();
+
 
 // assertion style
 
@@ -19,7 +19,7 @@ describe('Application Initializing Test Suite ', () => {
                 "PASSWORD": "testadmin",
                 "USERTYPE": "admin"
             })
-            .end((err, res,) => {
+            .end((err, res) => {
                 if (err) done(err);
                 res.should.have.status(200);
                 res.body.should.be.a('object');
