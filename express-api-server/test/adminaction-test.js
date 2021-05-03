@@ -99,6 +99,8 @@ describe('Admin Action Test Suite', () => {
     });
 
     it('Should Delete user from the apllication either active or inactive', (done) => {
+
+        // login to the application and get token
         chai.request(server)
             .post('/auth/login')
             .set('Content-Type', 'application/json')
@@ -115,28 +117,43 @@ describe('Admin Action Test Suite', () => {
                 res.body.should.have.property('result');
                 res.body.should.have.property('token');
                 let token = res.body.token;
-                let ID = res.body.result[0].ID
 
+                // get ID of user
                 chai.request(server)
-                    .post('/admin/action/user/create')
-                    .set('Content-Type', 'application/json')
+                    .get('/admin/action/user/get?USERID=test')
                     .set('Authorization', 'Bearer ' + token)
-                    .send({
-                        "payload": {
-                            "ID": ID
-                        }
-                    })
                     .end((err, res) => {
                         if (err) done(err);
                         res.should.have.status(200)
                         res.body.should.be.a('object');
                         res.body.should.have.property('status').eql('200');
                         res.body.should.have.property('result');
-                        done();
-                    });
+                        let ID = res.body.result[0].ID
+                        console.log(ID)
+                        chai.request(server)
+                            .post('/admin/action/user/delete')
+                            .set('Content-Type', 'application/json')
+                            .set('Authorization', 'Bearer ' + token)
+                            .send({
+                                "payload": {
+                                    "ID": ID
+                                }
+                            })
+                            .end((err, res) => {
+                                if (err) done(err);
+                                res.should.have.status(200)
+                                res.body.should.be.a('object');
+                                res.body.should.have.property('status').eql('200');
+                                res.body.should.have.property('result');
+                                res.body.should.have.property('result').eql(1);
+                                done();
+                            });
 
-            })
+                    })
+            });
 
+    })
 
-    });
+    // describe close
 });
+
