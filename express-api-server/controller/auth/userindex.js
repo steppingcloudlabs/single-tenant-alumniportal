@@ -152,44 +152,50 @@ module.exports = {
 			});
 		}
 	},
-	resetpassword: async (req, res) => {
-		try {
+	// resetpassword: async (req, res) => {
+	// 	try {
 
-			const payload = req.body;
-			const resettoken = req.query;
+	// 		const payload = req.body;
+	// 		const resettoken = req.query;
 
-			let db = new dbClass(req.db);
-			let response = await authserivce.resetpassword({
-				payload,
-				resettoken,
-				db
-			});
+	// 		let db = new dbClass(req.db);
+	// 		let response = await authserivce.resetpassword({
+	// 			payload,
+	// 			resettoken,
+	// 			db
+	// 		});
 
 
-			if (response == "ResetTokenExpired") {
-				res.status(200).send({
-					status: 400,
-					result: "Reset Token Expired",
-				});
-			} else if ("updated") {
-				res.status(200).send({
-					status: 200,
-					result: "New password updated successfully",
-				});
-			} else {
-				res.status(200).send({
-					status: 200,
-					result: response,
-				});
-			}
+	// 		if (response == "ResetTokenExpired") {
+	// 			res.status(200).send({
+	// 				status: 400,
+	// 				result: "Reset Token Expired"
+	// 			});
+	// 		} else if (response == "updated") {
+	// 			res.status(200).send({
+	// 				status: 200,
+	// 				result: "New password updated successfully"
+	// 			});
+	// 		} else if (response == "usernotfound") {
+	// 			res.status(200).send({
+	// 				status: 400,
+	// 				result: "Updation Failed, User Not Found"
+	// 			});
+	// 		}
+	// 		else {
+	// 			res.status(200).send({
+	// 				status: 400,
+	// 				result: response
+	// 			});
+	// 		}
 
-		} catch (error) {
-			res.type("application/json").status(500).send({
-				status: "500",
-				error: error
-			});
-		}
-	},
+	// 	} catch (error) {
+	// 		res.type("application/json").status(500).send({
+	// 			status: "500",
+	// 			error: error.message
+	// 		});
+	// 	}
+	// },
 
 
 }

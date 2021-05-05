@@ -120,9 +120,74 @@ module.exports = () => {
         });
     }
 
+
+    const sendForgetPasswordEmail = async ({ EMAIL, FIRST_NAME_PERSONAL_INFORMATION, token }) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const SES_CONFIG = {
+                    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                    region: 'us-east-2'
+                };
+                let params = {
+                    Destination: { /* required */
+                        CcAddresses: [
+
+                        ],
+                        ToAddresses: [
+                            EMAIL,
+                            /* more items */
+                        ]
+                    },
+                    Message: { /* required */
+                        Body: { /* required */
+                            Html: {
+                                Charset: "UTF-8",
+                                Data: "HTML_FORMAT_BODY"
+                            },
+                            Text: {
+                                Charset: "UTF-8",
+                                Data: "TEXT_FORMAT_BODY"
+                            }
+                        },
+                        Subject: {
+                            Charset: 'UTF-8',
+                            Data: 'Test email'
+                        }
+                    },
+                    Source: 'daraksha@steppingcloud.com', /* required */
+                    ReplyToAddresses: [
+
+                    ],
+                };
+
+                let endpoint = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
+                endpoint = endpoint.replace('-srv', "");
+                console.log(EMAIL)
+                let paramsTemplate = {
+                    Source: 'daraksha@steppingcloud.com',
+                    Template: 'WelcomeMail',
+                    Destination: {
+                        ToAddresses: [EMAIL]
+                    },
+                    TemplateData: JSON.stringify({ name: FIRST_NAME_PERSONAL_INFORMATION, link: 'https://' + endpoint + `/#/resetpassword/${token}` })
+                };
+
+                // console.log(paramsTemplate)
+                // let sendPromise = new AWS.SES(SES_CONFIG).sendEmail(params).promise();
+                sendPromise = new AWS.SES(SES_CONFIG).sendTemplatedEmail(paramsTemplate).promise();
+                resolve(sendPromise);
+
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
     return {
         handleResponse,
         handleSnsNotification,
-        sendEmail
+        sendEmail,
+        sendForgetPasswordEmail
     }
 }

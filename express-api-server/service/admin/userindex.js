@@ -154,8 +154,17 @@ module.exports = () => {
 							let results = await db.statementExecPromisified(statement, [])
 
 							let res = await emailservice.sendEmail({ PERSONAL_EMAIL_ID, FIRST_NAME_PERSONAL_INFORMATION, URL });
+							if (res) {
+								resolve(results)
+							} else {
+								const query =
+									`DELETE FROM  "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"  WHERE USER_ID = '${USER_ID}'`
 
-							resolve(results)
+								const statement = await db.preparePromisified(query)
+								let results = await db.statementExecPromisified(statement, [])
+
+								reject(res)
+							}
 						}
 
 					} catch (error) {

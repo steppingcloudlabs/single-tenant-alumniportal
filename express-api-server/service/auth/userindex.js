@@ -1,8 +1,8 @@
 const uuid = require("uuid");
-const nodemailer = require('nodemailer')
 const { JWT_SECRET } = require('../../config');
 const JWT = require('jsonwebtoken');
 const utils = require("../../utils/database/index.js")();
+const emailservice = require("../ses/index")();
 // hashing algo.
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -199,7 +199,7 @@ module.exports = () => {
 				const query1 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
 				const statement1 = await db.preparePromisified(query1)
 				const result1 = await db.statementExecPromisified(statement1, [])
-
+				let FIRST_NAME_PERSONAL_INFORMATION = result1[0].USERNAME
 				if (result1.length != 0) {
 
 					const token = JWT.sign({
@@ -208,31 +208,18 @@ module.exports = () => {
 						jwtKey: 'steppingcloudsecret',
 						algorithm: 'HS256',
 						iat: new Date().getTime(),
-						exp: new Date().setDate(new Date().getDate() + 1),
+						exp: new Date().setDate(new Date().getDate() + 1)
 					},
 						JWT_SECRET
 					);
-					let html = `
-					<p>You are receiving this because you (or someone else) have requested the reset of the PASSWORD for your account.</p>
-					
-                    <p>Please click on the following link, or paste this into your browser to complete the process: https://org-dev-sclabs-space-test-single-tenant-alumniportal-sap.cfapps.eu10.hana.ondemand.com/#/resetpassword/${token}</p>
-                    <p>If you did not request this, please ignore this EMAIL and your PASSWORD will remain unchanged. Please note that the token will get expired in 24hrs </p>
-                    `
-					var transporter = nodemailer.createTransport({
-						service: 'gmail',
-						auth: {
-							user: 'prakritidev@steppingcloud.com',
-							pass: 'SteppingCloud'
-						}
-					});
 
-					let info = await transporter.sendMail({
-						from: '"support@alumniportal" <prakritidev@steppingcloud.com>', // sender address
-						to: EMAIL, // list of receivers
-						subject: "AlumiPortal Password Reset Request", // Subject line
-						html: html, // html body
-					});
-					resolve("tokensent");
+
+					let res = await emailservice.sendForgetPasswordEmail({ EMAIL, FIRST_NAME_PERSONAL_INFORMATION, token });
+					if (res) {
+						resolve("tokensent");
+					} else {
+						reject(res);
+					}
 				} else {
 					resolve("notfounduser");
 				}

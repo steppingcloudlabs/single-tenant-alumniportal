@@ -120,6 +120,25 @@ describe('User Signup and Authentication Test Suite', () => {
             })
     });
 
+    it('User Forget Password by calling POST /auth/login', (done) => {
+        chai.request(server)
+            .post('/auth/login')
+            .set('Content-Type', 'application/json')
+            .send({
+                "EMAIL": "testuser@steppingcloud.com",
+                "PASSWORD": "testuser"
+            })
+            .end((err, res) => {
+                if (err) done(err);
+                res.should.have.status(200)
+                res.body.should.be.a('object');
+                res.body.should.have.property('status').eql('200');
+                res.body.should.have.property('token');
+                res.body.should.have.property('result');
+                done();
+            })
+    });
+
     // Clean database
     it('Should Delete user from the apllication either active or inactive', (done) => {
 

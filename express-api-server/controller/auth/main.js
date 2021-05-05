@@ -244,22 +244,34 @@ module.exports = {
         try {
 
             const payload = req.body;
-
+            const resettoken = req.query;
             let db = new dbClass(req.db);
             let response = await userauthserivce.resetpassword({
                 payload,
+                resettoken,
                 db
             });
 
-            if (response == "updated") {
+            if (response == "ResetTokenExpired") {
                 res.status(200).send({
-                    status: 200,
-                    result: "New password updated successfully",
+                    status: 400,
+                    result: "Reset Token Expired"
                 });
-            } else {
+            } else if (response == "updated") {
                 res.status(200).send({
                     status: 200,
-                    result: response,
+                    result: "New password updated successfully"
+                });
+            } else if (response == "usernotfound") {
+                res.status(200).send({
+                    status: 400,
+                    result: "Updation Failed, User Not Found"
+                });
+            }
+            else {
+                res.status(200).send({
+                    status: 400,
+                    result: response
                 });
             }
 
