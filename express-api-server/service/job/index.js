@@ -16,7 +16,7 @@ module.exports = () => {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
-					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB"  LIMIT ${LIMIT} offset ${offset}`
+					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE BOARDID = '_external'  LIMIT ${LIMIT} offset ${offset}`
 
 				const statement = await db.preparePromisified(query)
 				let results = await db.statementExecPromisified(statement, [])
@@ -55,9 +55,9 @@ module.exports = () => {
 				const ID = uuid();
 				// payload = escape(payload);
 				const requisition_id = payload.payload.REQUISITIONID;
-				const posting_end_date = payload.payload.POSTINGENDDATE;
-				const posting_start_date = payload.payload.POSTINGSTARTDATE;
-				const job_posting_status = payload.payload.JOBPOSTINGSTATUS;
+				const posting_end_date = new Date(payload.payload.POSTINGENDDATE).getTime().toString() == "NaN" ? payload.payload.POSTINGENDDATE : new Date(payload.payload.POSTINGENDDATE).getTime();
+				const posting_start_date = new Date(payload.payload.POSTINGSTARTDATE).getTime().toString() == "NaN" ? payload.payload.POSTINGSTARTDATE : new Date(payload.payload.POSTINGSTARTDATE).getTime();
+				const job_posting_status = new Date(payload.payload.JOBPOSTINGSTATUS).getTime().toString() == "NaN" ? payload.payload.JOBPOSTINGSTATUS : new Date(payload.payload.JOBPOSTINGSTATUS).getTime();
 				const department = payload.payload.DEPARTMENT;
 				const title = escape(payload.payload.TITLE);
 				const jobdescription = escape(payload.payload.JOBDESCRIPTION);

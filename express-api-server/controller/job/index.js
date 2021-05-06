@@ -79,17 +79,17 @@ module.exports = {
 					db
 				})
 
-				let pagecount = await utils.getPageCount({
-					schema,
-					tablename,
-					db
-				})
+				const query =
+					` select count(*) as TOTALROWS from (SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE BOARDID = '_external') `
+
+				const statement = await db.preparePromisified(query)
+				const pagecount = await db.statementExecPromisified(statement, [])
 				paginationobject = {
 					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
 					'LIMIT': parseInt(LIMIT),
 					'OFFSET': parseInt(OFFSET)
 				}
-				res.type("application/json").status(200).send({
+				res.status(200).send({
 					status: "200",
 					result: response,
 					pagination: paginationobject
