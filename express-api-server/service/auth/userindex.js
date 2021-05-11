@@ -4,7 +4,7 @@ const JWT = require('jsonwebtoken');
 const utils = require("../../utils/database/index.js")();
 const emailservice = require("../ses/index")();
 // hashing algo.
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const saltRounds = 10;
 
 module.exports = () => {
@@ -252,8 +252,10 @@ module.exports = () => {
 					const result1 = await db.statementExecPromisified(statement1, [])
 
 					if (result1[0].PASSWORD == OLDPASSWORD) {
+						// computing hash of the password.
+						const HASHPASSWORD = await bcrypt.hash(NEWPASSWORD, saltRounds);
 						const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"
-					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
+					SET "PASSWORD" = '${HASHPASSWORD}' where USERNAME='${EMAIL}'`
 						const statement = await db.preparePromisified(query)
 						const result = await db.statementExecPromisified(statement, [])
 						if (result) {
@@ -273,8 +275,10 @@ module.exports = () => {
 					} else {
 						// the payload body contains new PASSWORD to be reset
 						const EMAIL = decoderesettoken.sub;
+						// computing hash of the password.
+						const HASHPASSWORD = await bcrypt.hash(NEWPASSWORD, saltRounds);
 						const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"
-					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
+					SET "PASSWORD" = '${HASHPASSWORD}' where USERNAME='${EMAIL}'`
 						const statement = await db.preparePromisified(query)
 						const result = await db.statementExecPromisified(statement, [])
 						if (result) {

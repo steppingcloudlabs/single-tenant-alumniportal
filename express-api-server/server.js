@@ -14,6 +14,9 @@ const helmet = require('helmet');
 const cors = require("cors");
 const log = require("cf-nodejs-logging-support");
 const upload = require('express-fileupload')
+// hashing algo.
+const bcrypt = require('bcryptjs');
+const saltRounds = 10;
 
 const app = express();
 //---------------------------------------------------------------------------------------------
@@ -120,6 +123,7 @@ app.get("/initialize", async (req, res, next) => {
     let EMAIL = req.body.EMAIL;
     let ID = uuid();
     const schema = await utils.currentSchema({ db });
+
     let query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
 	                    '${createdat}',
 	                    '${createdby}',
@@ -159,6 +163,7 @@ app.post("/initialize", async (req, res, next) => {
     let EMAIL = req.body.EMAIL;
     let ID = uuid();
     const schema = await utils.currentSchema({ db });
+    const HASHPASSWORD = await bcrypt.hash(PASSWORD, saltRounds);
     let query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
 	                    '${createdat}',
 	                    '${createdby}',
@@ -167,7 +172,7 @@ app.post("/initialize", async (req, res, next) => {
                       '${ID}'/*ID <NVARCHAR(36)>*/,
                       '${USERID}',
 	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
-                      '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
+                      '${HASHPASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
                       '${USERTYPE}'
                         )`
 

@@ -137,6 +137,7 @@ module.exports = {
             let result = await db.statementExecPromisified(statement, [])
             let payload = req.body;
             if (result.length == 0 && (payload.USERTYPE == 'hr' || payload.USERTYPE == 'admin')) {
+
                 try {
                     const payload = req.body;
                     const logger = req.logger;
@@ -246,34 +247,67 @@ module.exports = {
             const payload = req.body;
             const resettoken = req.query;
             let db = new dbClass(req.db);
-            let response = await userauthserivce.resetpassword({
-                payload,
-                resettoken,
-                db
-            });
+            if (payload.payload.USERTYPE == "admin" || payload.payload.USERTYPE == "hr") {
 
-            if (response == "ResetTokenExpired") {
-                res.status(200).send({
-                    status: 400,
-                    result: "Reset Token Expired"
+                let response = await adminauthserivce.resetpassword({
+                    payload,
+                    resettoken,
+                    db
                 });
-            } else if (response == "updated") {
-                res.status(200).send({
-                    status: 200,
-                    result: "New password updated successfully"
+
+                if (response == "ResetTokenExpired") {
+                    res.status(200).send({
+                        status: 400,
+                        result: "Reset Token Expired"
+                    });
+                } else if (response == "updated") {
+                    res.status(200).send({
+                        status: 200,
+                        result: "New password updated successfully"
+                    });
+                } else if (response == "usernotfound") {
+                    res.status(200).send({
+                        status: 400,
+                        result: "Updation Failed, User Not Found"
+                    });
+                }
+                else {
+                    res.status(200).send({
+                        status: 400,
+                        result: response
+                    });
+                }
+            } else {
+                let response = await userauthserivce.resetpassword({
+                    payload,
+                    resettoken,
+                    db
                 });
-            } else if (response == "usernotfound") {
-                res.status(200).send({
-                    status: 400,
-                    result: "Updation Failed, User Not Found"
-                });
+
+                if (response == "ResetTokenExpired") {
+                    res.status(200).send({
+                        status: 400,
+                        result: "Reset Token Expired"
+                    });
+                } else if (response == "updated") {
+                    res.status(200).send({
+                        status: 200,
+                        result: "New password updated successfully"
+                    });
+                } else if (response == "usernotfound") {
+                    res.status(200).send({
+                        status: 400,
+                        result: "Updation Failed, User Not Found"
+                    });
+                }
+                else {
+                    res.status(200).send({
+                        status: 400,
+                        result: response
+                    });
+                }
             }
-            else {
-                res.status(200).send({
-                    status: 400,
-                    result: response
-                });
-            }
+
 
         } catch (error) {
             res.type("application/json").status(500).send({
@@ -286,22 +320,43 @@ module.exports = {
         try {
             const payload = req.body;
             let db = new dbClass(req.db);
-            let response = await userauthserivce.forgetpassword({
-                payload,
-                db
-            });
+            if (payload.payload.USERTYPE == "admin" || payload.payload.USERTYPE == "hr") {
 
-            if (response == "notfounduser") {
-                res.status(200).send({
-                    status: 400,
-                    result: "user not found",
+                let response = await adminauthserivce.forgetpassword({
+                    payload,
+                    db
                 });
+
+                if (response == "notfounduser") {
+                    res.status(200).send({
+                        status: 400,
+                        result: "user not found",
+                    });
+                } else {
+                    res.status(200).send({
+                        status: 200,
+                        result: response,
+                    });
+                }
             } else {
-                res.status(200).send({
-                    status: 200,
-                    result: response,
+                let response = await userauthserivce.forgetpassword({
+                    payload,
+                    db
                 });
+
+                if (response == "notfounduser") {
+                    res.status(200).send({
+                        status: 400,
+                        result: "user not found",
+                    });
+                } else {
+                    res.status(200).send({
+                        status: 200,
+                        result: response,
+                    });
+                }
             }
+
 
         } catch (error) {
             res.type("application/json").status(500).send({
@@ -310,6 +365,4 @@ module.exports = {
             });
         }
     }
-
-
 }

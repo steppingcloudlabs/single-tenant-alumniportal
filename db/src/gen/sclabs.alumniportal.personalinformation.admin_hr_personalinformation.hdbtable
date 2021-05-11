@@ -8,5 +8,6 @@ COLUMN TABLE sclabs_alumniportal_personalinformation_admin_hr_personalinformatio
   lastname NVARCHAR(5000),
   email NVARCHAR(5000),
   usertype NVARCHAR(5000),
+  userid NVARCHAR(5000),
   PRIMARY KEY(ID)
 )

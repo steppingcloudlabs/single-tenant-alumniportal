@@ -1,5 +1,4 @@
 const uuid = require("uuid");
-const bcrypt = require('bcryptjs');
 const AWS = require('aws-sdk');
 const {
     JWT_SECRET
@@ -7,6 +6,11 @@ const {
 const JWT = require('jsonwebtoken');
 const config = require('../../config');
 const utils = require("../../utils/database/index.js")();
+const emailservice = require("../ses/index")();
+// hashing algo.
+const bcrypt = require('bcryptjs');
+const saltRounds = 10;
+
 module.exports = () => {
     const login = ({
         payload,
@@ -21,26 +25,33 @@ module.exports = () => {
                     EMAIL,
                     PASSWORD,
                 } = payload;
+
                 let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 let statement = await db.preparePromisified(query)
                 let result = await db.statementExecPromisified(statement, [])
                 if (result.length == 0) {
                     resolve("incorrectuser")
                 } else {
-                    let query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL}' and PASSWORD ='${PASSWORD}'`
+                    let query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL}'`
                     let statement2 = await db.preparePromisified(query2)
                     let result2 = await db.statementExecPromisified(statement2, [])
-                    if (result2.length == 0) {
+
+                    const match = await bcrypt.compare(PASSWORD, result2[0].PASSWORD);
+
+                    if (!match) {
                         resolve("incorrectpassword")
                     } else {
-
                         if (result2[0].USERTYPE == 'admin') {
-                            let query3 = `SELECT USERNAME, USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}' AND PASSWORD ='${PASSWORD}'`
+                            let query3 = `SELECT USERNAME, USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                             let statement3 = await db.preparePromisified(query3)
                             let result3 = await db.statementExecPromisified(statement3, [])
-                            resolve(result3)
+                            let query4 = `SELECT "USERID", "FIRSTNAME", "LASTNAME", "EMAIL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" where EMAIL = '${EMAIL}'`
+                            let statement4 = await db.preparePromisified(query4)
+                            let result4 = await db.statementExecPromisified(statement4, [])
+                            result4[0].USERTYPE = result3[0].USERTYPE
+                            resolve(result4)
                         } else if (result2[0].USERTYPE == 'hr') {
-                            query3 = `SELECT USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME='${EMAIL}' AND PASSWORD='${PASSWORD}'`
+                            query3 = `SELECT USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME='${EMAIL}'`
                             statement3 = await db.preparePromisified(query3)
                             result3 = await db.statementExecPromisified(statement3, [])
                             let query4 = `SELECT "ID", "FIRSTNAME", "LASTNAME", "EMAIL", "LEVELMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" where EMAIL = '${EMAIL}'`
@@ -104,6 +115,9 @@ module.exports = () => {
                                 let modifiedby = "admin";
                                 let modifiedat = new Date().toISOString();
                                 let ID = uuid();
+                                // computing hash of the password.
+                                const HASHPASSWORD = await bcrypt.hash(PASSWORD, saltRounds);
+
                                 query4 = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
 	                    '${createdat}',
 	                    '${createdby}',
@@ -112,7 +126,7 @@ module.exports = () => {
                         '${ID}'/*ID <NVARCHAR(36)>*/,
                         '${USERID}',
 	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
-                        '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
+                        '${HASHPASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
                         '${USERTYPE}'
                         )`
 
@@ -145,6 +159,9 @@ module.exports = () => {
                             let modifiedby = "admin";
                             let modifiedat = new Date().toISOString();
                             let ID = uuid();
+                            // computing hash of the password.
+                            const HASHPASSWORD = await bcrypt.hash(PASSWORD, saltRounds);
+
                             query4 = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
 	                    '${createdat}',
 	                    '${createdby}',
@@ -153,7 +170,7 @@ module.exports = () => {
                         '${ID}'/*ID <NVARCHAR(36)>*/,
                         '${USERID}',
 	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
-                        '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
+                        '${HASHPASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
                         '${USERTYPE}'
                         )`
                             let statement4 = await db.preparePromisified(query4)
@@ -190,6 +207,7 @@ module.exports = () => {
                 const statement1 = await db.preparePromisified(query1)
                 const result1 = await db.statementExecPromisified(statement1, [])
 
+                let FIRST_NAME_PERSONAL_INFORMATION = result1[0].USERNAME
                 if (result1.length != 0) {
 
                     const token = JWT.sign({
@@ -198,31 +216,19 @@ module.exports = () => {
                         jwtKey: 'steppingcloudsecret',
                         algorithm: 'HS256',
                         iat: new Date().getTime(),
-                        exp: new Date().setDate(new Date().getDate() + 1),
+                        exp: new Date().setDate(new Date().getDate() + 1)
                     },
                         JWT_SECRET
                     );
-                    let html = `
-					<p>You are receiving this because you (or someone else) have requested the reset of the PASSWORD for your account.</p>
-					
-                    <p>Please click on the following link, or paste this into your browser to complete the process: https://org-dev-sclabs-space-test-single-tenant-alumniportal-sap-srv.cfapps.eu10.hana.ondemand.com/auth/reset/'${token}</p>
-                    <p>If you did not request this, please ignore this EMAIL and your PASSWORD will remain unchanged. Please note that the token will get expired in 24hrs </p>
-                    `
-                    var transporter = nodemailer.createTransport({
-                        service: 'gmail',
-                        auth: {
-                            user: 'prakritidev@steppingcloud.com',
-                            pass: 'SteppingCloud'
-                        }
-                    });
 
-                    let info = await transporter.sendMail({
-                        from: '"support@alumniportal" <prakritidev@steppingcloud.com>', // sender address
-                        to: EMAIL, // list of receivers
-                        subject: "AlumiPortal Password Reset Request", // Subject line
-                        html: html, // html body
-                    });
-                    resolve("tokensent");
+                    console.log(token);
+
+                    let res = await emailservice.sendForgetPasswordEmail({ EMAIL, FIRST_NAME_PERSONAL_INFORMATION, token });
+                    if (res) {
+                        resolve("tokensent");
+                    } else {
+                        reject(res);
+                    }
                 } else {
                     resolve("notfounduser");
                 }
@@ -244,35 +250,61 @@ module.exports = () => {
                 });
                 const {
                     NEWPASSWORD,
+                    OLDPASSWORD,
+                    EMAIL
                 } = payload.payload;
 
-                const resettokenforpass = resettoken.token
 
-                const decoderesettoken = JWT.verify(resettokenforpass, JWT_SECRET);
+                if (EMAIL) {
+                    const query1 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
+                    const statement1 = await db.preparePromisified(query1)
+                    const result1 = await db.statementExecPromisified(statement1, [])
 
-                if (Date.now() > decoderesettoken.exp) {
-                    resolve('ResetTokenExpired');
+                    if (result1[0].PASSWORD == OLDPASSWORD) {
+                        // computing hash of the password.
+                        const HASHPASSWORD = await bcrypt.hash(NEWPASSWORD, saltRounds);
+
+                        const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"
+					SET "PASSWORD" = '${HASHPASSWORD}' where USERNAME='${EMAIL}'`
+                        const statement = await db.preparePromisified(query)
+                        const result = await db.statementExecPromisified(statement, [])
+                        if (result) {
+                            resolve('updated');
+                        } else {
+                            resolve('Updation Failed, Current Password Not matched');
+                        }
+                    }
+                    else {
+                        resolve('Updation Failed');
+                    }
                 } else {
-                    // the payload body contains new PASSWORD to be reset
-                    const EMAIL = decoderesettoken.sub;
-
-                    const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"
-					SET "PASSWORD" = '${NEWPASSWORD}' where USERNAME='${EMAIL}'`
-                    const statement = await db.preparePromisified(query)
-                    const result = await db.statementExecPromisified(statement, [])
-                    if (result) {
-                        resolve('updated');
+                    const resettokenforpass = resettoken.TOKEN
+                    const decoderesettoken = JWT.verify(resettokenforpass, JWT_SECRET);
+                    if (Date.now() > decoderesettoken.exp) {
+                        resolve('ResetTokenExpired');
                     } else {
-                        resolve('Updation Failed, Please Check');
+                        // the payload body contains new PASSWORD to be reset
+                        const EMAIL = decoderesettoken.sub;
+                        // computing hash of the password.
+                        const HASHPASSWORD = await bcrypt.hash(NEWPASSWORD, saltRounds);
+                        const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"
+					SET "PASSWORD" = '${HASHPASSWORD}' where USERNAME='${EMAIL}'`
+                        const statement = await db.preparePromisified(query)
+                        const result = await db.statementExecPromisified(statement, [])
+                        if (result) {
+                            resolve('updated');
+                        } else {
+                            resolve('Updation Failed, Please Check');
+                        }
                     }
                 }
+
+
             } catch (error) {
                 reject(error);
             }
         });
     };
-
-
 
     return {
         login,
