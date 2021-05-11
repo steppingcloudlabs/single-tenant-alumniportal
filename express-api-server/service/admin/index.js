@@ -16,7 +16,7 @@ module.exports = () => {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				const query =
-					`SELECT "ID","FIRSTNAME","LASTNAME","EMAIL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" rows LIMIT ${LIMIT} offset ${offset}`
+					`SELECT "ID","USERID", "FIRSTNAME","LASTNAME","EMAIL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" rows LIMIT ${LIMIT} offset ${offset}`
 				const statement = await db.preparePromisified(query)
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
