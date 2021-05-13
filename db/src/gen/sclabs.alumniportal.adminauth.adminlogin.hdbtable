@@ -8,5 +8,6 @@ COLUMN TABLE sclabs_alumniportal_adminauth_adminlogin (
   username NVARCHAR(5000) NOT NULL,
   password NVARCHAR(5000) NOT NULL,
   usertype NVARCHAR(5000),
+  lastlogin NVARCHAR(5000),
   PRIMARY KEY(ID)
 )

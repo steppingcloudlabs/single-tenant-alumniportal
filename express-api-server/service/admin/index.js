@@ -74,19 +74,20 @@ module.exports = () => {
 
 						if (results1 == 1) {
 							// mocking signup step by create a random password for admin user which he will reset on his end. 
-							let password = generator.generate({
-								length: 10,
-								numbers: true
-							});
-							let payload = {
-								"EMAIL": email,
-								"PASSWORD": password,
-								"USERID": userid,
-								"USERTYPE": usertype
-							}
-							let res = await authservice.signup({ payload, db });
-							console.log("Username is: " + email + "password is: " + password);
-							resolve(res);
+							// let password = generator.generate({
+							// 	length: 10,
+							// 	numbers: true
+							// });
+							// let payload = {
+							// 	"EMAIL": email,
+							// 	"PASSWORD": password,
+							// 	"USERID": userid,
+							// 	"USERTYPE": usertype
+							// }
+							// let res = await authservice.signup({ payload, db });
+							// console.log("Username is: " + email + "password is: " + password);
+							// resolve(res);
+							resolve(results1)
 						} else {
 							reject(results1)
 						}
@@ -117,7 +118,6 @@ module.exports = () => {
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" WHERE ID = '${payload.payload.ID}'`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
-				console.log(results);
 				resolve(results);
 			} catch (error) {
 				req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/deleteuser ${error}`);

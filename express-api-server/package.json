@@ -57,7 +57,7 @@
 		"coverage": "nyc --reporter=lcov --reporter=text-summary mocha"
 	},
 	"engines": {
-		"node": "15.x"
+		"node": "12.x"
 	},
 	"version": "1.0.0"
 }

@@ -1,4 +1,25 @@
 {
     "codewindProfiling.showProfiling": true,
-    "powershell.codeFormatting.addWhitespaceAroundPipe": true
+    "powershell.codeFormatting.addWhitespaceAroundPipe": true,
+    "sqltools.connections": [
+        {
+            "connectionTimeout": 30,
+            "hanaOptions": {
+                "encrypt": true,
+                "sslValidateCertificate": true,
+                "sslCryptoProvider": "mscrypto",
+                "sslTrustStore": "-----BEGIN CERTIFICATE-----\\nMIIDrzCCApegAwIBAgIQCDvgVpBCRrGhdWrJWZHHSjANBgkqhkiG9w0BAQUFADBh\\nMQswCQYDVQQGEwJVUzEVMBMGA1UEChMMRGlnaUNlcnQgSW5jMRkwFwYDVQQLExB3\\nd3cuZGlnaWNlcnQuY29tMSAwHgYDVQQDExdEaWdpQ2VydCBHbG9iYWwgUm9vdCBD\\nQTAeFw0wNjExMTAwMDAwMDBaFw0zMTExMTAwMDAwMDBaMGExCzAJBgNVBAYTAlVT\\nMRUwEwYDVQQKEwxEaWdpQ2VydCBJbmMxGTAXBgNVBAsTEHd3dy5kaWdpY2VydC5j\\nb20xIDAeBgNVBAMTF0RpZ2lDZXJ0IEdsb2JhbCBSb290IENBMIIBIjANBgkqhkiG\\n9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4jvhEXLeqKTTo1eqUKKPC3eQyaKl7hLOllsB\\nCSDMAZOnTjC3U/dDxGkAV53ijSLdhwZAAIEJzs4bg7/fzTtxRuLWZscFs3YnFo97\\nnh6Vfe63SKMI2tavegw5BmV/Sl0fvBf4q77uKNd0f3p4mVmFaG5cIzJLv07A6Fpt\\n43C/dxC//AH2hdmoRBBYMql1GNXRor5H4idq9Joz+EkIYIvUX7Q6hL+hqkpMfT7P\\nT19sdl6gSzeRntwi5m3OFBqOasv+zbMUZBfHWymeMr/y7vrTC0LUq7dBMtoM1O/4\\ngdW7jVg/tRvoSSiicNoxBN33shbyTApOB6jtSj1etX+jkMOvJwIDAQABo2MwYTAO\\nBgNVHQ8BAf8EBAMCAYYwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUA95QNVbR\\nTLtm8KPiGxvDl7I90VUwHwYDVR0jBBgwFoAUA95QNVbRTLtm8KPiGxvDl7I90VUw\\nDQYJKoZIhvcNAQEFBQADggEBAMucN6pIExIK+t1EnE9SsPTfrgT1eXkIoyQY/Esr\\nhMAtudXH/vTBH1jLuG2cenTnmCmrEbXjcKChzUyImZOMkXDiqw8cvpOp/2PV5Adg\\n06O/nVsJ8dWO41P0jmP6P6fbtGbfYmbW0W5BjfIttep3Sp+dWOIrWcBAI+0tKIJF\\nPnlUkiaY4IBIqDfv8NZ5YBberOgOzW6sRBc4L0na4UU+Krk2U886UAb3LujEV0ls\\nYSEY1QSteDwsOoBrp+uvFRTp2InBuThs4pFsiv9kuXclVzDAGySj4dzp30d8tbQk\\nCAUw7C29C79Fv1C5qfPrmAESrciIxpg0X40KPMbp1ZWVbd4=\\n-----END CERTIFICATE-----\\n"
+            },
+            "previewLimit": 50,
+            "driver": "SAPHana",
+            "name": "test",
+            "group": "hana",
+            "server": "zeus.hana.prod.eu-central-1.whitney.dbaas.ondemand.com",
+            "port": 31917,
+            "database": "27D1DAD385DC4E6DAEBC7153CF50EE88",
+            "username": "27D1DAD385DC4E6DAEBC7153CF50EE88_6R7TWW99LDAMUYB8BTIKKZO6Q_DT",
+            "password": "Sq67jkog65T46mwq.hEy4O.c05sePQvxOT_Ig8p47-m5RRMiw7Y34N31iWtNUt.vyU-r1n0senHs8Y2-P1k3fEZxRLmP7jpwErfWvLaTyV_sScLvL4.FlliPd90AzKid"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
 }

@@ -42,13 +42,18 @@ module.exports = () => {
                         resolve("incorrectpassword")
                     } else {
                         if (result2[0].USERTYPE == 'admin') {
-                            let query3 = `SELECT USERNAME, USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
+                            let query3 = `SELECT USERNAME, USERTYPE, LASTLOGIN FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                             let statement3 = await db.preparePromisified(query3)
                             let result3 = await db.statementExecPromisified(statement3, [])
-                            let query4 = `SELECT "USERID", "FIRSTNAME", "LASTNAME", "EMAIL" FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" where EMAIL = '${EMAIL}'`
+                            let query4 = `SELECT "USERID", "FIRSTNAME", "LASTNAME", "EMAIL"  FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" where EMAIL = '${EMAIL}'`
                             let statement4 = await db.preparePromisified(query4)
                             let result4 = await db.statementExecPromisified(statement4, [])
+                            query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" SET LASTLOGIN = '${new Date().getTime()}' where USERNAME='${EMAIL}'`
+                            statement = await db.preparePromisified(query)
+                            result = await db.statementExecPromisified(statement, [])
+
                             result4[0].USERTYPE = result3[0].USERTYPE
+                            result4[0].LASTLOGIN = result3[0].LASTLOGIN
                             resolve(result4)
                         } else if (result2[0].USERTYPE == 'hr') {
                             query3 = `SELECT USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME='${EMAIL}'`
@@ -57,6 +62,11 @@ module.exports = () => {
                             let query4 = `SELECT "ID", "FIRSTNAME", "LASTNAME", "EMAIL", "LEVELMANAGER" FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER" where EMAIL = '${EMAIL}'`
                             let statement4 = await db.preparePromisified(query4)
                             let result4 = await db.statementExecPromisified(statement4, [])
+
+                            query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" SET LASTLOGIN = '${new Date().getTime()}' where USERNAME='${EMAIL}'`
+                            statement = await db.preparePromisified(query)
+                            result = await db.statementExecPromisified(statement, [])
+
                             result4[0].USERTYPE = result3[0].USERTYPE
 
                             resolve(result4)
@@ -127,7 +137,8 @@ module.exports = () => {
                         '${USERID}',
 	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
                         '${HASHPASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
-                        '${USERTYPE}'
+                        '${USERTYPE}',
+                        ''
                         )`
 
                                 let statement4 = await db.preparePromisified(query4)
@@ -171,7 +182,8 @@ module.exports = () => {
                         '${USERID}',
 	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
                         '${HASHPASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
-                        '${USERTYPE}'
+                        '${USERTYPE}',
+                        ''
                         )`
                             let statement4 = await db.preparePromisified(query4)
                             let result4 = await db.statementExecPromisified(statement4, [])
@@ -220,8 +232,6 @@ module.exports = () => {
                     },
                         JWT_SECRET
                     );
-
-                    console.log(token);
 
                     let res = await emailservice.sendForgetPasswordEmail({ EMAIL, FIRST_NAME_PERSONAL_INFORMATION, token });
                     if (res) {

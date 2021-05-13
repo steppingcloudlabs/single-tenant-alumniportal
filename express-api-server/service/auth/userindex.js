@@ -21,21 +21,21 @@ module.exports = () => {
 					EMAIL,
 					PASSWORD
 				} = payload;
-				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
-				const statement = await db.preparePromisified(query)
-				const result = await db.statementExecPromisified(statement, [])
+				let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
+				let statement = await db.preparePromisified(query)
+				let result = await db.statementExecPromisified(statement, [])
 				if (result.length == 0) {
 					resolve("incorrectuser")
 				} else {
-					const query2 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
+					const query2 = `SELECT PASSWORD, LASTLOGIN FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
 					const statement2 = await db.preparePromisified(query2)
 					const userSavedHashedPassword = await db.statementExecPromisified(statement2, [])
-
+					
 					const match = await bcrypt.compare(PASSWORD, userSavedHashedPassword[0].PASSWORD);
 					if (!match) {
 						resolve("incorrectpassword")
 					} else {
-						const query3 = `SELECT USERID FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" WHERE USERNAME='${EMAIL}'`
+						const query3 = `SELECT USERID, LASTLOGIN FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" WHERE USERNAME='${EMAIL}'`
 						const statement3 = await db.preparePromisified(query3)
 						const result3 = await db.statementExecPromisified(statement3, [])
 						const USERID = result3[0].USERID;
@@ -68,8 +68,13 @@ module.exports = () => {
 						const statement4 = await db.preparePromisified(query4)
 						let obj = await db.statementExecPromisified(statement4, [])
 
+						query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" SET LASTLOGIN = '${new Date().getTime()}' where USERNAME='${EMAIL}'`
+                        statement = await db.preparePromisified(query)
+                        result = await db.statementExecPromisified(statement, [])
+						console.log(result)
+						// update 
+						obj[0].LASTLOGIN = result3[0].LASTLOGIN
 						resolve(obj);
-
 					}
 				}
 			} catch (error) {
@@ -129,7 +134,8 @@ module.exports = () => {
 									'${ID}',
 									'${USERID}',
 									'${EMAIL}',
-									'${HASHPASSWORD}'
+									'${HASHPASSWORD}',
+									''
 									)`
 							const statement4 = await db.preparePromisified(query4)
 							const result4 = await db.statementExecPromisified(statement4, [])
@@ -166,6 +172,7 @@ module.exports = () => {
 							const result5 = await db.statementExecPromisified(statement5, [])
 
 							let query6 = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" SET "ISACTIVE" = 'registered' WHERE "USER_ID" = '${USERID}'`
+
 
 							const statement6 = await db.preparePromisified(query6)
 							const result6 = await db.statementExecPromisified(statement6, [])

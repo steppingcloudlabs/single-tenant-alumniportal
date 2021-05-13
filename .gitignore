@@ -46,3 +46,4 @@ cp.project.properties.json
 .vscode/launch.json
 express-api-server/service/documents/index.js
 express-api-server/reports/coverage-final.json
+.vscode/settings.json
