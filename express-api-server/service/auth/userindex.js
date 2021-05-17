@@ -256,9 +256,10 @@ module.exports = () => {
 				if (EMAIL) {
 					const query1 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
 					const statement1 = await db.preparePromisified(query1)
-					const result1 = await db.statementExecPromisified(statement1, [])
+					const userSavedHashedPassword = await db.statementExecPromisified(statement1, [])
 
-					if (result1[0].PASSWORD == OLDPASSWORD) {
+					const match = await bcrypt.compare(OLDPASSWORD, userSavedHashedPassword[0].PASSWORD);
+					if (match) {
 						// computing hash of the password.
 						const HASHPASSWORD = await bcrypt.hash(NEWPASSWORD, saltRounds);
 						const query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN"

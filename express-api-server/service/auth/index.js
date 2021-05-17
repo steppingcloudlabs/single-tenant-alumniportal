@@ -29,6 +29,7 @@ module.exports = () => {
                 let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 let statement = await db.preparePromisified(query)
                 let result = await db.statementExecPromisified(statement, [])
+                
                 if (result.length == 0) {
                     resolve("incorrectuser")
                 } else {
@@ -219,8 +220,8 @@ module.exports = () => {
                 const query1 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 const statement1 = await db.preparePromisified(query1)
                 const result1 = await db.statementExecPromisified(statement1, [])
-
-                let FIRST_NAME_PERSONAL_INFORMATION = result1[0].USERNAME
+                
+                let FIRST_NAME_PERSONAL_INFORMATION = result1[0].EMAIL
                 if (result1.length != 0) {
 
                     const token = JWT.sign({
@@ -234,6 +235,7 @@ module.exports = () => {
                         JWT_SECRET
                     );
 
+                    console.log(token)
                     let res = await emailservice.sendForgetPasswordEmail({ EMAIL, FIRST_NAME_PERSONAL_INFORMATION, token });
                     if (res) {
                         resolve("tokensent");
@@ -269,9 +271,10 @@ module.exports = () => {
                 if (EMAIL) {
                     const query1 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                     const statement1 = await db.preparePromisified(query1)
-                    const result1 = await db.statementExecPromisified(statement1, [])
+                    const userSavedHashedPassword = await db.statementExecPromisified(statement1, [])
 
-                    if (result1[0].PASSWORD == OLDPASSWORD) {
+                    const match = await bcrypt.compare(OLDPASSWORD, userSavedHashedPassword[0].PASSWORD);
+                    if (match) {
                         // computing hash of the password.
                         const HASHPASSWORD = await bcrypt.hash(NEWPASSWORD, saltRounds);
 
@@ -286,7 +289,7 @@ module.exports = () => {
                         }
                     }
                     else {
-                        resolve('Updation Failed');
+                        resolve('Updation Failed, Password Does Not Match');
                     }
                 } else {
                     const resettokenforpass = resettoken.TOKEN
@@ -305,11 +308,10 @@ module.exports = () => {
                         if (result) {
                             resolve('updated');
                         } else {
-                            resolve('Updation Failed, Please Check');
+                            reject('Updation Failed: ' + result);
                         }
                     }
                 }
-
 
             } catch (error) {
                 reject(error);
