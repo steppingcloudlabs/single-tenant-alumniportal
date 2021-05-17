@@ -56,8 +56,5 @@
 		"cluster": "node-pm server.js",
 		"coverage": "nyc --reporter=lcov --reporter=text-summary mocha"
 	},
-	"engines": {
-		"node": "12.x"
-	},
 	"version": "1.0.0"
 }
