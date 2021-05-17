@@ -110,31 +110,11 @@ app.get("/", async (req, res) => {
 app.get("/initialize", async (req, res, next) => {
   try {
     const dbClass = require("sap-hdbext-promisfied")
-    const uuid = require("uuid");
     const utils = require("./utils/database/index.js")();
     let db = new dbClass(req.db);
-    let createdat = new Date().toISOString();
-    let createdby = "admin";
-    let modifiedby = "admin";
-    let modifiedat = new Date().toISOString();
-    let USERTYPE = req.body.USERTYPE;
-    let PASSWORD = req.body.PASSWORD;
-    let USERID = uuid();
-    let EMAIL = req.body.EMAIL;
-    let ID = uuid();
     const schema = await utils.currentSchema({ db });
 
-    let query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
-	                    '${createdat}',
-	                    '${createdby}',
-	                    '${modifiedat}',
-	                    '${modifiedby}',
-                      '${ID}'/*ID <NVARCHAR(36)>*/,
-                      '${USERID}',
-	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
-                      '${PASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
-                      '${USERTYPE}'
-                        )`
+    let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN"`
 
     let statement = await db.preparePromisified(query)
     let result = await db.statementExecPromisified(statement, [])
@@ -157,28 +137,53 @@ app.post("/initialize", async (req, res, next) => {
     let createdby = "admin";
     let modifiedby = "admin";
     let modifiedat = new Date().toISOString();
+    let FIRSTNAME = req.body.FIRSTNAME;
+    let LASTNAME = req.body.LASTNAME;
     let USERTYPE = req.body.USERTYPE;
     let PASSWORD = req.body.PASSWORD;
     let USERID = uuid();
     let EMAIL = req.body.EMAIL;
     let ID = uuid();
-    const schema = await utils.currentSchema({ db });
-    const HASHPASSWORD = await bcrypt.hash(PASSWORD, saltRounds);
-    let query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
-	                    '${createdat}',
-	                    '${createdby}',
-	                    '${modifiedat}',
-	                    '${modifiedby}',
-                      '${ID}'/*ID <NVARCHAR(36)>*/,
-                      '${USERID}',
-	                    '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
-                      '${HASHPASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
-                      '${USERTYPE}'
-                        )`
+    let schema = await utils.currentSchema({ db });
 
-    let statement = await db.preparePromisified(query)
-    let result = await db.statementExecPromisified(statement, [])
-    return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
+    const query1 =
+							`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" VALUES(
+							'${createdat}',
+							'${createdby}',
+							'${modifiedat}',
+							'${modifiedby}',
+							'${ID}',	
+							'${FIRSTNAME}',
+							'${LASTNAME}',
+							'${EMAIL}',
+							'${USERTYPE}',
+							'${USERID}'
+							)`
+		const statement1 = await db.preparePromisified(query1)
+		const results1 = await db.statementExecPromisified(statement1, [])
+
+    if(results1 == 1){
+      const HASHPASSWORD = await bcrypt.hash(PASSWORD, saltRounds);
+      let query = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" VALUES(
+                        '${createdat}',
+                        '${createdby}',
+                        '${modifiedat}',
+                        '${modifiedby}',
+                        '${ID}'/*ID <NVARCHAR(36)>*/,
+                        '${USERID}',
+                        '${EMAIL}'/*USERNAME <NVARCHAR(5000)>*/,
+                        '${HASHPASSWORD}'/*PASSWORD <NVARCHAR(5000)>*/,
+                        '${USERTYPE}',
+                        ''
+                          )`
+  
+      let statement = await db.preparePromisified(query)
+      let result = await db.statementExecPromisified(statement, [])
+      return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
+    }else{
+      return res.type("application/json").status(200).send(JSON.stringify({ results: "Not able to create superadmin" }))
+    }
+    
   } catch (e) {
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
   }
@@ -200,6 +205,10 @@ app.delete("/initialize", async (req, res, next) => {
     let query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL}'`
     let statement = await db.preparePromisified(query)
     let result = await db.statementExecPromisified(statement, [])
+
+    query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" WHERE EMAIL = '${EMAIL}'`
+    statement = await db.preparePromisified(query)
+    result = await db.statementExecPromisified(statement, [])
     return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
   } catch (e) {
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)

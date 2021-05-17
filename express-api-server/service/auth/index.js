@@ -35,7 +35,7 @@ module.exports = () => {
                     let query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL}'`
                     let statement2 = await db.preparePromisified(query2)
                     let result2 = await db.statementExecPromisified(statement2, [])
-
+                    
                     const match = await bcrypt.compare(PASSWORD, result2[0].PASSWORD);
 
                     if (!match) {
@@ -45,13 +45,14 @@ module.exports = () => {
                             let query3 = `SELECT USERNAME, USERTYPE, LASTLOGIN FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                             let statement3 = await db.preparePromisified(query3)
                             let result3 = await db.statementExecPromisified(statement3, [])
+                            
                             let query4 = `SELECT "USERID", "FIRSTNAME", "LASTNAME", "EMAIL"  FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" where EMAIL = '${EMAIL}'`
                             let statement4 = await db.preparePromisified(query4)
                             let result4 = await db.statementExecPromisified(statement4, [])
                             query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" SET LASTLOGIN = '${new Date().getTime()}' where USERNAME='${EMAIL}'`
                             statement = await db.preparePromisified(query)
                             result = await db.statementExecPromisified(statement, [])
-
+                            
                             result4[0].USERTYPE = result3[0].USERTYPE
                             result4[0].LASTLOGIN = result3[0].LASTLOGIN
                             resolve(result4)
