@@ -99,7 +99,7 @@ module.exports = () => {
 
                 let endpoint = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
                 endpoint = endpoint.replace('-srv', "");
-                console.log(endpoint)
+                
                 let paramsTemplate = {
                     Source: 'daraksha@steppingcloud.com',
                     Template: 'WelcomeMail',
@@ -163,7 +163,7 @@ module.exports = () => {
 
                 let endpoint = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
                 endpoint = endpoint.replace('-srv', "");
-                console.log(EMAIL)
+                
                 let paramsTemplate = {
                     Source: 'daraksha@steppingcloud.com',
                     Template: 'WelcomeMail',
@@ -226,7 +226,6 @@ module.exports = () => {
 
                 let endpoint = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
                 endpoint = endpoint.replace('-srv', "");
-                console.log(endpoint)
                 let paramsTemplate = {
                     Source: 'daraksha@steppingcloud.com',
                     Template: 'WelcomeAdminMail',
@@ -237,7 +236,7 @@ module.exports = () => {
                 };
 
 
-                console.log(paramsTemplate)
+                
                 // let sendPromise = new AWS.SES(SES_CONFIG).sendEmail(params).promise();
                 sendPromise = new AWS.SES(SES_CONFIG).sendTemplatedEmail(paramsTemplate).promise();
                 resolve(sendPromise);

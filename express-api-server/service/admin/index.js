@@ -79,19 +79,20 @@ module.exports = () => {
 								length: 10,
 								numbers: true
 							});
-							let payload = {
+							let payloadsignup = {
 								"EMAIL": email,
 								"PASSWORD": password,
 								"USERID": userid,
 								"USERTYPE": usertype
 							}
-							let res = await authservice.signup({ payload, db });
+							let res = await authservice.signup({ payload: payloadsignup, db });
 							if(res == 1) {
 								emailresults = await emailservice.sendEmailAdmin({email, firstname, password})
 								console.log(emailresults)
 							}
 							console.log("Username is: " + email + "password is: " + password);
-							resolve(res);
+							payload.payload.ID = ID;
+							resolve(payload.payload);
 							
 						} else {
 							reject(results1)
