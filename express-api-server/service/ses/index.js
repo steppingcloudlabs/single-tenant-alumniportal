@@ -184,10 +184,77 @@ module.exports = () => {
         });
     }
 
+    const sendEmailAdmin = async ({ email, firstname, password ,URL }) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const SES_CONFIG = {
+                    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                    region: 'us-east-2'
+                };
+                let params = {
+                    Destination: { /* required */
+                        CcAddresses: [
+
+                        ],
+                        ToAddresses: [
+                            email,
+                            /* more items */
+                        ]
+                    },
+                    Message: { /* required */
+                        Body: { /* required */
+                            Html: {
+                                Charset: "UTF-8",
+                                Data: "HTML_FORMAT_BODY"
+                            },
+                            Text: {
+                                Charset: "UTF-8",
+                                Data: "TEXT_FORMAT_BODY"
+                            }
+                        },
+                        Subject: {
+                            Charset: 'UTF-8',
+                            Data: 'Test email'
+                        }
+                    },
+                    Source: 'daraksha@steppingcloud.com', /* required */
+                    ReplyToAddresses: [
+
+                    ],
+                };
+
+                let endpoint = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
+                endpoint = endpoint.replace('-srv', "");
+                console.log(endpoint)
+                let paramsTemplate = {
+                    Source: 'daraksha@steppingcloud.com',
+                    Template: 'WelcomeAdminMail',
+                    Destination: {
+                        ToAddresses: [email]
+                    },
+                    TemplateData: JSON.stringify({ name: firstname, username: email, password: password, link: 'https://' + endpoint + '/index.html#/login' })
+                };
+
+
+                console.log(paramsTemplate)
+                // let sendPromise = new AWS.SES(SES_CONFIG).sendEmail(params).promise();
+                sendPromise = new AWS.SES(SES_CONFIG).sendTemplatedEmail(paramsTemplate).promise();
+                resolve(sendPromise);
+
+            } catch (error) {
+                reject(error);
+            }
+        });
+    }
+
+
+
     return {
         handleResponse,
         handleSnsNotification,
         sendEmail,
-        sendForgetPasswordEmail
+        sendForgetPasswordEmail,
+        sendEmailAdmin
     }
 }

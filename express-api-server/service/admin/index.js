@@ -2,6 +2,7 @@ const uuid = require("uuid");
 const generator = require('generate-password');
 const utils = require("../../utils/database/index.js")();
 const authservice = require("../auth/index")();
+const emailservice = require("../ses/index")();
 module.exports = () => {
 	const getuser = ({
 		payload,
@@ -85,9 +86,13 @@ module.exports = () => {
 								"USERTYPE": usertype
 							}
 							let res = await authservice.signup({ payload, db });
+							if(res == 1) {
+								emailresults = await emailservice.sendEmailAdmin({email, firstname, password})
+								console.log(emailresults)
+							}
 							console.log("Username is: " + email + "password is: " + password);
 							resolve(res);
-							// resolve(results1)
+							
 						} else {
 							reject(results1)
 						}
