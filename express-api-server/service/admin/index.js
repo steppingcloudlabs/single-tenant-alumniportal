@@ -119,23 +119,29 @@ module.exports = () => {
 				let query = `SELECT EMAIL FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" WHERE ID = '${payload.payload.ID}'`
 				let statement = await db.preparePromisified(query);
 				let EMAIL = await db.statementExecPromisified(statement, [])
+				if(EMAIL.length == 0) {resolve("Admin does't exists")}
+				//lete its login credentials as well.
 
+				query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL[0].EMAIL}'`
+				statement = await db.preparePromisified(query);
+				result = await db.statementExecPromisified(statement, [])
+				console.log(result)
+				
+				// delete from askhr 
+				query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE EMAIL = '${EMAIL[0].EMAIL}'`
+				statement = await db.preparePromisified(query);
+				results = await db.statementExecPromisified(statement, [])
+
+				// delete admin profile
 				query =
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" WHERE ID = '${payload.payload.ID}'`
 				statement = await db.preparePromisified(query);
 				results = await db.statementExecPromisified(statement, [])
 
-				if (results == 1){
-					query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL}'`
-					statement = await db.preparePromisified(query);
-					result = await db.statementExecPromisified(statement, [])
-					resolve(result)
-				}else{
-					resolve(results);
-				}
+				resolve(results)
 				
 			} catch (error) {
-				req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/deleteuser ${error}`);
+				// req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/deleteuser ${error}`);
 				reject(error);
 			}
 		});
@@ -147,8 +153,7 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query =
-					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"'`
+				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
