@@ -29,13 +29,14 @@ module.exports = () => {
                 let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 let statement = await db.preparePromisified(query)
                 let result = await db.statementExecPromisified(statement, [])
+                
                 if (result.length == 0) {
                     resolve("incorrectuser")
                 } else {
                     let query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL}'`
                     let statement2 = await db.preparePromisified(query2)
                     let result2 = await db.statementExecPromisified(statement2, [])
-
+                    
                     const match = await bcrypt.compare(PASSWORD, result2[0].PASSWORD);
 
                     if (!match) {
@@ -45,13 +46,14 @@ module.exports = () => {
                             let query3 = `SELECT USERNAME, USERTYPE, LASTLOGIN FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                             let statement3 = await db.preparePromisified(query3)
                             let result3 = await db.statementExecPromisified(statement3, [])
+                            
                             let query4 = `SELECT "USERID", "FIRSTNAME", "LASTNAME", "EMAIL"  FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" where EMAIL = '${EMAIL}'`
                             let statement4 = await db.preparePromisified(query4)
                             let result4 = await db.statementExecPromisified(statement4, [])
                             query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" SET LASTLOGIN = '${new Date().getTime()}' where USERNAME='${EMAIL}'`
                             statement = await db.preparePromisified(query)
                             result = await db.statementExecPromisified(statement, [])
-
+                            
                             result4[0].USERTYPE = result3[0].USERTYPE
                             result4[0].LASTLOGIN = result3[0].LASTLOGIN
                             resolve(result4)
@@ -218,8 +220,8 @@ module.exports = () => {
                 const query1 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 const statement1 = await db.preparePromisified(query1)
                 const result1 = await db.statementExecPromisified(statement1, [])
-
-                let FIRST_NAME_PERSONAL_INFORMATION = result1[0].USERNAME
+                
+                let FIRST_NAME_PERSONAL_INFORMATION = result1[0].EMAIL
                 if (result1.length != 0) {
 
                     const token = JWT.sign({
@@ -233,6 +235,7 @@ module.exports = () => {
                         JWT_SECRET
                     );
 
+                    console.log(token)
                     let res = await emailservice.sendForgetPasswordEmail({ EMAIL, FIRST_NAME_PERSONAL_INFORMATION, token });
                     if (res) {
                         resolve("tokensent");
@@ -268,9 +271,10 @@ module.exports = () => {
                 if (EMAIL) {
                     const query1 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                     const statement1 = await db.preparePromisified(query1)
-                    const result1 = await db.statementExecPromisified(statement1, [])
+                    const userSavedHashedPassword = await db.statementExecPromisified(statement1, [])
 
-                    if (result1[0].PASSWORD == OLDPASSWORD) {
+                    const match = await bcrypt.compare(OLDPASSWORD, userSavedHashedPassword[0].PASSWORD);
+                    if (match) {
                         // computing hash of the password.
                         const HASHPASSWORD = await bcrypt.hash(NEWPASSWORD, saltRounds);
 
@@ -285,7 +289,7 @@ module.exports = () => {
                         }
                     }
                     else {
-                        resolve('Updation Failed');
+                        resolve('Updation Failed, Password Does Not Match');
                     }
                 } else {
                     const resettokenforpass = resettoken.TOKEN
@@ -304,11 +308,10 @@ module.exports = () => {
                         if (result) {
                             resolve('updated');
                         } else {
-                            resolve('Updation Failed, Please Check');
+                            reject('Updation Failed: ' + result);
                         }
                     }
                 }
-
 
             } catch (error) {
                 reject(error);

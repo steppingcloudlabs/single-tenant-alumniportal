@@ -53,10 +53,10 @@ process.on("message", (message) => {
                 const data = await entry.buffer();
                 let base64 = data.toString('base64');
 
-                // let userid = fileName.split('_')[0]
-                // let document = fileName.split('_')[1]
-                let userid = "76545678"
-                let document = "form16"
+                let userid = fileName.split('_')[0]
+                let document = fileName.split('_')[1]
+                // let userid = userid
+                // let document = document
                 let payload = {
                     "payload": {
                         "FILE": "data:application/pdf;base64," + base64,
@@ -87,8 +87,9 @@ process.on("message", (message) => {
     })().catch((error) => {
         console.log(error);
     }).finally(() => {
+        console.log("process exiting")
         process.exit();
-        console.log("process exited")
+        
     });
 });
 

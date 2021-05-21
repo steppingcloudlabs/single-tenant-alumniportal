@@ -142,8 +142,8 @@ module.exports = () => {
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
 				let country = (payload.COUNTRY == "null" || payload.COUNTRY == undefined) ? "" : payload.COUNTRY
-				let searchquery = (payload.QUERY == "null" || payload.QUERY == undefined) ? "" : payload.QUERY
-				searchquery = escape(searchquery) + " " + escape(country)
+				let query = (payload.QUERY == "null" || payload.QUERY == undefined) ? "" : payload.QUERY
+				searchquery = escape(query) + " " + escape(country)
 
 				if (searchquery == " ") {
 					let results = await jobService.getjob({
@@ -151,10 +151,44 @@ module.exports = () => {
 						db
 					});
 					resolve(results);
-				} else {
+				} else if (country.length != 0 && query.length != 0){
 					const query =
-						`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE BOARDID = '_external' AND CONTAINS((jobTitle, location, country, jobDescription), '${searchquery}', FUZZY(0.6))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
-					console.log(query)
+					`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE BOARDID = '_external' AND CONTAINS((jobTitle, location, country, jobDescription), '${searchquery}', FUZZY(0.6))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
+				
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
+					for (var i = 0; i < results.length; i++) {
+						try {
+							// results[i].CONTENT = unescape(results[i].CONTENT).replace("\n", "\n")
+							// results[i].TITLE = unescape(results[i].TITLE).replace("\n", "\n")
+							results[i] = JSON.parse(unescape(JSON.stringify(results[i])))
+						} catch (error) {
+							console.log(error);
+						}
+
+					}
+					resolve(results);
+				} else if (country.length != 0) {
+					const query =
+					`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE BOARDID = '_external' AND CONTAINS((location, country), '${searchquery}', FUZZY(0.6))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
+				
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
+					for (var i = 0; i < results.length; i++) {
+						try {
+							// results[i].CONTENT = unescape(results[i].CONTENT).replace("\n", "\n")
+							// results[i].TITLE = unescape(results[i].TITLE).replace("\n", "\n")
+							results[i] = JSON.parse(unescape(JSON.stringify(results[i])))
+						} catch (error) {
+							console.log(error);
+						}
+
+					}
+					resolve(results);
+				}else{
+					const query =
+					`SELECT "ID", "COUNTRY", "DEPARTMENT", "JOBDESCRIPTION", "JOBPOSTINGID", "JOBREQID", "JOBTITLE", "LOCATION", "POSTINGSTATUS", "POSTINGSTARTDATE", "POSTINGENDDATE" FROM "${schema}". "SCLABS_ALUMNIPORTAL_JOB_JOB" WHERE BOARDID = '_external' AND CONTAINS((jobTitle, jobDescription), '${searchquery}', FUZZY(0.6))  ORDER BY POSTINGSTARTDATE DESC LIMIT ${LIMIT} offset ${offset}`
+				
 					const statement = await db.preparePromisified(query)
 					const results = await db.statementExecPromisified(statement, [])
 					for (var i = 0; i < results.length; i++) {

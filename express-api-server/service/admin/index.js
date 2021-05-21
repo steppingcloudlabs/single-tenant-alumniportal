@@ -2,6 +2,7 @@ const uuid = require("uuid");
 const generator = require('generate-password');
 const utils = require("../../utils/database/index.js")();
 const authservice = require("../auth/index")();
+const emailservice = require("../ses/index")();
 module.exports = () => {
 	const getuser = ({
 		payload,
@@ -74,20 +75,25 @@ module.exports = () => {
 
 						if (results1 == 1) {
 							// mocking signup step by create a random password for admin user which he will reset on his end. 
-							// let password = generator.generate({
-							// 	length: 10,
-							// 	numbers: true
-							// });
-							// let payload = {
-							// 	"EMAIL": email,
-							// 	"PASSWORD": password,
-							// 	"USERID": userid,
-							// 	"USERTYPE": usertype
-							// }
-							// let res = await authservice.signup({ payload, db });
-							// console.log("Username is: " + email + "password is: " + password);
-							// resolve(res);
-							resolve(results1)
+							let password = generator.generate({
+								length: 10,
+								numbers: true
+							});
+							let payloadsignup = {
+								"EMAIL": email,
+								"PASSWORD": password,
+								"USERID": userid,
+								"USERTYPE": usertype
+							}
+							let res = await authservice.signup({ payload: payloadsignup, db });
+							if(res == 1) {
+								emailresults = await emailservice.sendEmailAdmin({email, firstname, password})
+								console.log(emailresults)
+							}
+							console.log("Username is: " + email + "password is: " + password);
+							payload.payload.ID = ID;
+							resolve(payload.payload);
+							
 						} else {
 							reject(results1)
 						}
@@ -114,13 +120,34 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query =
+
+				// get Email
+				let query = `SELECT EMAIL FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" WHERE ID = '${payload.payload.ID}'`
+				let statement = await db.preparePromisified(query);
+				let EMAIL = await db.statementExecPromisified(statement, [])
+				if(EMAIL.length == 0) {resolve("Admin does't exists")}
+				//lete its login credentials as well.
+
+				query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL[0].EMAIL}'`
+				statement = await db.preparePromisified(query);
+				result = await db.statementExecPromisified(statement, [])
+				console.log(result)
+				
+				// delete from askhr 
+				query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_MANAGER_MANAGER"  WHERE EMAIL = '${EMAIL[0].EMAIL}'`
+				statement = await db.preparePromisified(query);
+				results = await db.statementExecPromisified(statement, [])
+
+				// delete admin profile
+				query =
 					`DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" WHERE ID = '${payload.payload.ID}'`
-				const statement = await db.preparePromisified(query);
-				const results = await db.statementExecPromisified(statement, [])
-				resolve(results);
+				statement = await db.preparePromisified(query);
+				results = await db.statementExecPromisified(statement, [])
+
+				resolve(results)
+				
 			} catch (error) {
-				req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/deleteuser ${error}`);
+				// req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/deleteuser ${error}`);
 				reject(error);
 			}
 		});
@@ -132,8 +159,7 @@ module.exports = () => {
 				const schema = await utils.currentSchema({
 					db
 				})
-				const query =
-					`SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"'`
+				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"`
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);
