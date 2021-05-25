@@ -9,9 +9,39 @@ module.exports = () => {
                 });
                 let query = `SELECT "ISACTIVE" as STATUS , COUNT(ISACTIVE) as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" GROUP BY ISACTIVE`
                 let statement = await db.preparePromisified(query);
-
                 let result = await db.statementExecPromisified(statement);
-                resolve(result);
+
+                if(result[0].STATUS == "unregistered"){
+                    let response = [
+                        {
+                            "STATUS": result[0].STATUS,
+                            "COUNT": result[0].COUNT,
+                        },
+                        {
+                            "STATUS": result[1].STATUS,
+                            "COUNT": result[1].COUNT,
+                        },
+                    
+                    ];
+
+                    resolve(response);
+                }else{
+                    let response = [
+                        {
+                            "STATUS": "unregistered",
+                            "COUNT": 0,
+                        },
+                        {
+                            "STATUS": result[0].STATUS,
+                            "COUNT": result[0].COUNT,
+                        },
+                    
+                    ];
+                    resolve(response)
+                }
+
+                
+                
             } catch (error) {
                 reject(error);
             }

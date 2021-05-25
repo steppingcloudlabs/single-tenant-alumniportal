@@ -166,7 +166,7 @@ module.exports = () => {
                 
                 let paramsTemplate = {
                     Source: 'daraksha@steppingcloud.com',
-                    Template: 'WelcomeMail',
+                    Template: 'ResetPassword',
                     Destination: {
                         ToAddresses: [EMAIL]
                     },
