@@ -64,9 +64,10 @@ module.exports = () => {
                 const schema = await utils.currentSchema({
                     db
                 });
-                let startdate = payload.startdate
-                let enddate   = payload.enddate;
-                let query = `SELECT count("LOGINCOUNT") as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT >= '${startdate}' and CREATEDAT <= '${enddate}' and LOGINCOUNT = 1`
+                let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
+                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let query = `SELECT count("LOGINCOUNT") as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and LOGINCOUNT = '1'`
+                
                 let statement = await db.preparePromisified(query);
                 let result = await db.statementExecPromisified(statement);
                 resolve(result)
@@ -78,32 +79,97 @@ module.exports = () => {
 
     const signupcount = ({payload, db}) =>{
         return new Promise(async(resolve, reject) =>{
-            
+            try {
+                const schema = await utils.currentSchema({
+                    db
+                });
+                let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
+                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let query = `SELECT count("SIGNUPCOUNT") as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and SIGNUPCOUNT = '1'`
+                let statement = await db.preparePromisified(query);
+                let result = await db.statementExecPromisified(statement);
+                resolve(result)
+            } catch (error) {
+                reject(error)
+            }
         })
     } 
     const documentdownloadcount = ({payload, db}) =>{
         return new Promise(async(resolve, reject) =>{
-            
+            try {
+                const schema = await utils.currentSchema({
+                    db
+                });
+                let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
+                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let query = `SELECT count("DOCUMENTDOWNLOADCOUNT") as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and DOCUMENTDOWNLOADCOUNT = '1'`
+                let statement = await db.preparePromisified(query);
+                let result = await db.statementExecPromisified(statement);
+                resolve(result)
+            } catch (error) {
+                reject(error)
+            }
         })
     } 
     const documentuploadcount = ({payload, db}) =>{
         return new Promise(async(resolve, reject) =>{
-            
+            try {
+                const schema = await utils.currentSchema({
+                    db
+                });
+                let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
+                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let query = `SELECT count("DOCUMENTUPLOADCOUNT") as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and DOCUMENTUPLOADCOUNT = '1'`
+                let statement = await db.preparePromisified(query);
+                let result = await db.statementExecPromisified(statement);
+                resolve(result)
+            } catch (error) {
+                reject(error)
+            }
         })
     } 
     const ticketopencount = ({payload, db}) =>{
         return new Promise(async(resolve, reject) =>{
-            
+            try {
+                const schema = await utils.currentSchema({
+                    db
+                });
+                let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
+                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let query = `SELECT count("TICKETOPENCOUNT") as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and TICKETOPENCOUNT = '1'`
+                let statement = await db.preparePromisified(query);
+                let result = await db.statementExecPromisified(statement);
+                resolve(result)
+            } catch (error) {
+                reject(error)
+            }
         })
     } 
-    const ticketclosedcout = ({payload, db}) =>{
+    const ticketclosecount = ({payload, db}) =>{
         return new Promise(async(resolve, reject) =>{
-            
+            try {
+                const schema = await utils.currentSchema({
+                    db
+                });
+                let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
+                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let query = `SELECT count("TICKETCLOSEDCOUT") as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and TICKETCLOSEDCOUT = '1'`
+                let statement = await db.preparePromisified(query);
+                let result = await db.statementExecPromisified(statement);
+                resolve(result)
+            } catch (error) {
+                reject(error)
+            }
         })
     } 
     return {
         getActiveUserStats,
         getRegisteredUsers,
-        logincount
+        logincount,
+        signupcount,
+        documentdownloadcount,
+        documentuploadcount,
+        ticketopencount,
+        ticketclosecount
     }
 }

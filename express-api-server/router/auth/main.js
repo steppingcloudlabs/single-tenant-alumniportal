@@ -13,7 +13,7 @@ expressrouter
     .post( (req, res, next) =>{logincount(req, res, next)}, (req, res, next) => authcontroller.login(req, res, next));
 expressrouter
     .route("/signup")
-    .post((req, res, next) => authcontroller.signup(req, res, next));
+    .post((req, res, next) =>{signupcount(req, res, next)}, (req, res, next) => authcontroller.signup(req, res, next));
 expressrouter
     .route("/forgetpassword")
     .post((req, res, next) => authcontroller.forgetpassword(req, res, next));
