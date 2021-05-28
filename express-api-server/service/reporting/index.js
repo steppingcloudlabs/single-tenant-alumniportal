@@ -58,8 +58,52 @@ module.exports = () => {
         })
     }
 
+    const logincount = ({payload, db}) =>{
+        return new Promise(async(resolve, reject) =>{
+            try {
+                const schema = await utils.currentSchema({
+                    db
+                });
+                let startdate = payload.startdate
+                let enddate   = payload.enddate;
+                let query = `SELECT count("LOGINCOUNT") as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT >= '${startdate}' and CREATEDAT <= '${enddate}' and LOGINCOUNT = 1`
+                let statement = await db.preparePromisified(query);
+                let result = await db.statementExecPromisified(statement);
+                resolve(result)
+            } catch (error) {
+                reject(error)
+            }
+        })
+    } 
+
+    const signupcount = ({payload, db}) =>{
+        return new Promise(async(resolve, reject) =>{
+            
+        })
+    } 
+    const documentdownloadcount = ({payload, db}) =>{
+        return new Promise(async(resolve, reject) =>{
+            
+        })
+    } 
+    const documentuploadcount = ({payload, db}) =>{
+        return new Promise(async(resolve, reject) =>{
+            
+        })
+    } 
+    const ticketopencount = ({payload, db}) =>{
+        return new Promise(async(resolve, reject) =>{
+            
+        })
+    } 
+    const ticketclosedcout = ({payload, db}) =>{
+        return new Promise(async(resolve, reject) =>{
+            
+        })
+    } 
     return {
         getActiveUserStats,
-        getRegisteredUsers
+        getRegisteredUsers,
+        logincount
     }
 }

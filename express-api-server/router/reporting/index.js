@@ -6,6 +6,6 @@ expressrouter
     .route("/user/registered")
     .get((req, res, next) => controller.getRegisteredUsers(req, res, next));
 expressrouter
-    .route("/user/active")
-    .get((req, res, next) => controller.getActiveUserStats(req, res, next));
+    .route("/logincount")
+    .get((req, res, next) => controller.logincount(req, res, next));
 module.exports = expressrouter;
