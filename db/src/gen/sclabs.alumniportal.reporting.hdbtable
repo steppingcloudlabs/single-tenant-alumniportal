@@ -1,0 +1,11 @@
+COLUMN TABLE sclabs_alumniportal_reporting (
+  createdAt NVARCHAR(100),
+  ID NVARCHAR(36) NOT NULL,
+  logincount NVARCHAR(5000) NOT NULL,
+  signupcount NVARCHAR(5000) NOT NULL,
+  documentdownloadcount NVARCHAR(5000) NOT NULL,
+  documentuploadcount NVARCHAR(5000) NOT NULL,
+  ticketopencount NVARCHAR(5000),
+  ticketclosedcout NVARCHAR(5000) NOT NULL,
+  PRIMARY KEY(ID)
+)
