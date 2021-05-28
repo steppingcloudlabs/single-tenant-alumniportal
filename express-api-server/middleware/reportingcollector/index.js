@@ -117,7 +117,7 @@ module.exports = () => {
 					'0'/*LOGINCOUNT <NVARCHAR(5000)>*/,
 					'0'/*SIGNUPCOUNT <NVARCHAR(5000)>*/,
 					'0'/*DOCUMENTDOWNLOADCOUNT <NVARCHAR(5000)>*/,
-					'${documentdownloadcount}'/*DOCUMENTUPLOADCOUNT <NVARCHAR(5000)>*/,
+					'${documentuploadcount}'/*DOCUMENTUPLOADCOUNT <NVARCHAR(5000)>*/,
 					'0'/*TICKETOPENCOUNT <NVARCHAR(5000)>*/,
 					'0'/*TICKETCLOSEDCOUT <NVARCHAR(5000)>*/
 				)`

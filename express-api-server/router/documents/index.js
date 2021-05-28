@@ -1,5 +1,6 @@
 const expressrouter = require("express").Router();
 const documentcontroller = require("../../controller/documents/index");
+const {documentuploadcount} = require("../../middleware/reportingcollector/index")();
 
 //document routers
 expressrouter
@@ -7,7 +8,7 @@ expressrouter
 	.get((req, res, next) => documentcontroller.getdocuments(req, res, next));
 expressrouter
 	.route("/documents/create")
-	.post((req, res, next) => documentcontroller.createdocuments(req, res, next));
+	.post((req, res, next) =>{documentuploadcount(req, res, next)}, (req, res, next) => documentcontroller.createdocuments(req, res, next));
 expressrouter
 	.route("/documents/update")
 	.post((req, res, next) => documentcontroller.updatedocuments(req, res, next));
