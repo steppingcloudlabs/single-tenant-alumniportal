@@ -3,6 +3,7 @@ const dbClass = require("sap-hdbext-promisfied");
 const uuid = require("uuid");
 module.exports = () => {
 	function logincount(req, res, next) {
+	
 		return new Promise(async(resolve, reject) =>{
             try {
 				let db = new dbClass(req.db);
@@ -26,6 +27,7 @@ module.exports = () => {
 				)`
                 let statement = await db.preparePromisified(query);
                 let result = await db.statementExecPromisified(statement);
+				
 				next()
             } catch (error) {
 				console.log(error)

@@ -65,7 +65,7 @@ module.exports = () => {
                     db
                 });
                 let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
-                // let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
                 let yearly = startdate - 356 * 24 * 60 * 60 * 1000;
                 let monthly = startdate - 30 * 24 * 60 * 60 * 1000;
                 let weekly = startdate - 7 * 24 * 60 * 60 * 1000;
@@ -73,19 +73,50 @@ module.exports = () => {
                 console.log(new Date(startdate).getTime(), new Date(yearly).getTime())
 
                 // let query = `SELECT count("LOGINCOUNT") as YEARCOUNT as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and LOGINCOUNT = '1'`
+                //----------------------------------------------------- WEEKLY query-----------------------------------------
                 let query = 
                 `
-                SELECT YEARCOUNT, MONTHCOUNT, WEEKCOUNT FROM  
-
-                (SELECT COUNT("LOGINCOUNT") as YEARCOUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${yearly}' and LOGINCOUNT = '1') as YEARCOUNT,
-	            (SELECT COUNT("LOGINCOUNT") as MONTHCOUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${monthly}' and LOGINCOUNT = '1') as MONTHCOUNT,
-	            (SELECT COUNT("LOGINCOUNT") as WEEKCOUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${weekly}' and LOGINCOUNT = '1') as WEEKCOUNT
-	
-                
+                SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
+                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND LOGINCOUNT = '1' 
+                GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 let statement = await db.preparePromisified(query);
-                let result = await db.statementExecPromisified(statement);
-                resolve(result)
+                let weeklyresult = await db.statementExecPromisified(statement);
+                
+                // ---------------------------------------------------Monthly Count ------------------------------------------
+                query = 
+                `
+                SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
+                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND LOGINCOUNT = '1' 
+                GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
+                `
+                statement = await db.preparePromisified(query);
+                let monthlyresult = await db.statementExecPromisified(statement);
+
+
+                // ---------------------------------------------------Yearly Count ------------------------------------------
+                query = 
+                `
+                SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
+                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND LOGINCOUNT = '1' 
+                GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
+                `
+                statement = await db.preparePromisified(query);
+                let yearlyresult = await db.statementExecPromisified(statement);
+
+                let response = [{
+                    "WEEKCOUNT" : weeklyresult,
+                    "MONTHCOUNT": monthlyresult,
+                    "YEARLYCOUNT": yearlyresult
+                }]
+                
+                resolve(response)
             } catch (error) {
                 reject(error)
             }
@@ -106,13 +137,11 @@ module.exports = () => {
                 // let query = `SELECT count("SIGNUPCOUNT") as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and SIGNUPCOUNT = '1'`
                 let query = 
                 `
-                SELECT YEARCOUNT, MONTHCOUNT, WEEKCOUNT FROM  
-
-                (SELECT COUNT("SIGNUPCOUNT") as YEARCOUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${yearly}' and SIGNUPCOUNT = '1') as YEARCOUNT,
-	            (SELECT COUNT("SIGNUPCOUNT") as MONTHCOUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${monthly}' and SIGNUPCOUNT = '1') as MONTHCOUNT,
-	            (SELECT COUNT("SIGNUPCOUNT") as WEEKCOUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${weekly}' and SIGNUPCOUNT = '1') as WEEKCOUNT
-	
-                
+                SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
+                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND SIGNUPCOUNT = '1' 
+                GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 let statement = await db.preparePromisified(query);
                 let result = await db.statementExecPromisified(statement);
