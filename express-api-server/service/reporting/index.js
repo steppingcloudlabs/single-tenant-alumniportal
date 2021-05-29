@@ -77,7 +77,7 @@ module.exports = () => {
                 let query = 
                 `
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
-                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND LOGINCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -89,7 +89,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
-                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND LOGINCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -102,7 +102,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
-                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND LOGINCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -137,7 +137,7 @@ module.exports = () => {
                 let query = 
                 `
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
-                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND SIGNUPCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -149,7 +149,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
-                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND SIGNUPCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -162,7 +162,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
-                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND SIGNUPCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -196,7 +196,7 @@ module.exports = () => {
                 let query = 
                 `
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
-                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTDOWNLOADCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -208,7 +208,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
-                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTDOWNLOADCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -221,7 +221,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
-                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTDOWNLOADCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -255,7 +255,7 @@ module.exports = () => {
                 let query = 
                 `
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
-                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTUPLOADCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -267,7 +267,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
-                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTUPLOADCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -280,7 +280,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
-                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTUPLOADCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -314,7 +314,7 @@ module.exports = () => {
                 let query = 
                 `
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
-                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETOPENCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -326,7 +326,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
-                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETOPENCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -339,7 +339,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
-                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETOPENCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -373,7 +373,7 @@ module.exports = () => {
                 let query = 
                 `
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
-                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETCLOSEDCOUT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -385,7 +385,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
-                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETCLOSEDCOUT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
@@ -398,7 +398,7 @@ module.exports = () => {
                 query = 
                 `
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
-                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as COUNTDAY
+                COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
                 WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETCLOSEDCOUT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
