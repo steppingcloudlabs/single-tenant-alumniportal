@@ -154,6 +154,7 @@ module.exports = () => {
 					'${ticketopencount}'/*TICKETOPENCOUNT <NVARCHAR(5000)>*/,
 					'0'/*TICKETCLOSEDCOUT <NVARCHAR(5000)>*/
 				)`
+				console.log(query)
                 let statement = await db.preparePromisified(query);
                 let result = await db.statementExecPromisified(statement);
 				next()
@@ -185,6 +186,7 @@ module.exports = () => {
 					'0'/*TICKETOPENCOUNT <NVARCHAR(5000)>*/,
 					'${ticketclosecount}'/*TICKETCLOSEDCOUT <NVARCHAR(5000)>*/
 				)`
+				console.log(query)
                 let statement = await db.preparePromisified(query);
                 let result = await db.statementExecPromisified(statement);
 				next()

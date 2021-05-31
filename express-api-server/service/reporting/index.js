@@ -65,10 +65,10 @@ module.exports = () => {
                     db
                 });
                 let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
-                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
-                // let yearly = startdate - 356 * 24 * 60 * 60 * 1000;
-                // let monthly = startdate - 30 * 24 * 60 * 60 * 1000;
-                // let weekly = startdate - 7 * 24 * 60 * 60 * 1000;
+                // let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  new Date('1/1/'+new Date().getFullYear()).getTime() : payload.enddate;
+                let yearly = 0;
+                let monthly = new Date('1/1/'+new Date().getFullYear()).getTime();
+                let weekly = startdate - 7 * 24 * 60 * 60 * 1000;
                 // console.log(yearly)
                 // console.log(new Date(startdate).getTime(), new Date(yearly).getTime())
 
@@ -79,7 +79,7 @@ module.exports = () => {
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
                 COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND LOGINCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${weekly}' AND LOGINCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 let statement = await db.preparePromisified(query);
@@ -91,7 +91,7 @@ module.exports = () => {
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
                 COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND LOGINCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${monthly}' AND LOGINCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -104,7 +104,7 @@ module.exports = () => {
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
                 COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND LOGINCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${yearly}' AND LOGINCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -130,8 +130,11 @@ module.exports = () => {
                     db
                 });
                 let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
-                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                // let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
 
+                let yearly = 0;
+                let monthly = new Date('1/1/'+new Date().getFullYear()).getTime();
+                let weekly = startdate - 7 * 24 * 60 * 60 * 1000;
                 // let query = `SELECT count("LOGINCOUNT") as YEARCOUNT as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and LOGINCOUNT = '1'`
                 //----------------------------------------------------- WEEKLY query-----------------------------------------
                 let query = 
@@ -139,7 +142,7 @@ module.exports = () => {
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
                 COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND SIGNUPCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${weekly}' AND SIGNUPCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 let statement = await db.preparePromisified(query);
@@ -151,7 +154,7 @@ module.exports = () => {
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
                 COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND SIGNUPCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${monthly}' AND SIGNUPCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -164,7 +167,7 @@ module.exports = () => {
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
                 COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND SIGNUPCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${yearly}' AND SIGNUPCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -189,8 +192,10 @@ module.exports = () => {
                     db
                 });
                 let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
-                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
-
+                // let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let yearly = 0;
+                let monthly = new Date('1/1/'+new Date().getFullYear()).getTime();
+                let weekly = startdate - 7 * 24 * 60 * 60 * 1000;
                 // let query = `SELECT count("LOGINCOUNT") as YEARCOUNT as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and LOGINCOUNT = '1'`
                 //----------------------------------------------------- WEEKLY query-----------------------------------------
                 let query = 
@@ -198,7 +203,7 @@ module.exports = () => {
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
                 COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTDOWNLOADCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${weekly}' AND DOCUMENTDOWNLOADCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 let statement = await db.preparePromisified(query);
@@ -210,7 +215,7 @@ module.exports = () => {
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
                 COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTDOWNLOADCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${monthly}' AND DOCUMENTDOWNLOADCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -223,7 +228,7 @@ module.exports = () => {
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
                 COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTDOWNLOADCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${yearly}' AND DOCUMENTDOWNLOADCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -248,8 +253,10 @@ module.exports = () => {
                     db
                 });
                 let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
-                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
-
+                // let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let yearly = 0;
+                let monthly = new Date('1/1/'+new Date().getFullYear()).getTime();
+                let weekly = startdate - 7 * 24 * 60 * 60 * 1000;
                 // let query = `SELECT count("LOGINCOUNT") as YEARCOUNT as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and LOGINCOUNT = '1'`
                 //----------------------------------------------------- WEEKLY query-----------------------------------------
                 let query = 
@@ -257,7 +264,7 @@ module.exports = () => {
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
                 COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTUPLOADCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${weekly}' AND DOCUMENTUPLOADCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 let statement = await db.preparePromisified(query);
@@ -269,7 +276,7 @@ module.exports = () => {
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
                 COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTUPLOADCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${monthly}' AND DOCUMENTUPLOADCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -282,7 +289,7 @@ module.exports = () => {
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
                 COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND DOCUMENTUPLOADCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${yearly}' AND DOCUMENTUPLOADCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -307,8 +314,10 @@ module.exports = () => {
                     db
                 });
                 let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
-                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
-
+                // let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let yearly = 0;
+                let monthly = new Date('1/1/'+new Date().getFullYear()).getTime();
+                let weekly = startdate - 7 * 24 * 60 * 60 * 1000;
                 // let query = `SELECT count("LOGINCOUNT") as YEARCOUNT as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and LOGINCOUNT = '1'`
                 //----------------------------------------------------- WEEKLY query-----------------------------------------
                 let query = 
@@ -316,7 +325,7 @@ module.exports = () => {
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
                 COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETOPENCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${weekly}' AND TICKETOPENCOUNT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 let statement = await db.preparePromisified(query);
@@ -328,7 +337,7 @@ module.exports = () => {
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
                 COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETOPENCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${monthly}' AND TICKETOPENCOUNT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -341,7 +350,7 @@ module.exports = () => {
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
                 COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETOPENCOUNT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${yearly}' AND TICKETOPENCOUNT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -366,8 +375,10 @@ module.exports = () => {
                     db
                 });
                 let startdate = (payload.startdate == undefined || payload.startdate == "null") ? new Date().getTime() : payload.startdate
-                let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
-
+                // let enddate   = (payload.enddate == undefined || payload.enddate == "null") ?  0 : payload.enddate;
+                let yearly = 0;
+                let monthly = new Date('1/1/'+new Date().getFullYear()).getTime();
+                let weekly = startdate - 7 * 24 * 60 * 60 * 1000;
                 // let query = `SELECT count("LOGINCOUNT") as YEARCOUNT as COUNT FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" WHERE CREATEDAT <= '${startdate}' and CREATEDAT >= '${enddate}' and LOGINCOUNT = '1'`
                 //----------------------------------------------------- WEEKLY query-----------------------------------------
                 let query = 
@@ -375,7 +386,7 @@ module.exports = () => {
                 SELECT DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) DAYNAME, 
                 COUNT(DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETCLOSEDCOUT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${weekly}' AND TICKETCLOSEDCOUT = '1' 
                 GROUP BY DAYNAME(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 let statement = await db.preparePromisified(query);
@@ -387,7 +398,7 @@ module.exports = () => {
                 SELECT MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) MONTHASNUMBER, 
                 COUNT(MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETCLOSEDCOUT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${monthly}' AND TICKETCLOSEDCOUT = '1' 
                 GROUP BY MONTH(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
@@ -400,7 +411,7 @@ module.exports = () => {
                 SELECT YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000)) YEARASNUMBER, 
                 COUNT(YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))) as TOTALCOUNT
                 FROM "${schema}"."SCLABS_ALUMNIPORTAL_REPORTING" 
-                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${enddate}' AND TICKETCLOSEDCOUT = '1' 
+                WHERE CREATEDAT <= '${startdate}'  and CREATEDAT >= '${yearly}' AND TICKETCLOSEDCOUT = '1' 
                 GROUP BY YEAR(ADD_SECONDS(TO_TIMESTAMP('1970-01-01 00:00:00'), cast("CREATEDAT" as bigint)/1000))
                 `
                 statement = await db.preparePromisified(query);
