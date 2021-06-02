@@ -1,6 +1,6 @@
 const expressrouter = require("express").Router();
 const authcontroller = require("../../controller/auth/main");
-
+const {logincount, signupcount} = require("../../middleware/reportingcollector/index")();
 const {
     signupValidateBody,
     signupSchemas,
@@ -10,10 +10,10 @@ const {
 //auth routers
 expressrouter
     .route("/login")
-    .post((req, res, next) => authcontroller.login(req, res, next));
+    .post( (req, res, next) =>{logincount(req, res, next)}, (req, res, next) => authcontroller.login(req, res, next));
 expressrouter
     .route("/signup")
-    .post((req, res, next) => authcontroller.signup(req, res, next));
+    .post((req, res, next) =>{signupcount(req, res, next)}, (req, res, next) => authcontroller.signup(req, res, next));
 expressrouter
     .route("/forgetpassword")
     .post((req, res, next) => authcontroller.forgetpassword(req, res, next));
