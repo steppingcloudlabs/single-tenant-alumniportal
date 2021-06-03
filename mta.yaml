@@ -24,6 +24,7 @@ modules:
       - name: single-tenant-alumniportal-sap-uaa
       - name: sfsdkdest
       - name: single-tenant-alumniportal-sap-s3
+      - name: application-logs
     parameters:
       memory: 350M
       disk-quota: 2048M
@@ -75,3 +76,8 @@ resources:
       service: objectstore
       service-plan: s3-standard
       service-name: single-tenant-alumniportal-sap-s3
+  - name: application-logs
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-plan: lite
+      service: application-logs
