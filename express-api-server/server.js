@@ -98,7 +98,9 @@ app.get("/", async (req, res) => {
     })
     return res.type("application/json").status(200).send(result)
   } catch (e) {
+    req.logger.error(e)
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
+    
   }
 });
 
@@ -120,6 +122,7 @@ app.get("/initialize", async (req, res, next) => {
     let result = await db.statementExecPromisified(statement, [])
     return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
   } catch (e) {
+    req.logger.error(e)
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
   }
 })
@@ -185,6 +188,7 @@ app.post("/initialize", async (req, res, next) => {
     }
     
   } catch (e) {
+    req.logger.error(e)
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
   }
 })
@@ -211,6 +215,7 @@ app.delete("/initialize", async (req, res, next) => {
     result = await db.statementExecPromisified(statement, [])
     return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
   } catch (e) {
+    req.logger.error(e)
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
   }
 })
