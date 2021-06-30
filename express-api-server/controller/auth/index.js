@@ -1,3 +1,6 @@
+/**
+ * Index.js is a file that contains admin code. Auth controller for admin are defined below. 
+ */
 const authserivce = require("../../service/auth/index.js")();
 const dbClass = require("sap-hdbext-promisfied");
 const JWT = require("jsonwebtoken");
@@ -11,12 +14,14 @@ module.exports = {
             const payload = req.body;
             const logger = req.logger;
             let db = new dbClass(req.db);
+            // Calling Async login service
             let response = await authserivce.login({
                 payload,
                 logger,
                 db
             });
 
+            // setting the appropriate response code and message.
             if (response == "incorrectuser") {
                 res.type("application/json").status(200).send({
                     status: "200",
@@ -30,8 +35,10 @@ module.exports = {
                 });
             }
 
+            // If valid response then create the token. 
+            // Improvement: token validaation and expiration if user clicks on logout needs to be implemented if required. 
             if (response) {
-                console.log(response[0].USERTYPE);
+                // generating token 
                 const token = JWT.sign({
                     iss: "steppingcloudforuser",
                     sub: response[0].USER_ID,
@@ -51,6 +58,7 @@ module.exports = {
                     token: token
                 });
             } else {
+                
                 req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/index/login ${error}`);
                 res.type("application/json").status(200).send({
                     status: "500",
@@ -74,6 +82,7 @@ module.exports = {
             const payload = req.body;
             const logger = req.logger;
             let db = new dbClass(req.db);
+            // DB call 
             let response = await authserivce.signup({
                 payload,
                 logger,

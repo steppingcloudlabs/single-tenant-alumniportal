@@ -21,12 +21,14 @@ module.exports = () => {
 					EMAIL,
 					PASSWORD
 				} = payload;
+				//  check if user exists or not.
 				let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
 				let statement = await db.preparePromisified(query)
 				let result = await db.statementExecPromisified(statement, [])
 				if (result.length == 0) {
 					resolve("incorrectuser")
 				} else {
+					// fetch the stored hash password
 					const query2 = `SELECT PASSWORD, LASTLOGIN FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
 					const statement2 = await db.preparePromisified(query2)
 					const userSavedHashedPassword = await db.statementExecPromisified(statement2, [])
@@ -35,6 +37,8 @@ module.exports = () => {
 					if (!match) {
 						resolve("incorrectpassword")
 					} else {
+						// if match then returnuser profile.
+						// IFNULL is SQL functtion which cheks for NaN or null values. 
 						const query3 = `SELECT USERID, LASTLOGIN FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" WHERE USERNAME='${EMAIL}'`
 						const statement3 = await db.preparePromisified(query3)
 						const result3 = await db.statementExecPromisified(statement3, [])
@@ -68,11 +72,12 @@ module.exports = () => {
 						const statement4 = await db.preparePromisified(query4)
 						let obj = await db.statementExecPromisified(statement4, [])
 
+						//  update last login
 						query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" SET LASTLOGIN = '${new Date().getTime()}' where USERNAME='${EMAIL}'`
                         statement = await db.preparePromisified(query)
                         result = await db.statementExecPromisified(statement, [])
 						console.log(result)
-						// update 
+						// setlast login in the response. 
 						obj[0].LASTLOGIN = result3[0].LASTLOGIN
 						resolve(obj);
 					}
@@ -100,6 +105,7 @@ module.exports = () => {
 					USERID
 				} = payload;
 
+				//  check if its already exists
 				const query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
 
 				const statement = await db.preparePromisified(query)
@@ -111,6 +117,7 @@ module.exports = () => {
 					const statement2 = await db.preparePromisified(query2)
 					const result2 = await db.statementExecPromisified(statement2, [])
 					if (result2.length == 0) {
+						// Checking if user is alumni or not.
 						const query3 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" where USER_ID='${USERID}'`
 						const statement3 = await db.preparePromisified(query3)
 						const result3 = await db.statementExecPromisified(statement3, [])
@@ -125,6 +132,7 @@ module.exports = () => {
 							const modifiedby = "admin";
 							const modifiedat = new Date().toISOString();
 							const ID = uuid()
+							// Insert credentials in Login table.
 							const query4 =
 								`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" VALUES(
 									'${createdat}',
@@ -139,6 +147,7 @@ module.exports = () => {
 									)`
 							const statement4 = await db.preparePromisified(query4)
 							const result4 = await db.statementExecPromisified(statement4, [])
+							// Creating UserProfile in users table.
 							const query5 = `INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" VALUES(
                                 	'${createdat}',
 									'${createdby}',
@@ -171,9 +180,8 @@ module.exports = () => {
 							const statement5 = await db.preparePromisified(query5)
 							const result5 = await db.statementExecPromisified(statement5, [])
 
+							// updating the user status for admins to see.
 							let query6 = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" SET "ISACTIVE" = 'registered' WHERE "USER_ID" = '${USERID}'`
-
-
 							const statement6 = await db.preparePromisified(query6)
 							const result6 = await db.statementExecPromisified(statement6, [])
 							resolve(result5)
@@ -203,6 +211,7 @@ module.exports = () => {
 					EMAIL
 				} = payload.payload;
 
+				// fetch user details
 				const query1 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
 				const statement1 = await db.preparePromisified(query1)
 				const result1 = await db.statementExecPromisified(statement1, [])
@@ -220,6 +229,7 @@ module.exports = () => {
 						JWT_SECRET
 					);
 
+					// send email with its token using SES.
 
 					let res = await emailservice.sendForgetPasswordEmail({ EMAIL, FIRST_NAME_PERSONAL_INFORMATION, token });
 					if (res) {
@@ -252,7 +262,7 @@ module.exports = () => {
 					EMAIL
 				} = payload.payload;
 
-
+				// if provided when user is not loggedin
 				if (EMAIL) {
 					const query1 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_AUTH_LOGIN" where USERNAME='${EMAIL}'`
 					const statement1 = await db.preparePromisified(query1)
@@ -275,7 +285,9 @@ module.exports = () => {
 					else {
 						resolve('Updation Failed');
 					}
-				} else {
+				} 
+				// when user is loggedin.
+				else {
 					const resettokenforpass = resettoken.TOKEN
 					const decoderesettoken = JWT.verify(resettokenforpass, JWT_SECRET);
 					if (Date.now() > decoderesettoken.exp) {

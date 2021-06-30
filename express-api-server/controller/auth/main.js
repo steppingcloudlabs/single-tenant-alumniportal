@@ -1,3 +1,7 @@
+/**
+ *  
+ * New Requirement: combining admin and user login routes as single route.
+ */
 const userauthserivce = require("../../service/auth/userindex.js")();
 const adminauthserivce = require("../../service/auth/index.js")();
 const utils = require("../../utils/database/index")();

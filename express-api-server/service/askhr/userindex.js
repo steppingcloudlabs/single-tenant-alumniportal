@@ -1,3 +1,6 @@
+/**
+ * All Functionality are similar as of Admin but for alumni users.
+ */
 const uuid = require("uuid");
 const util = require("../../utils/index.js")
 const utils = require("../../utils/database/index.js")();
@@ -289,6 +292,8 @@ module.exports = () => {
         });
     };
 
+    // Function escaltes a ticket if user wants to escalte it.
+
     const esclate = ({
         payload,
         db
@@ -311,6 +316,8 @@ module.exports = () => {
             }
         });
     };
+
+    
 
     const checkEscalation = ({
         TICKETID,

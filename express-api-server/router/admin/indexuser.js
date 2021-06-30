@@ -1,6 +1,6 @@
 const expressrouter = require("express").Router();
 const admincontroller = require("../../controller/admin/userindex.js");
-//admin control routers
+//admin routes that controls user. 
 expressrouter
 	.route("/user/create")
 	.post((req, res, next) => admincontroller.createuser(req, res, next));

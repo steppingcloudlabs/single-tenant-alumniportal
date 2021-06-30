@@ -47,7 +47,7 @@ app.use(function (req, res, next) {
 //---------------------------------------------------------------------------------------------
 // Passport injection for app router integration and secure Hana Database connection.
 //---------------------------------------------------------------------------------------------
-xsenv.loadEnv();  // loads your defaul-env.json file that contains SAP Cloud services credentials. 
+xsenv.loadEnv();  // loads your defaul-env.json file that contains SAP Cloud services credentials.  
 
 app.use(passport.initialize());
 passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({

@@ -20,3 +20,79 @@ There is a lot of room for improvement, some of them are mentioned below.
 
 1. Database Indexing.
 2. Refactor code and change if else condition to different fucntions.
+
+## Project structure 
+
+```
+├───config
+├───controller
+│   ├───admin
+│   ├───askhr
+│   ├───auth
+│   ├───bulk
+│   ├───documents
+│   ├───job
+│   ├───nef
+│   ├───reporting
+│   ├───search
+│   ├───ses
+│   ├───sftp
+│   ├───skills
+│   ├───successfactors
+│   └───user
+├───generated
+│   └───sfo-data-service
+├───middleware
+│   ├───JWTtoken
+│   ├───reportingcollector
+│   └───unescape
+├───router
+│   ├───admin
+│   ├───askhr
+│   ├───auth
+│   ├───bulk
+│   ├───documents
+│   ├───job
+│   ├───nef
+│   ├───reporting
+│   ├───search
+│   ├───ses
+│   ├───sftp
+│   ├───skills
+│   ├───successfactors
+│   └───users
+├───service
+│   ├───admin
+│   ├───askhr
+│   ├───auth
+│   ├───bulk
+│   │   └───docuemts
+│   ├───documents
+│   ├───job
+│   ├───nef
+│   ├───reporting
+│   ├───search
+│   ├───ses
+│   ├───sftp
+│   ├───skills
+│   ├───successfactors
+│   └───user
+├───test
+├───uploads
+├───utils
+│   ├───database
+│   └───jsontolower
+└───validator
+
+```
+
+Project is divided into two users admin and users, service layer is common for all the users but controller and router are specific for a usertype. 
+
+# Naming conventions
+
+The name conventions of files are not that great we need a lot of improvement in there. 
+
+1. index.js -> for admin realted codes 
+2. userindex.js -> for users realted codes
+
+

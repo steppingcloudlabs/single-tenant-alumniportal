@@ -1,3 +1,7 @@
+/**
+ * Service layer of admin actions for user 
+ */
+
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 const emailservice = require("../ses/index")();
@@ -6,19 +10,30 @@ const csv = require('csvtojson')
 const dataForge = require('data-forge');
 const AWS = require('aws-sdk');
 module.exports = () => {
+
+	/**
+	 * Function returns list of user or a user 
+	 * @params payload
+	 * @params db
+	 */
+	
 	const getuser = ({
 		payload,
 		db
 	}) => {
 		return new Promise(async (resolve, reject) => {
 			try {
+				// Get the schema name or database name for this request. 
 				const schema = await utils.currentSchema({
 					db
 				})
-
+				//  pagination manual set, same configration as of controller.
 				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
 				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				// userId checks. 
 				const USERID = (payload.USERID == undefined || payload.USERID == null || payload.USERID == "null") ? false : payload.USERID
+				// ----- Promisied SAP Hana Query execution. 
+				// IFNULL (Read the SAP HANA SQL Reference )
 				if (USERID) {
 					const statement = await db.preparePromisified(
 						`SELECT "ID", "USER_ID", "GENDER", "DATE_OF_BIRTH", "DATE_OF_RESIGNATION", "LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD", "PERSONAL_EMAIL_ID","FIRST_NAME_PERSONAL_INFORMATION","LAST_NAME_PERSONAL_INFORMATION","MIDDLE_NAME_PERSONAL_INFORMATION","NATIONALITY_PERSONAL_INFORMATION","SALUTATION_PERSONAL_INFORMATION","CITY_ADDRESSES","PHONE_NUMBER_PHONE_INFORMATION","MANAGER_JOB_INFORMATION","DESIGNATION_JOB_INFORMATION", IFNULL(STATE, '') "STATE",
@@ -41,12 +56,28 @@ module.exports = () => {
 		});
 	};
 
+	/**
+	 * Function creating a user in database as well as sending the emails to the user 
+	 * Also update the user if ID exists in the paylaod.
+	 * @params payload 
+	 * @params db 
+	 */
+	
 	const createuser = ({
 		payload,
 		db
 	}) => {
 		return new Promise(async (resolve, reject) => {
+			`
+			Below code does 2 things 
+			1. update user if there is any ID in the payload. 
+			2. Insert the user id there is no ID in the payload. 
+
+			This is very dumb implementation, a lot of room for refactor. Need to checkout hana UPSERT Statement for this thing.  
+			`
+
 			try {
+				//  Check for ID and udpate user 
 				if (payload.payload.ID) {
 					try {
 						let response = await updateuser({
@@ -57,8 +88,13 @@ module.exports = () => {
 					} catch (error) {
 						reject(error)
 					}
-				} else {
+				} 
+				// Insert user to database
+				else {
 					try {
+						// simple way to extract values from a json object. 
+						// we are writing payload.payload because we are using "paylaod" in our apis as well.
+						// # Important: use different language for naming convention. 
 						let {
 							USER_ID,
 							DATE_OF_RELIEVING,
@@ -80,6 +116,10 @@ module.exports = () => {
 							COUNTRY,
 							URL
 						} = payload.payload;
+
+						
+						// Handling the cases for the data comming in payload. A simple terary satement. 
+						
 						DATE_OF_RELIEVING = DATE_OF_RELIEVING == undefined ? " " : DATE_OF_RELIEVING;
 						USER_ID = USER_ID == undefined ? " " : USER_ID;
 						DATE_OF_RESIGNATION = DATE_OF_RESIGNATION == undefined ? " " : DATE_OF_RESIGNATION;
@@ -103,25 +143,32 @@ module.exports = () => {
 							db
 						});
 
+						//  Handling the NaNs in data of successfactors. 
+
 						DATE_OF_BIRTH = new Date(DATE_OF_BIRTH).getTime().toString() == "NaN" ? DATE_OF_BIRTH : new Date(DATE_OF_BIRTH).getTime();
 						DATE_OF_RESIGNATION = new Date(DATE_OF_RESIGNATION).getTime().toString() == "NaN" ? DATE_OF_RESIGNATION : new Date(DATE_OF_RESIGNATION).getTime();
 						LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD = new Date(LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD).getTime().toString() == "NaN" ? LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD : new Date(LAST_WORKING_DAY_AS_PER_NOTICE_PERIOD).getTime();
 						DATE_OF_RELIEVING = new Date(DATE_OF_RELIEVING).getTime().toString() == "NaN" ? DATE_OF_RELIEVING : new Date(DATE_OF_RELIEVING).getTime();
 
+						// preparing the data we want to insert in table. 
 						const createdat = new Date().toISOString();
 						const createdby = "admin";
 						const modifiedby = "admin";
 						const modifiedat = new Date().toISOString();
 						const date = new Date().toISOString();
 						const ID = uuid()
+
+						// checking if user exists or not. 
 						const query1 = `SELECT USER_ID FROM "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" WHERE USER_ID='${USER_ID}'`
 
 						const statement1 = await db.preparePromisified(query1)
 
 						const results1 = await db.statementExecPromisified(statement1, [])
 						if (results1.length != 0) {
+							//  sending the status to controller level. It will send the respose cdoe and relecant message in the API. 
 							resolve("userexists")
 						} else {
+							// Query Preperation and execution. 
 							const query =
 								`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA" VALUES(	
 									'${createdat}',
@@ -153,16 +200,18 @@ module.exports = () => {
 							const statement = await db.preparePromisified(query)
 							let results = await db.statementExecPromisified(statement, [])
 
+							// If the above query fails the email will not trigger. 
+							// Send the email to the user for signup/
 							let res = await emailservice.sendEmail({ PERSONAL_EMAIL_ID, FIRST_NAME_PERSONAL_INFORMATION, URL });
 							if (res) {
 								resolve(results)
 							} else {
+								// if there is a problem while sending the email, delelte the user from database. 
 								const query =
 									`DELETE FROM  "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"  WHERE USER_ID = '${USER_ID}'`
-
 								const statement = await db.preparePromisified(query)
 								let results = await db.statementExecPromisified(statement, [])
-
+								// reject the request. 
 								reject(res)
 							}
 						}
@@ -178,6 +227,13 @@ module.exports = () => {
 
 		});
 	};
+
+	/**
+	 * Function update user in Masterdata. As we can't update multiple columns normally we have to write case statements for each colmns and check if it needs to be update or not.
+	 * @params payload 
+	 * @params db
+	 */
+	
 
 	const updateuser = ({
 		payload,
@@ -209,6 +265,8 @@ module.exports = () => {
 				const PHONE_NUMBER_PHONE_INFORMATION = payload.PHONE_NUMBER_PHONE_INFORMATION
 				const MANAGER_JOB_INFORMATION = payload.manager_job_informatio
 				const DESIGNATION_JOB_INFORMATION = payload.DESIGNATION_JOB_INFORMATION
+
+				// CASE Statements for handling each case, 
 				const statement = await db.preparePromisified(
 					`UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_MASTERDATA_MASTERDATA"
 					SET "USER_ID" = CASE 
@@ -297,14 +355,17 @@ module.exports = () => {
 				} else {
 					reject(results)
 				}
-
-
-
 			} catch (error) {
 				reject(error);
 			}
 		});
 	};
+
+	/**
+	 * Fucntion delete user from database 
+	 * @params payload 
+	 * @params db
+	 */
 
 	const deleteuser = ({
 		payload,
@@ -351,9 +412,16 @@ module.exports = () => {
 		});
 	};
 
+	/**
+	 * Function upload the users in bulk if a csv is uplaoded. 
+	 * @param {payload, db}  
+	 *  Not sure if we are using this as well, delete on your own risk.
+	 */
+
 	const createuserbulk = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
+
 				if (payload.files) {
 					let file = payload.files.filename,
 						filename = file.name;
@@ -484,6 +552,8 @@ module.exports = () => {
 
 		})
 	}
+
+	// ---------------Below function are not used anywhere as far as I know, delete them on your own risk.--------------------------------
 
 	const bounces = () => {
 

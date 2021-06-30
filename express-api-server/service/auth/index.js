@@ -26,13 +26,16 @@ module.exports = () => {
                     PASSWORD,
                 } = payload;
 
+                // Checking the user exists or not. 
                 let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 let statement = await db.preparePromisified(query)
                 let result = await db.statementExecPromisified(statement, [])
                 
                 if (result.length == 0) {
                     resolve("incorrectuser")
-                } else {
+                } 
+                // If user exists then compare the password with stored password in db.  
+                else {
                     let query2 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME = '${EMAIL}'`
                     let statement2 = await db.preparePromisified(query2)
                     let result2 = await db.statementExecPromisified(statement2, [])
@@ -42,6 +45,7 @@ module.exports = () => {
                     if (!match) {
                         resolve("incorrectpassword")
                     } else {
+                        // check for usertype.
                         if (result2[0].USERTYPE == 'admin') {
                             let query3 = `SELECT USERNAME, USERTYPE, LASTLOGIN FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                             let statement3 = await db.preparePromisified(query3)
@@ -50,14 +54,18 @@ module.exports = () => {
                             let query4 = `SELECT "USERID", "FIRSTNAME", "LASTNAME", "EMAIL"  FROM "${schema}"."SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION" where EMAIL = '${EMAIL}'`
                             let statement4 = await db.preparePromisified(query4)
                             let result4 = await db.statementExecPromisified(statement4, [])
+                            // updating the last login time. 
                             query = `UPDATE "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" SET LASTLOGIN = '${new Date().getTime()}' where USERNAME='${EMAIL}'`
                             statement = await db.preparePromisified(query)
                             result = await db.statementExecPromisified(statement, [])
                             
+                            // add the usertype and lastlogin in the response. 
                             result4[0].USERTYPE = result3[0].USERTYPE
                             result4[0].LASTLOGIN = result3[0].LASTLOGIN
                             resolve(result4)
-                        } else if (result2[0].USERTYPE == 'hr') {
+                        } 
+                        // Same code applie for HR as well. 
+                        else if (result2[0].USERTYPE == 'hr') {
                             query3 = `SELECT USERTYPE FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" WHERE USERNAME='${EMAIL}'`
                             statement3 = await db.preparePromisified(query3)
                             result3 = await db.statementExecPromisified(statement3, [])
@@ -70,7 +78,7 @@ module.exports = () => {
                             result = await db.statementExecPromisified(statement, [])
 
                             result4[0].USERTYPE = result3[0].USERTYPE
-
+                            result4[0].LASTLOGIN = result3[0].LASTLOGIN
                             resolve(result4)
                         }
                     }
@@ -98,6 +106,7 @@ module.exports = () => {
                     USERID
                 } = payload;
 
+                // Checking for correct usertype.
                 if (USERTYPE != 'hr' && USERTYPE != 'admin') {
                     resolve("onlyhrsandadmins");
                 } else if (USERTYPE == "hr") {
@@ -204,6 +213,7 @@ module.exports = () => {
         });
     };
 
+    //  Funtionality of forget password and reset are very much similar 
     const forgetpassword = ({
         payload,
         db
@@ -217,13 +227,14 @@ module.exports = () => {
                     EMAIL
                 } = payload.payload;
 
+                // check of email exists or not in satabase 
                 const query1 = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                 const statement1 = await db.preparePromisified(query1)
                 const result1 = await db.statementExecPromisified(statement1, [])
                 
                 let FIRST_NAME_PERSONAL_INFORMATION = result1[0].EMAIL
                 if (result1.length != 0) {
-
+                    // token creation  
                     const token = JWT.sign({
                         iss: 'steppingcloudforpasswordreset',
                         sub: EMAIL,
@@ -236,6 +247,7 @@ module.exports = () => {
                     );
 
                     console.log(token)
+                    // send email
                     let res = await emailservice.sendForgetPasswordEmail({ EMAIL, FIRST_NAME_PERSONAL_INFORMATION, token });
                     if (res) {
                         resolve("tokensent");
@@ -267,7 +279,7 @@ module.exports = () => {
                     EMAIL
                 } = payload.payload;
 
-
+                // if email is present then reset it.
                 if (EMAIL) {
                     const query1 = `SELECT PASSWORD FROM "${schema}"."SCLABS_ALUMNIPORTAL_ADMINAUTH_ADMINLOGIN" where USERNAME='${EMAIL}'`
                     const statement1 = await db.preparePromisified(query1)
@@ -291,7 +303,9 @@ module.exports = () => {
                     else {
                         resolve('Updation Failed, Password Does Not Match');
                     }
-                } else {
+                }
+                // check for token 
+                else {
                     const resettokenforpass = resettoken.TOKEN
                     const decoderesettoken = JWT.verify(resettokenforpass, JWT_SECRET);
                     if (Date.now() > decoderesettoken.exp) {

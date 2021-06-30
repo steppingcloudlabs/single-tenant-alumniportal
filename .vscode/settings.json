@@ -21,5 +21,6 @@
             "password": "Sq67jkog65T46mwq.hEy4O.c05sePQvxOT_Ig8p47-m5RRMiw7Y34N31iWtNUt.vyU-r1n0senHs8Y2-P1k3fEZxRLmP7jpwErfWvLaTyV_sScLvL4.FlliPd90AzKid"
         }
     ],
-    "sqltools.useNodeRuntime": true
+    "sqltools.useNodeRuntime": true,
+    "python.pythonPath": "C:\\Users\\akash\\anaconda3\\python.exe"
 }

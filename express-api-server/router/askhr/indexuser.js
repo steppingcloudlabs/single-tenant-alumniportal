@@ -1,7 +1,11 @@
+/**
+ * ASKHR routes for users with reporting middleware.
+ */
 const expressrouter = require("express").Router();
 const askhrusercontroller = require("../../controller/askhr/userindex");
 const {ticketopencount, ticketclosedcout} = require("../../middleware/reportingcollector/index")();
 
+// Middlware that counts opend and close ticket.
 expressrouter
 	.route("/ticket/create")
 	.post((req, res, next) =>{ticketopencount(req, res, next)},(req, res, next) => askhrusercontroller.createticket(req, res, next));
