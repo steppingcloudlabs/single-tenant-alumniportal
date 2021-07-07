@@ -1,7 +1,16 @@
+/**
+ * Service layer manages admin action for ASKHR
+ */
 const uuid = require("uuid");
 const util = require("../../utils/index.js")
 const utils = require("../../utils/database/index.js")();
 module.exports = () => {
+
+	/**
+	 * Function creates a ticket with its message in database.
+	 * @param {payload, db}  
+	 * @returns 1
+	 */
 	const createticket = ({
 		payload,
 		db
@@ -41,8 +50,9 @@ module.exports = () => {
 						)`
 				let statement = await db.preparePromisified(query)
 				let results = await db.statementExecPromisified(statement, [])
+				// if ticket is created then 
 				if (results == 1) {
-					// this query get the ticketid 
+					// this query get the ticketid then add message to SCLABS_ALUMNIPORTAL_MESSAGES_MESSAGES table
 					let query = `SELECT * FROM "${schema}"."SCLABS_ALUMNIPORTAL_TICKET_TICKET" WHERE CREATEDAT = '${createdat}' AND USERID = '${USERID}')`
 					let statement = await db.preparePromisified(query)
 					let results = await db.statementExecPromisified(statement, [])
@@ -75,6 +85,8 @@ module.exports = () => {
 			}
 		});
 	};
+
+	// get tcicket with its esclation type.
 	const getticket = ({
 		payload,
 		db
@@ -95,6 +107,7 @@ module.exports = () => {
 
 				for (var i = 0; i < results.length; i++) {
 					let TICKETID = results[i].ID;
+					// helper function for checking esclation
 					let response = await checkEscalation({ TICKETID, db });
 					results[i]["ESCLATION"] = response.esclation;
 					results[i]["LASTMODIFIEDAT"] = response.lastmodifiedby;
@@ -179,6 +192,8 @@ module.exports = () => {
 		});
 	};
 
+	//  Creates a new message
+
 	const createMESSAGE = ({
 		payload,
 		db
@@ -218,6 +233,8 @@ module.exports = () => {
 			}
 		});
 	};
+
+	// Function fetch all message of a ticket 
 	const getMESSAGE = ({
 		payload,
 		db
@@ -245,6 +262,8 @@ module.exports = () => {
 		});
 	};
 
+	// FUnctionality is not used but this updated a message.  
+
 	const updateMESSAGE = ({
 		payload,
 		db
@@ -258,6 +277,7 @@ module.exports = () => {
 		});
 	};
 
+	// FUnctionality is not used but this deletes messgae from the ticket 
 	const deleteMESSAGE = ({
 		payload,
 		db
@@ -285,6 +305,7 @@ module.exports = () => {
 		});
 	};
 
+	// Creates a manager in the database for ASKHR
 	const createmanager = ({
 		payload,
 		db
@@ -333,6 +354,8 @@ module.exports = () => {
 			}
 		});
 	};
+
+	// Fetch the Manager list added in the ASKHR
 	const getmanager = ({
 		payload,
 		db
@@ -354,6 +377,8 @@ module.exports = () => {
 			}
 		});
 	};
+
+	// gets the manager profile with its assigned tickets and their status.
 	const getmanagerprofile = ({
 		payload,
 		db
@@ -391,6 +416,8 @@ module.exports = () => {
 			}
 		});
 	};
+
+	// Updated the manager detials
 	const updatemanager = ({
 		payload,
 		db
@@ -432,6 +459,8 @@ module.exports = () => {
 		});
 	};
 
+	// Deletes the Level Manager from the application.
+
 	const deletemanager = ({
 		payload,
 		db
@@ -451,6 +480,9 @@ module.exports = () => {
 		});
 	};
 
+	/**
+	 * Function check for escaltion id ticket response of user is older than 7 days. 
+	 */
 	const checkEscalation = ({
 		TICKETID,
 		db

@@ -1,3 +1,7 @@
+`
+Admin Routes for Managing admins in the application.
+`
+
 const expressrouter = require("express").Router();
 const admincontroller = require("../../controller/admin/index");
 //admin control routers

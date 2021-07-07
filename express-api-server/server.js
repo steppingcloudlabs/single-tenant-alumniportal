@@ -47,7 +47,8 @@ app.use(function (req, res, next) {
 //---------------------------------------------------------------------------------------------
 // Passport injection for app router integration and secure Hana Database connection.
 //---------------------------------------------------------------------------------------------
-xsenv.loadEnv();
+xsenv.loadEnv();  // loads your defaul-env.json file that contains SAP Cloud services credentials.  
+
 app.use(passport.initialize());
 passport.use("JWT", new xssec.JWTStrategy(xsenv.getServices({
   uaa: {
@@ -65,6 +66,7 @@ app.use(log.logNetwork);
 
 //---------------------------------------------------------------------------------------------
 // SAP Hana Database Configuration and connection injection into request object.
+// This line injects a db obect in the request object and we use that object to call database queries.
 //---------------------------------------------------------------------------------------------
 var hanaOptions = xsenv.getServices(
   {
@@ -98,7 +100,9 @@ app.get("/", async (req, res) => {
     })
     return res.type("application/json").status(200).send(result)
   } catch (e) {
+    req.logger.error(e)
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
+    
   }
 });
 
@@ -120,6 +124,7 @@ app.get("/initialize", async (req, res, next) => {
     let result = await db.statementExecPromisified(statement, [])
     return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
   } catch (e) {
+    req.logger.error(e)
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
   }
 })
@@ -185,6 +190,7 @@ app.post("/initialize", async (req, res, next) => {
     }
     
   } catch (e) {
+    req.logger.error(e)
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
   }
 })
@@ -211,6 +217,7 @@ app.delete("/initialize", async (req, res, next) => {
     result = await db.statementExecPromisified(statement, [])
     return res.type("application/json").status(200).send(JSON.stringify({ results: result }))
   } catch (e) {
+    req.logger.error(e)
     return res.type("application/json").status(500).send(`ERROR: ${e.toString()}`)
   }
 })

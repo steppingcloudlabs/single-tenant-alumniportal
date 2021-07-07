@@ -54,18 +54,18 @@ module.exports = () => {
 				const date = new Date().toISOString();
 				const ID = uuid();
 				// payload = escape(payload);
-				const requisition_id = payload.payload.REQUISITIONID;
+				const requisition_id = payload.payload.JOBREQID;
 				const posting_end_date = new Date(payload.payload.POSTINGENDDATE).getTime().toString() == "NaN" ? payload.payload.POSTINGENDDATE : new Date(payload.payload.POSTINGENDDATE).getTime();
 				const posting_start_date = new Date(payload.payload.POSTINGSTARTDATE).getTime().toString() == "NaN" ? payload.payload.POSTINGSTARTDATE : new Date(payload.payload.POSTINGSTARTDATE).getTime();
-				const job_posting_status = new Date(payload.payload.JOBPOSTINGSTATUS).getTime().toString() == "NaN" ? payload.payload.JOBPOSTINGSTATUS : new Date(payload.payload.JOBPOSTINGSTATUS).getTime();
+				const job_posting_status = new Date(payload.payload.POSTINGSTATUS).getTime().toString() == "NaN" ? payload.payload.POSTINGSTATUS : new Date(payload.payload.POSTINGSTATUS).getTime();
 				const department = payload.payload.DEPARTMENT;
-				const title = escape(payload.payload.TITLE);
+				const title = escape(payload.payload.JOBTITLE);
 				const jobdescription = escape(payload.payload.JOBDESCRIPTION);
 				const jobpostingid = payload.payload.JOBPOSTINGID;
 				const boardid = payload.payload.BOARDID;
 				const country = payload.payload.COUNTRY;
-				const city = payload.payload.CITY;
-				const link = payload.payload.LINK;
+				const city = payload.payload.LOCATION;
+				const link = payload.payload.APPLYLINK;
 				const query =
 					`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_JOB_JOB" VALUES(
 					'${createdat}'/*CREATEDAT <TIMESTAMP>*/,
@@ -86,7 +86,7 @@ module.exports = () => {
 					'${posting_end_date}'/*POSTINGENDDATE <DATE>*/,
 					'${link}'
 					)`
-
+				// console.log(query)
 				const statement = await db.preparePromisified(query);
 				const results = await db.statementExecPromisified(statement, [])
 				resolve(results);

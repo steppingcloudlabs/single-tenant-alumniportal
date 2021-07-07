@@ -1,3 +1,6 @@
+/**
+ * Auth controller for users
+ */
 const authserivce = require("../../service/auth/userindex.js")();
 const dbClass = require("sap-hdbext-promisfied");
 const JWT = require("jsonwebtoken");

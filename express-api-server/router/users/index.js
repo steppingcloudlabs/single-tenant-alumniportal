@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 const expressrouter = require("express").Router();
 const usercontroller = require("../../controller/user/index.js");
 

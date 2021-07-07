@@ -3,6 +3,12 @@ const utils = require("../../utils/database/index.js")();
 const skillservice = require("../skills/index.js")();
 // const currentSchema = require("../../utils/database/index.js")();
 module.exports = () => {
+
+	/**
+	 * Gets user profile created at the time of signup.
+	 * @param {payload, db} 
+	 * 
+	 */
 	const getprofile = ({
 		payload,
 		db
@@ -41,6 +47,7 @@ module.exports = () => {
 				    where A1."USER_ID" = '${userid}';`
 				const statement = await db.preparePromisified(query)
 				let obj = await db.statementExecPromisified(statement, [])
+				// add skill in the response as well.
 				let response = await skillservice.getskills({ payload, db })
 				obj[0].SKILL = response
 				resolve(obj);
@@ -50,6 +57,8 @@ module.exports = () => {
 			}
 		});
 	};
+
+	// update profile. 
 	const updateprofile = ({
 		payload,
 		logger,
@@ -113,6 +122,8 @@ module.exports = () => {
 			}
 		});
 	};
+
+	// deleting user profile 
 	const deleteprofile = ({
 		payload,
 		db

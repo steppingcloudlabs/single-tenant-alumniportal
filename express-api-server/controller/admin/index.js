@@ -1,17 +1,39 @@
-const adminserivce = require("../../service/admin/index.js")();
-const dbClass = require("sap-hdbext-promisfied");
+`
+# Documentation
+
+Ths file is a json objext exported to module. 
+Adding documentation on first function all other function wroks the same way throughtout the application.
+
+## Improvement 
+
+1. By refactoring the service layer, we can reduce the if else statement in controller layer. The code will me more maintainable. 
+
+`
+const adminserivce = require("../../service/admin/index.js")() // service function call;
+const dbClass = require("sap-hdbext-promisfied"); // creates db connection 
 const utils = require("../../utils/database/index")();
 module.exports = {
+
+	/*
+	Controller for creating admin.
+	*/ 
 	createuser: async (req, res) => {
 		try {
+			// extracting the body from request
 			const payload = req.body;
-			const logger = req.logger;
+			// extracting the logger object from the request. 
+			const logger = req.logger; 
+			// getting db connection of this request.
 			let db = new dbClass(req.db);
+
+			// calling our service layer for admin creation
 			let response = await adminserivce.createuser({
 				payload,
 				logger,
-				db
+				db 
 			});
+
+			// Handling different cases of the response we get from out service layer and setting appropriate response and status codes. 
 			if (response == "userexists") {
 				res.type("application/json").status(200).send({
 					status: "201",
@@ -38,10 +60,15 @@ module.exports = {
 		}
 
 	},
+
+	/*
+	Controller for updating admin 
+	*/ 
 	updateuser: async (req, res) => {
 		try {
 			const payload = req.body;
 			const logger = req.logger;
+			// getting db connection of this request
 			let db = new dbClass(req.db);
 			let response = await adminserivce.updateuser({
 				payload,
@@ -70,10 +97,14 @@ module.exports = {
 			});
 		}
 	},
+	/*
+	Controller to get  admin 
+	*/ 
 	getuser: async (req, res) => {
 		try {
 			const payload = req.query;
 			const logger = req.logger;
+			// getting db connection of this request
 			let db = new dbClass(req.db);
 			let response = await adminserivce.getuser({
 				payload,
@@ -123,6 +154,9 @@ module.exports = {
 		}
 
 	},
+	/*
+	Controller for deleting admin 
+	*/ 
 	deleteuser: async (req, res) => {
 		try {
 			const payload = req.body;
