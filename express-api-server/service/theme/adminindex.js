@@ -82,13 +82,13 @@
                  const modifiedby = "admin";
                  const modifiedat = new Date().toISOString();;
                  const ID = uuid();
-                 const primary = payload.payload.PRIMARY;
-                 const secondary = payload.payload.SECONDARY;
-                 const info = payload.payload.INFO;
-                 const error = payload.payload.ERROR;
-                 const warning= payload.payload.WARNING
-                 const success= payload.payload.SUCCESS
-                 const accent= payload.payload.ACCENT
+                 const primary = payload.payload.primary;
+                 const secondary = payload.payload.secondary;
+                 const info = payload.payload.info;
+                 const error = payload.payload.error;
+                 const warning= payload.payload.warning
+                 const success= payload.payload.success
+                 const accent= payload.payload.accent
                  
                  // Check if the request is for admin or not.
                  
