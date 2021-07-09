@@ -1,0 +1,16 @@
+COLUMN TABLE sclabs_alumniportal_admin_colortheme (
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID NVARCHAR(36) NOT NULL,
+  primary NVARCHAR(5000) NOT NULL,
+  secondary NVARCHAR(5000) NOT NULL,
+  accent NVARCHAR(5000) NOT NULL,
+  error NVARCHAR(5000) NOT NULL,
+  info NVARCHAR(5000) NOT NULL,
+  success NVARCHAR(5000) NOT NULL,
+  warning NVARCHAR(5000) NOT NULL,
+  PRIMARY KEY(ID)
+)
+
