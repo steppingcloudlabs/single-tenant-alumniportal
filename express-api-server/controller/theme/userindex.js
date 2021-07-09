@@ -19,8 +19,8 @@ module.exports = {
 				logger,
 				db
 			});
-
-			if (response) {
+            console.log(response.length)
+			if (response.length) {
               
 				let result = Object.keys(response['0']).reduce((prev, current) => 
                    ({ ...prev, [current.toLowerCase()]: response['0'][current]}), {})

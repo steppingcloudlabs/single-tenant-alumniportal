@@ -51,6 +51,7 @@
                 // Executing Query. 
                 const results = await db.statementExecPromisified(statement, [])
                 // resolve the response from SAP Hana. 
+                console.log(results)
                 resolve(results);
             } catch (error) {
                 // log the detialed error with error stack.
