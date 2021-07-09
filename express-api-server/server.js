@@ -291,7 +291,7 @@ const searchuserRoutes = require("./router/search/index")
 const usertheme = require("./router/theme/userindex")
 app.use("/user/auth", userauthRoutes);
 app.use("/user/action", usertokenchecker, userskillsRoutes);
-app.use("/user/action", usertokenchecker, usertheme);
+app.use("/user/setting", usertheme);
 app.use("/user/action", usertokenchecker, userjobRoutes);
 app.use("/user/action", usertokenchecker, usernefRoutes);
 app.use("/user/action", usertokenchecker, userdocumentRoutes);
