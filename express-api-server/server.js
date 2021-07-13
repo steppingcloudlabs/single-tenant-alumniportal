@@ -261,10 +261,13 @@ const searchRoutes = require("./router/search/adminindex");
 const successfactorsRoutes = require("./router/successfactors");
 const askhradminroutes = require("./router/askhr")
 const adminauthRoutes = require("./router/auth/index.js");
-const adminsftp = require("./router/sftp/index")
+const adminsftp = require("./router/sftp/index");
+const admintheme = require("./router/theme/adminindex");
+
 
 app.use("/admin/auth", adminauthRoutes);
 app.use("/admin/action", admintokenchecker, adminactionRoutes);
+app.use("/admin/action", admintokenchecker, admintheme);
 app.use("/admin/action", admintokenchecker, adminskillsRoutes);
 app.use("/admin/action", admintokenchecker, adminjobRoutes);
 app.use("/admin/action", admintokenchecker, adminnefRoutes);
@@ -285,8 +288,10 @@ const useractionRoutes = require("./router/users/index.js");
 const usernefRoutes = require("./router/nef/userindex.js");
 const askhruserroutes = require("./router/askhr/indexuser.js")
 const searchuserRoutes = require("./router/search/index")
+const usertheme = require("./router/theme/userindex")
 app.use("/user/auth", userauthRoutes);
 app.use("/user/action", usertokenchecker, userskillsRoutes);
+app.use("/user/setting", usertheme);
 app.use("/user/action", usertokenchecker, userjobRoutes);
 app.use("/user/action", usertokenchecker, usernefRoutes);
 app.use("/user/action", usertokenchecker, userdocumentRoutes);

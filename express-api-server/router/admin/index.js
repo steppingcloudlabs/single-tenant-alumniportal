@@ -15,4 +15,5 @@ expressrouter
 	.route("/admin/delete")
 	.post((req, res, next) => admincontroller.deleteuser(req, res, next));
 
+
 module.exports = expressrouter;
