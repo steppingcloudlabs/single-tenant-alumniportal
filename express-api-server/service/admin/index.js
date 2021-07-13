@@ -121,12 +121,13 @@ module.exports = () => {
 								"USERID": userid,
 								"USERTYPE": usertype
 							}
+							//console.log(payloadsignup)
 							let res = await authservice.signup({ payload: payloadsignup, db });
 							if(res == 1) {
 								// Sending Email to the admin with its random generated password
 								emailresults = await emailservice.sendEmailAdmin({email, firstname, password})
-								`
-								# Bug 1: This process flow might break in future, even though its wroking fine at this moment. 
+								
+								/*# Bug 1: This process flow might break in future, even though its wroking fine at this moment. 
 								If due to some reason the admin did not get the email, or server crashed after adding admin to database. 
 								Admin user have to re-create the admin again otherwise it will not be able to add this user gain. 
 								
@@ -138,7 +139,7 @@ module.exports = () => {
 								2. When admin reset its password delete the entry the table. 
 								3. store the data in SCLABS_ALUMNIPORTAL_PERSONALINFORMATION_ADMIN_HR_PERSONALINFORMATION table. 
 								4. Check for different edge cases, I am not going to type it all. 
-								`
+								*/
 								console.log(emailresults)
 							}
 							console.log("Username is: " + email + "password is: " + password);

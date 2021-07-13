@@ -1,6 +1,9 @@
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 const undoEscape = require("../../middleware/unescape/index")
+const calendar = require('ical-generator')();
+const moment = require('moment')
+
 
 module.exports = () => {
 	/*
@@ -444,7 +447,7 @@ module.exports = () => {
 				}
 
 			} catch (error) {
-				console.log(error)
+				
 				reject(error);
 			}
 		});
@@ -469,6 +472,109 @@ module.exports = () => {
 			}
 		});
 	};
+	let enrollevent = ({ payload, db }) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let schema = await utils.currentSchema({ db })
+				let id = uuid()
+				let userid = payload.payload.USERID;
+				let eventid = payload.payload.EVENTID;
+				let createdat = new Date().toISOString();
+				let createdby = "User";
+				let modifiedat = new Date().toISOString();
+				let modifiedby = "admin";
+				let userstatus = payload.payload.USERSTATUS;
+				let query = `SELECT "USERID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_RSVP" WHERE USERID = '${userid}' AND EVENTID = '${eventid}'`
+				let statement = await db.preparePromisified(query)
+				let result = await db.statementExecPromisified(statement, [])
+	
+				if (result.length == 1) {
+
+					resolve("UserAlreadyEnrolled");
+				}
+				else {
+					// calendar.createEvent({
+					// 	start: moment(),
+					// 	end: moment().add(1, 'hour'),
+					// 	summary: 'Example Event',
+					// 	description: 'It works ;)',
+					// 	location: 'my room',
+					// 	url: 'http://sebbo.net/'
+					// });
+					// var path = __dirname + '/icsfile/'+'akcjmak'+ '.ics';
+					//  calendar.saveSync(path);
+					// console.log(path)
+
+					let query =
+						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_RSVP" VALUES(
+						'${createdat}',
+						'${createdby}',
+						'${modifiedat}',
+						'${modifiedby}',
+						'${id}',
+						'${eventid}',
+						'${userid}',
+						'${userstatus}')
+						`
+					
+					let statement = await db.preparePromisified(query)
+					let result = await db.statementExecPromisified(statement, [])
+					if(result==1){
+						
+						resolve(result)
+					}
+					
+				}
+
+			} catch (error) {
+				reject(error);
+			}
+
+		});
+	};
+	let viewenrollevent = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let schema = await utils.currentSchema({ db })
+				let LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				let offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
+
+				let query =
+					`SELECT "EVENTID",COUNT(*) AS ENROLL FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_RSVP" GROUP BY EVENTID LIMIT ${LIMIT} offset ${offset}`
+				
+					let statement = await db.preparePromisified(query)
+				let results = await db.statementExecPromisified(statement, [])
+
+				resolve(results);
+
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
+	let unenrollevent = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let schema = await utils.currentSchema({
+					db
+				})
+				let query = `DELETE FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_RSVP"  WHERE EVENTID = '${payload.payload.EVENTID}' AND USERID = '${payload.payload.USERID}'  `
+				let statement = await db.preparePromisified(query)
+				let results = await db.statementExecPromisified(statement, [])
+				resolve(results);
+
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
+
 
 	return {
 		viewnews,
@@ -482,7 +588,10 @@ module.exports = () => {
 		getevent,
 		createevent,
 		updateevent,
-		deleteevent
+		deleteevent,
+		enrollevent,
+		viewenrollevent,
+		unenrollevent
 
 	};
 

@@ -1,0 +1,11 @@
+COLUMN TABLE sclabs_alumniportal_events_rsvp (
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID NVARCHAR(36) NOT NULL,
+  EventID NVARCHAR(36) NOT NULL,
+  UserID NVARCHAR(36) NOT NULL,
+  Userstatus NVARCHAR(36) NOT NULL, 
+  PRIMARY KEY(ID)
+)

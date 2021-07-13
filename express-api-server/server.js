@@ -282,7 +282,7 @@ const userskillsRoutes = require("./router/skills/userindex.js");
 const userjobRoutes = require("./router/job/userindex.js");
 const userdocumentRoutes = require("./router/documents/userindex.js");
 const useractionRoutes = require("./router/users/index.js");
-const usernefRoutes = require("./router/nef");
+const usernefRoutes = require("./router/nef/userindex.js");
 const askhruserroutes = require("./router/askhr/indexuser.js")
 const searchuserRoutes = require("./router/search/index")
 app.use("/user/auth", userauthRoutes);
