@@ -447,7 +447,7 @@ module.exports = () => {
 				}
 
 			} catch (error) {
-				
+
 				reject(error);
 			}
 		});
@@ -486,25 +486,13 @@ module.exports = () => {
 				let userstatus = payload.payload.USERSTATUS;
 				let query = `SELECT "USERID" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_RSVP" WHERE USERID = '${userid}' AND EVENTID = '${eventid}'`
 				let statement = await db.preparePromisified(query)
-				let result = await db.statementExecPromisified(statement, [])
-	
-				if (result.length == 1) {
-
-					resolve("UserAlreadyEnrolled");
+				let result1 = await db.statementExecPromisified(statement, [])
+				console.log(result1)
+				if (result1.length == 1) {
+					result1[0]['stat'] = '1';
+					resolve(result1);
 				}
 				else {
-					// calendar.createEvent({
-					// 	start: moment(),
-					// 	end: moment().add(1, 'hour'),
-					// 	summary: 'Example Event',
-					// 	description: 'It works ;)',
-					// 	location: 'my room',
-					// 	url: 'http://sebbo.net/'
-					// });
-					// var path = __dirname + '/icsfile/'+'akcjmak'+ '.ics';
-					//  calendar.saveSync(path);
-					// console.log(path)
-
 					let query =
 						`INSERT INTO "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_RSVP" VALUES(
 						'${createdat}',
@@ -516,14 +504,40 @@ module.exports = () => {
 						'${userid}',
 						'${userstatus}')
 						`
-					
+
 					let statement = await db.preparePromisified(query)
 					let result = await db.statementExecPromisified(statement, [])
-					if(result==1){
-						
+					if (result == 1) {
+						let query = `SELECT TITLE , CONTENT,DATE FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" WHERE ID = '${eventid}'`
+						let statement = await db.preparePromisified(query)
+						let result = await db.statementExecPromisified(statement, []);
+						calendar.createEvent({
+							start: result[0].DATE,
+							end: result[0].DATE,
+							summary: 'Example Event ' + result[0].TITLE,
+							description: 'EVENT  ' + result[0].CONTENT,
+							location: 'Remote',
+							url: 'http://sebbo.net/'
+						});
+						query = `SELECT  PERSONAL_EMAIL_ID, FIRST_NAME_PERSONAL_INFORMATION FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE "ID" = '${userid}'`
+						statement = await db.preparePromisified(query)
+						result = await db.statementExecPromisified(statement, []);
+						var path = __dirname + '/icsfile/' + result[0]['FIRST_NAME_PERSONAL_INFORMATION'] + '.ics';
+						calendar.saveSync(path);
+						//getting user data to send mail
+
+						result[0]['path'] = path;
+						result[0]['stat'] = '0';
 						resolve(result)
+						//result1 = '1'
+
 					}
-					
+					// else {
+					// 	//result[0]['path'] = '1';
+					// 	resolve(result)
+					// }
+
+
 				}
 
 			} catch (error) {
@@ -544,8 +558,8 @@ module.exports = () => {
 
 				let query =
 					`SELECT "EVENTID",COUNT(*) AS ENROLL FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_RSVP" GROUP BY EVENTID LIMIT ${LIMIT} offset ${offset}`
-				
-					let statement = await db.preparePromisified(query)
+
+				let statement = await db.preparePromisified(query)
 				let results = await db.statementExecPromisified(statement, [])
 
 				resolve(results);

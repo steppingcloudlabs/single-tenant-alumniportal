@@ -49,3 +49,4 @@ express-api-server/reports/coverage-final.json
 .vscode/settings.json
 db/src/gen/.env
 express-api-server/service/nef/icsfile/akcjmak.ics
+express-api-server/service/nef/icsfile/ak.ics

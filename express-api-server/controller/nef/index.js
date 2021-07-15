@@ -1,8 +1,8 @@
 /* eslint-disable */
 const nefserivce = require("../../service/nef")();
+const sesservice = require("../../service/ses")();
 const dbClass = require("sap-hdbext-promisfied");
 const utils = require("../../utils/database/index")();
-
 module.exports = {
 	// News Controllers
 	getnews: async (req, res) => {
@@ -402,61 +402,70 @@ module.exports = {
 			});
 		}
 	},
-	enrollevent: async (req, res) =>{
-		try{
-		const payload = req.body;
-		const db = new dbClass(req.db);
-		let response = await nefserivce.enrollevent({
-			payload, db
-		});
-		if (response) {
-			res.type("application/json").status(200).send({
-				status: "200",
-				result: response
+	enrollevent: async (req, res) => {
+		try {
+			const payload = req.body;
+			const db = new dbClass(req.db);
+			let Path = await nefserivce.enrollevent({
+				payload, db
 			});
-		} else {
-			res.type("application/json").status(200).send({
-				status: "400",
-				result: response
-			});
-		}
-	}catch (error) {
-		res.type("application/json").status(500).send({
-			status: "500",
-			error: error.message
-		});
-	}
-
-
-	}, 	
-	viewenrollevent: async (req, res) =>{
-		try{
-		const payload = req.body;
-		const db = new dbClass(req.db);
-		let response = await nefserivce.viewenrollevent({
-			payload, db
-		});
-		if (response) {
-			res.type("application/json").status(200).send({
-				status: "200",
-				result: response
-			});
-		} else {
-			res.type("application/json").status(200).send({
-				status: "400",
-				result: response
+			let response;
+			console.log(Path)
+			if(Path[0]['stat'] == '1'){
+				response ="UserAlreadyEnrolled"
+			}
+			else{
+				console.log(Path[0]['stat'])
+			response = await sesservice.sendInviteMail( Path)
+			}
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response
+				});
+			} else {
+				res.type("application/json").status(200).send({
+					status: "400",
+					result: response
+				});
+			}
+		} catch (error) {
+			res.type("application/json").status(500).send({
+				status: "500",
+				error: error.message
 			});
 		}
-	}catch (error) {
-		res.type("application/json").status(500).send({
-			status: "500",
-			error: error
-		});
-	}
 
 
 	},
-	
+	viewenrollevent: async (req, res) => {
+		try {
+			const payload = req.body;
+			const db = new dbClass(req.db);
+			let response = await nefserivce.viewenrollevent({
+				payload, db
+			});
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response
+				});
+			} else {
+				res.type("application/json").status(200).send({
+					status: "400",
+					result: response
+				});
+			}
+		} catch (error) {
+			res.type("application/json").status(500).send({
+				status: "500",
+				error: error
+			});
+		}
+
+
+	},
+
 	unenrollevent: async (req, res) => {
 		try {
 			const payload = req.body;
@@ -465,17 +474,24 @@ module.exports = {
 				payload,
 				db
 			});
+			//console.log(response)
 			if (response) {
 				res.status(200).send({
 					status: "200",
 					result: response,
 				});
 			}
+			else {
+				res.type("application/json").status(200).send({
+					status: "400",
+					result: "User is not registered in this event"
+				});
+			}
 		} catch (error) {
 			res.status(200).send({
 				status: "400",
-				result: "User is not registered in this event"
+				result: error
 			});
 		}
-	}, 	
+	},
 }

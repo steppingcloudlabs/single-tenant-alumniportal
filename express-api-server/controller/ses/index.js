@@ -1,4 +1,4 @@
-const sesservice = require("../../service/ses/index")();
+const sesservice = require("../../service/ses/index");
 module.exports = {
     handlebounces: async (req, res) => {
         try {

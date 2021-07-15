@@ -1,5 +1,7 @@
 const AWS = require("aws-sdk");
-
+const ses = require("../../controller/ses");
+const fs = require('fs').promises;
+const nodemailer = require("nodemailer");
 module.exports = () => {
     AWS.config.update({
         accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -99,7 +101,7 @@ module.exports = () => {
 
                 let endpoint = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
                 endpoint = endpoint.replace('-srv', "");
-                
+
                 let paramsTemplate = {
                     Source: 'daraksha@steppingcloud.com',
                     Template: 'WelcomeMail',
@@ -129,41 +131,44 @@ module.exports = () => {
                     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
                     region: 'us-east-2'
                 };
-                let params = {
-                    Destination: { /* required */
-                        CcAddresses: [
+                // let params = {
+                //     Destination: { /* required */
+                //         CcAddresses: [
 
-                        ],
-                        ToAddresses: [
-                            EMAIL,
-                            /* more items */
-                        ]
-                    },
-                    Message: { /* required */
-                        Body: { /* required */
-                            Html: {
-                                Charset: "UTF-8",
-                                Data: "HTML_FORMAT_BODY"
-                            },
-                            Text: {
-                                Charset: "UTF-8",
-                                Data: "TEXT_FORMAT_BODY"
-                            }
-                        },
-                        Subject: {
-                            Charset: 'UTF-8',
-                            Data: 'Test email'
-                        }
-                    },
-                    Source: 'daraksha@steppingcloud.com', /* required */
-                    ReplyToAddresses: [
+                //         ],
+                //         ToAddresses: [
+                //             EMAIL,
+                //             /* more items */
+                //         ]
+                //     },
+                //     RawMessage: { /* required */
+                //          Data: 
+                //         Body: { /* required */
+                //             Html: {
+                //                 Charset: "UTF-8",
+                //                 Data: "HTML_FORMAT_BODY"
+                //             },
+                //             Text: {
+                //                 Charset: "UTF-8",
+                //                 Data: "TEXT_FORMAT_BODY"
+                //             }
 
-                    ],
-                };
+
+                //         },
+                //         Subject: {
+                //             Charset: 'UTF-8',
+                //             Data: 'Test email'
+                //         }
+                //     },
+                //     Source: 'daraksha@steppingcloud.com', /* required */
+                //     ReplyToAddresses: [
+
+                //     ],
+                // };
 
                 let endpoint = JSON.parse(process.env.VCAP_APPLICATION).uris[0];
                 endpoint = endpoint.replace('-srv', "");
-                
+
                 let paramsTemplate = {
                     Source: 'daraksha@steppingcloud.com',
                     Template: 'ResetPassword',
@@ -184,7 +189,7 @@ module.exports = () => {
         });
     }
 
-    const sendEmailAdmin = async ({ email, firstname, password ,URL }) => {
+    const sendEmailAdmin = async ({ email, firstname, password, URL }) => {
         return new Promise(async (resolve, reject) => {
             try {
                 const SES_CONFIG = {
@@ -236,7 +241,7 @@ module.exports = () => {
                 };
 
 
-                
+
                 // let sendPromise = new AWS.SES(SES_CONFIG).sendEmail(params).promise();
                 sendPromise = new AWS.SES(SES_CONFIG).sendTemplatedEmail(paramsTemplate).promise();
                 resolve(sendPromise);
@@ -246,7 +251,46 @@ module.exports = () => {
             }
         });
     }
+   
+    const sendInviteMail = (Path ) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+                const SES_CONFIG = {
+                    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+                    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+                    region: 'us-east-2'
+                };
+               // EMAIL = 'anasmak5624@gmail.com'
+               // const contents = await fs.readFile(Path, { encoding: 'base64' });
+                console.log(Path)
+                let transporter = nodemailer.createTransport({
+                    SES: new AWS.SES(SES_CONFIG)
+                  });
+                  let text = 'Hi '+Path[0]['FIRST_NAME_PERSONAL_INFORMATION']
+                  let info = await transporter.sendMail({
+                    from: '"Stepping Cloud" <daraksha@steppingcloud.com>',
+                    to: "mohd.anas@steppingcloud.com",
+                    subject: "Invitation",                // Subject line
+                    text: text,                      // plaintext version
+                    html: '<div>' + text + '</div>', // html version
+                    attachments: [{
+                        path: Path[0]['path']
+                    }]
+                  });
+                  
+                const t = await fs.unlink(Path[0]['path'])
+                console.log(t)
+                resolve(info)
 
+            }
+           
+            catch (error) {
+                    reject(error)
+                }
+
+            })
+
+    }
 
 
     return {
@@ -254,6 +298,7 @@ module.exports = () => {
         handleSnsNotification,
         sendEmail,
         sendForgetPasswordEmail,
-        sendEmailAdmin
+        sendEmailAdmin,
+        sendInviteMail
     }
 }
