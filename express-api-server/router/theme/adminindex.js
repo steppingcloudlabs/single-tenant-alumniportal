@@ -11,5 +11,12 @@ expressrouter
 expressrouter
 	.route("/theme/getcolor")
 	.get((req, res, next) => admincontroller.getcolor(req, res, next));
+expressrouter
+	.route("/theme/updateDynamicImage")
+	.post((req, res, next) => admincontroller.updateDynamicImage(req, res, next));
+expressrouter
+	.route("/theme/getDynamicImage")
+	.get((req, res, next) => admincontroller.getDynamicImage(req, res, next));
+
 
 module.exports = expressrouter;

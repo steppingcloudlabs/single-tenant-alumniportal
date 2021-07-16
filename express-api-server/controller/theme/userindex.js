@@ -45,5 +45,38 @@ module.exports = {
 		}
 
 	},
+
+    getDynamicImage: async (req, res) => {
+		try {
+			const payload = req.query;
+			const logger = req.logger;
+			// getting db connection of this request
+			let db = new dbClass(req.db);
+			let response = await userservice.getDynamicImage({
+				payload,
+				logger,
+				db
+			});
+          
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response
+				});
+			}else {
+				res.status(400).send({
+					status: "400",
+					result: response
+				});
+			}
+		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at user/theme/getDynamic ${error}`);
+			res.status(500).send({
+				status: "500",
+				result: error
+			});
+		}
+
+	},
 	
 }

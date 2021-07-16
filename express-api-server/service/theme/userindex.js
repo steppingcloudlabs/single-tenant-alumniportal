@@ -1,7 +1,7 @@
 /**
  * Service layer of admin actions for user 
  */
-
+ 
  const uuid = require("uuid");
  const utils = require("../../utils/database/index.js")();
  const emailservice = require("../ses/index")();
@@ -10,7 +10,9 @@
  const dataForge = require('data-forge');
  const AWS = require('aws-sdk');
  module.exports = () => {
- 
+     
+    AWS.config.update({ accessKeyId: process.env.ACCESS_KEY_ID, secretAccessKey: process.env.SECRET_ACCESS_KEY,region:process.env.AWS_REGION });
+    const s3= new AWS.S3()
      /**
       * Function returns list of user or a user 
       * @params payload
@@ -62,12 +64,52 @@
         });
     };
 
+    const getDynamicImage = ({
+        payload,
+        logger,
+        db
+    }) => {
+        return new Promise(async (resolve, reject) => {
+            try {
+
+                `
+                Schema is the database name we need for execuing the query. 
+
+                Improvement : We can inject the database(schema) name at controller level by extracting from the db credentials. 
+                This change might improve the response time of the API.  
+                `
+                const schema = await utils.currentSchema({
+                    db
+                })
+                // Setting Limit and offeset if present in the request. 
+                const myKey = payload.query
+                const signedUrlExpireSeconds = 60*60*24*7
+                
+                const url = s3.getSignedUrl('getObject', {
+                    Bucket: process.env.AWS_BUCKET_NAME,
+                    Key: myKey,
+                    Expires: signedUrlExpireSeconds
+                   
+                })
+
+                let data={"key":myKey,"url":url}
+                resolve(data)
+            } catch (error) {
+                // log the detialed error with error stack.
+                logger.error(`Error for ${logger.getTenantId()} at getDynamicImage function: ${error.message}`)
+                // reject the promise.
+                reject(error);
+            }
+        });
+    };
+
     
      
    
      return {
          
          getcolor,
+         getDynamicImage
          
      };
  
