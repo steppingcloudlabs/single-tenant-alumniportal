@@ -96,6 +96,82 @@ module.exports = {
 		}
 
 	},
+    
+   /*
+	Controller to get  Dynamic Image of landing page
+	*/ 
+    getDynamicImage: async(req,res)=>
+    {
+        try
+        {
+            const payload=req.query;
+            const logger=req.logger;
+            let db=new dbClass(req.db)
+            let response=await adminservice.getDynamicImage({payload,logger,db})
+            if(response.length)
+            {
+                res.type("application/json").status(200).send({
+                    status:"200",
+                    result:response
+                })
+            }
+           
+            else {
+				res.status(400).send({
+					status: "200",
+					result: response
+				});
+			}
+        }catch(error)
+        {
+            req.logger.error(` Error for ${req.logger.getTenantId()} at admin/theme/getDynamicImage ${error}`);
+			res.status(500).send({
+				status: "500",
+				result: error
+			});
+        }
+    },
+    /*
+	Controller for updating/inserting dynamic Image theme.
+	*/ 
+	updateDynamicImage: async (req, res) => {
+		try {
+			// extracting the body from request
+			const payload = req.body;
+			// extracting the logger object from the request. 
+			const logger = req.logger; 
+			// getting db connection of this request.
+			let db = new dbClass(req.db);
+
+			// calling our service layer for admin creation
+			let response = await adminservice.updateDynamicImage({
+				payload,
+				logger,
+				db 
+			});
+
+			// Handling different cases of the response we get from out service layer and setting appropriate response and status codes. 
+			if (response.Location) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: "Images updated successfully"
+				});
+			} else {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response
+				});
+			}
+
+		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()}at admin/action/theme/updatecolor ${error}`);
+			res.type("application/json").status(500).send({
+				status: "500",
+				error: error
+			});
+		}
+
+	},
 	
 
 

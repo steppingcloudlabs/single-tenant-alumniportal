@@ -1,0 +1,14 @@
+COLUMN TABLE sclabs_alumniportal_admin_dynamicImage (
+  createdAt TIMESTAMP,
+  createdBy NVARCHAR(255),
+  modifiedAt TIMESTAMP,
+  modifiedBy NVARCHAR(255),
+  ID NVARCHAR(36) NOT NULL,
+  logo NCLOB,
+  landingimage1 NCLOB,
+  landingimage2 NCLOB,
+  landingimage3 NCLOB,
+  landingimage4 NCLOB,
+  PRIMARY KEY(ID)
+)
+

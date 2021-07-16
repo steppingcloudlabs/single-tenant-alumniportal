@@ -9,5 +9,8 @@ const usercontroller = require("../../controller/theme/userindex");
 expressrouter
 	.route("/theme/getcolor")
 	.get((req, res, next) => usercontroller.getcolor(req, res, next));
+expressrouter
+	.route("/theme/getDynamicImage")
+	.get((req, res, next) => usercontroller.getDynamicImage(req, res, next));
 
 module.exports = expressrouter;
