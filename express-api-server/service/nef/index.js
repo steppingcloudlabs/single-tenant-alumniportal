@@ -519,7 +519,7 @@ module.exports = () => {
 							location: 'Remote',
 							url: 'http://sebbo.net/'
 						});
-						query = `SELECT  PERSONAL_EMAIL_ID, FIRST_NAME_PERSONAL_INFORMATION FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE "ID" = '${userid}'`
+						query = `SELECT  PERSONAL_EMAIL_ID, FIRST_NAME_PERSONAL_INFORMATION FROM "${schema}"."SCLABS_ALUMNIPORTAL_USERS_USERS" WHERE "USERID" = '${userid}'`
 						statement = await db.preparePromisified(query)
 						result = await db.statementExecPromisified(statement, []);
 						var path = __dirname + '/icsfile/' + result[0]['FIRST_NAME_PERSONAL_INFORMATION'] + '.ics';

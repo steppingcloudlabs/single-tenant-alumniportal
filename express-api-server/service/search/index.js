@@ -279,12 +279,66 @@ module.exports = () => {
 			}
 		});
 	};
+	const searchNews = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				let query= `SELECT A1."ID",
+					A1."TITLE",
+					A1."CONTENT",
+					A1."PHOTO",
+					A1."DATE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" AS A1 WHERE CONTAINS ((A1."TITLE"),'${payload.QUERY}', fuzzy(0.1)) LIMIT ${LIMIT} offset ${offset} `
+					console.log(query)
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
+					resolve(results)
+
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
+	const searchEvent = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				let query= `SELECT A1."ID",
+					A1."TITLE",
+					A1."CONTENT",  
+					A1."PHOTO",
+					A1."DATE" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" AS A1 WHERE CONTAINS ((A1."TITLE"),'${payload.QUERY}', fuzzy(0.3)) LIMIT ${LIMIT} offset ${offset}`
+					const statement = await db.preparePromisified(query)
+					const results = await db.statementExecPromisified(statement, [])
+					resolve(results)
+
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
 	return {
 		searchUser,
 		searchSkill,
 		searchAdmin,
 		searchJob,
 		searchUserids,
-		getMapsProfile
+		getMapsProfile,
+		searchNews,
+		searchEvent
+		//searchDocument
 	}
 };

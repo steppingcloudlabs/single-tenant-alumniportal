@@ -28,6 +28,7 @@
 		"moment": "^2.24.0",
 		"node-stream-zip": "latest",
 		"nodemailer": "latest",
+		"ical-generator": "^2.2.0",
 		"nodemon": "latest",
 		"passport": "latest",
 		"sap-hdbext-promisfied": "^2.202103.1",

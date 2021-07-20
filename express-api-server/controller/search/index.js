@@ -290,5 +290,95 @@ module.exports = {
 				result: error.message
 			});
 		}
+	},
+	getEvent: async (req, res) => {
+		try {
+			const payload = req.query;
+			let db = new dbClass(req.db);
+			let response = await searchService.searchEvent({
+				payload,
+				db
+			});
+			if (response) {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				let query = `SELECT COUNT(*) AS TOTALROWS FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_EVENTS" AS A1 WHERE CONTAINS ((A1."TITLE"),'${payload.QUERY}', fuzzy(0.1))`
+				const schemaSQL = await db.preparePromisified(query)
+				let pagecount = await db.statementExecPromisified(schemaSQL, [])
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': parseInt(LIMIT),
+					'OFFSET': parseInt(OFFSET)
+				}
+				res.status(200).send({
+					status: "200",
+					result: response,
+					pagination: paginationobject
+				});
+
+			} else {
+				res.status(400).send({
+					status: "400",
+					result: response
+				});
+			}
+
+		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/search/event ${error}`);
+			res.status(400).send({
+				status: "400",
+				result: error
+			});
+
+
+		}
+	},
+	getNews: async (req, res) => {
+		try {
+			const payload = req.query;
+			let db = new dbClass(req.db);
+			let response = await searchService.searchNews({
+				payload,
+				db
+			});
+			if (response) {
+				const schema = await utils.currentSchema({
+					db
+				})
+				const LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				const OFFSET = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				let query = `SELECT COUNT(*) as TOTALROWS FROM "${schema}"."SCLABS_ALUMNIPORTAL_NEWS_NEWS" AS A1 WHERE CONTAINS ((A1."TITLE"),'${payload.QUERY}', fuzzy(0.1))`
+				const schemaSQL = await db.preparePromisified(query)
+				let pagecount = await db.statementExecPromisified(schemaSQL, [])
+				paginationobject = {
+					'TOTALPAGES': Math.ceil(pagecount[0].TOTALROWS / LIMIT),
+					'LIMIT': parseInt(LIMIT),
+					'OFFSET': parseInt(OFFSET)
+				}
+				res.status(200).send({
+					status: "200",
+					result: response,
+					pagination: paginationobject
+				});
+
+			} else {
+				res.status(400).send({
+					status: "400",
+					result: response
+				});
+			}
+
+		} catch (error) {
+			req.logger.error(` Error for ${req.logger.getTenantId()} at user/action/search/event ${error}`);
+			res.status(400).send({
+				status: "400",
+				result: error
+			});
+
+
+		}
 	}
 }

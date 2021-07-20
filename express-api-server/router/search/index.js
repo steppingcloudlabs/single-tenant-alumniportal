@@ -25,5 +25,13 @@ expressrouter
 expressrouter
 	.route("/maps/userprofile/get")
 	.get((req, res, next) => searchContoller.getMapsProfile(req, res, next));
+// For event	
+expressrouter
+	.route("/event")
+	.get((req, res, next) => searchContoller.getEvent(req, res, next));
+// FOR NEWS
+expressrouter
+	.route("/news")
+	.get((req, res, next) => searchContoller.getNews(req, res, next));
 
 module.exports = expressrouter;

@@ -26,7 +26,7 @@ modules:
       - name: single-tenant-alumniportal-sap-s3
       - name: application-logs
     parameters:
-      memory: 350M
+      memory: 512M
       disk-quota: 2048M
     properties:
       apiDest: 'sfsdkdest'
