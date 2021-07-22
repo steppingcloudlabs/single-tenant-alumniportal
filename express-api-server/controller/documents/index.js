@@ -2,7 +2,6 @@
 const documentserivce = require("../../service/documents")();
 const bulkService = require("../../service/bulk/index")();
 const utils = require("../../utils/database/index")();
-const sftpservice = require("../../service/sftp")();
 const dbClass = require("sap-hdbext-promisfied");
 const objectstorserivce = require("../../service/bulk/docuemts/jobschedulder")();
 
@@ -180,49 +179,7 @@ module.exports = {
 
 	},
 
-	triggersftpdownload: async (req, res, next) => {
-		try {
-			let db = new dbClass(req.db);
-			console.log(req.db)
-			// call sftp credential api 
-			let payload = {};
-			let sftp = await sftpservice.getCredentials({ db }).catch((error) => console.log(error));
-
-			let config = {}
-			config.host = sftp[0].URL
-			config.port = sftp[0].PORT
-			config.username = sftp[0].USERNAME
-			config.password = sftp[0].PASSWORD
-			payload.config = config;
-			payload.source = sftp[0].PATH
-			payload.destination = "./tmp"
-
-			let response = await documentserivce.triggerSFTPDownload({
-				payload,
-				db
-			});
-
-			if (response) {
-				res.type("application/json").status(200).send({
-					status: "200",
-					result: response,
-				});
-			} else {
-				res.type("application/json").status(400).send({
-					status: "400",
-					result: response
-				});
-			}
-
-		} catch (error) {
-			req.logger.error(` Error for ${req.logger.getTenantId()} at admin/action/index/documents/triggerBulkUpload ${error}`);
-			res.type("application/json").status(500).send({
-				status: "500",
-				error: error.message
-			});
-		}
-	},
-
+	// <-----------------------BULK UPLOAD CODE ----------------------->
 	triggerbulkupload: async (req, res, next) => {
 		try {
 			// let db = new dbClass(req.db);
@@ -281,6 +238,7 @@ module.exports = {
 		}
 	},
 
+	// This function get the uploadID from AWS S3 all the multipart will be uploaded against this AWS provided ID
 	getuploadid: async (req, res, next) => {
 		try {
 			let db = new dbClass(req.db);

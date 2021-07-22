@@ -236,9 +236,6 @@ app.use("/integration/auth", integrationAuth);
 const bulkjobs = require("./router/job");
 app.use("/integration", bulkjobs);
 
-const documentsjobs = require("./router/bulk");
-app.use("/integration", documentsjobs);
-
 const ses = require('./router/ses');
 app.use("/aws", ses);
 app.use(function (req, res, next) {

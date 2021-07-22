@@ -18,15 +18,9 @@ expressrouter
 expressrouter
 	.route("/documents/status")
 	.get((req, res, next) => documentcontroller.statusdocuments(req, res, next));
-expressrouter
-	.route("/documents/create/sftp/count")
-	.get((req, res, next) => documentcontroller.triggersftpdownload(req, res, next));
-expressrouter
-	.route("/documents/create/sftp/trigger")
-	.get((req, res, next) => documentcontroller.triggerbulkupload(req, res, next));
-expressrouter
-	.route("/documents/create/sftp/status")
-	.get((req, res, next) => documentcontroller.bulkuploadstatus(req, res, next));
+// <----------------------BULK UPLOAD ROUTES ----------------------------->
+
+// These routes required for uploading zip file on S3.
 expressrouter
 	.route("/documents/create/_bulk/getuploadid")
 	.get((req, res, next) => documentcontroller.getuploadid(req, res, next));
@@ -34,11 +28,14 @@ expressrouter
 	.route("/documents/create/_bulk/getuploadurl")
 	.get((req, res, next) => documentcontroller.getuploadurl(req, res, next));
 expressrouter
-	.route("/documents/create/jobs/trigger")
-	.post((req, res, next) => documentcontroller.trigger(req, res, next));
-expressrouter
 	.route("/documents/create/_bulk/complete")
 	.post((req, res, next) => documentcontroller.complete(req, res, next));
+// This routes triggers a function which run the extraction and insertion job in the background.
+expressrouter
+	.route("/documents/create/jobs/trigger")
+	.post((req, res, next) => documentcontroller.trigger(req, res, next));
+
+// These are reporting routes for Document bulk upload.
 expressrouter
 	.route("/documents/create/jobs/get")
 	.get((req, res, next) => documentcontroller.getAllJobs(req, res, next));

@@ -221,6 +221,11 @@ module.exports = () => {
 		return new Promise(async (resolve, reject) => {
 			try {
 
+				// We have two approach to implement this.
+				// 1. We can either user objectstore (provided by SAP CLoud Platform) 
+				// 2. We can directly user S3(Currently this is implemented, However this is the appropriate implementation in case of multu-tenant env)
+				// From Code prespective a very small change is required if anyone trying to user SAP ObjectStore. Just use credentials from xsService rather than from process.env
+				// You dont have to do anything. 
 				let xsService = xsenv.getServices(
 					{
 						objectstore: {
@@ -232,14 +237,7 @@ module.exports = () => {
 				let host = xsService.objectstore.host;
 				let region = xsService.objectstore.region;
 
-				//S3 configuration
-				// const s3 = new AWS.S3({
-				// 	accessKeyId: accessKeyId,
-				// 	secretAccessKey: secretAccessKey,
-				// 	region: region,
-				// 	signatureVersion: 'v4'
-				// });
-
+				// Use above variuable is you want to use the SAP ObjectStore 
 				const s3 = new AWS.S3({
 					accessKeyId: process.env.AWS_ACCESS_KEY_ID,
 					secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -247,12 +245,14 @@ module.exports = () => {
 					signatureVersion: 'v4'
 				});
 
+				// Change the bucket name as well, this should come from xsService
 				let params = {
 					Bucket: process.env.AWS_BUCKET_NAME,
 					Key: payload.query.filename,
 					ContentType: payload.query.filetype
 				};
 
+				// This will return the UplaodID to the frontend, we dont have to do anything 
 				let response = await s3.createMultipartUpload(params).promise();
 				resolve({ KEY: response.Key, UPLOADID: response.UploadId })
 
@@ -266,6 +266,7 @@ module.exports = () => {
 		return new Promise(async (resolve, reject) => {
 			try {
 
+				// The documentation is save as able function
 				let xsService = xsenv.getServices(
 					{
 						objectstore: {
@@ -276,14 +277,6 @@ module.exports = () => {
 				let secretAccessKey = xsService.objectstore.secret_access_key;
 				let host = xsService.objectstore.host;
 				let region = xsService.objectstore.region;
-
-				//S3 configuration
-				// const s3 = new AWS.S3({
-				// 	accessKeyId: accessKeyId,
-				// 	secretAccessKey: secretAccessKey,
-				// 	region: region,
-				// 	signatureVersion: 'v4'
-				// });
 
 				const s3 = new AWS.S3({
 					accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -312,7 +305,7 @@ module.exports = () => {
 	const complete = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
-
+				// The documentation is save as above function
 				let xsService = xsenv.getServices(
 					{
 						objectstore: {
@@ -320,20 +313,12 @@ module.exports = () => {
 						}
 					});
 				// Need to change this when migratring this for multitenant.
-
-
 				let accessKeyId = xsService.objectstore.access_key_id;
 				let secretAccessKey = xsService.objectstore.secret_access_key;
 				let host = xsService.objectstore.host;
 				let region = xsService.objectstore.region;
 
-				//S3 configuration
-				// const s3 = new AWS.S3({
-				// 	accessKeyId: accessKeyId,
-				// 	secretAccessKey: secretAccessKey,
-				// 	region: region,
-				// 	signatureVersion: 'v4'
-				// });
+				
 
 				const s3 = new AWS.S3({
 					accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -341,6 +326,7 @@ module.exports = () => {
 					region: 'us-east-2',
 					signatureVersion: 'v4'
 				});
+				// Ṭhis code is for completing multipart upload.
 				// process.env.AWS_BUCKET_NAME
 				let params = {
 					Bucket: process.env.AWS_BUCKET_NAME,
@@ -360,6 +346,9 @@ module.exports = () => {
 		})
 	}
 
+	/**
+	 * We are capturing any error occured while running the job in background.
+	 */
 	const errorReport = ({ error, payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -390,6 +379,9 @@ module.exports = () => {
 		});
 	}
 
+	/**
+	 * We are capturing the job status which was submitted by the admin, so the they can see the status of the job.
+	 */
 	const jobtoDatabase = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -421,6 +413,9 @@ module.exports = () => {
 		});
 	}
 
+	/**
+	 * We are also updating the status if a successfull upload
+	 */
 	const successReport = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -450,6 +445,8 @@ module.exports = () => {
 		});
 	}
 
+	// We need to call this function in trigger function defined belo after eveything is done. This is required because we have to pay for storeage in AWS if we dont delete then we have to pay for the storage.
+
 	const cleanS3afterprocessing = ({ payload, query, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
@@ -470,24 +467,30 @@ module.exports = () => {
 		});
 	}
 
-
+	// This is the core implementation of bulk upload function. 
 	const trigger = ({ payload, db }) => {
 		return new Promise(async (resolve, reject) => {
 			try {
+				// launching the child process.
 				let id = uuid();
 				const childProcess = fork("./service/documents/jobscheduler.js");
 
+				// sendinng the filename that I want to download with its JOBID (whihc is nothing but uuid).
 				childProcess.send({
 					filename: payload.payload.filename, uuid: id
 				})
 
+				// Child Process will return the payload after extraction fopr each user.
 				childProcess.on("message", payload => {
 					(async (payload) => {
+						// we'll try to call or createdocuments function which will add a new entry into the system.
 						let response = await createdocuments({ payload, db });
 						return response;
 					})(payload).then((response) => {
 						(async (response) => {
+							// Based on the response I'll updae my reporting table.
 							if (response == 1) {
+								// If success then update its successfull
 								let response = await successReport({ payload, db });
 								console.log("data in response" + response);
 							} else {
@@ -499,6 +502,7 @@ module.exports = () => {
 
 					}).catch((error) => {
 						(async (error) => {
+							// Else I'll add the error in the reporting so that we can find out why did it broke.
 							let response = await errorReport({ error, payload, db });
 							console.log(response);
 						})(error).catch(error => {
@@ -545,8 +549,10 @@ module.exports = () => {
 						console.log(err);
 					})
 				})
-				// enter ID in 
-
+				// Notice that we dont resolve this request(Promose function). This is because if we resolve this, the db connection will be closed by the middleware we used in server.js
+				// In order to keep this running in background, we will not resolve this, as we are closing our child process we will not hit the thread limition for nodejs. 
+				// In Frontend, they don't wait for this to get resolved. THat's how the bulk upload is working. 
+		
 				// resolve("triggered")
 			} catch (error) {
 				// console.log(error)

@@ -1,3 +1,7 @@
+/**
+ * WE ARE NOT USING THIS AS OF NOW< THIS IS FOR FUTURE USE.
+ */
+
 const uuid = require("uuid");
 const utils = require("../../utils/database/index.js")();
 const {
