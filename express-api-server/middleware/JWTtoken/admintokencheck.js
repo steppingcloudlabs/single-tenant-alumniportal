@@ -1,3 +1,5 @@
+// This middleware is for checking if the token is valid or not. 
+
 const {
     JWT_SECRET
 } = require('../../config');

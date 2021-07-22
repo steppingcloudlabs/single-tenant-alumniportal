@@ -1,4 +1,5 @@
 module.exports = () => {
+	// Helper functions which get the currentSchema of the tenant
 	const currentSchema = ({
 		db
 	}) => {
@@ -13,6 +14,8 @@ module.exports = () => {
 			}
 		});
 	};
+
+	// Get the total pagecount of a table.
 
 	const getPageCount = ({
 		schema,
