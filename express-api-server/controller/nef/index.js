@@ -465,6 +465,33 @@ module.exports = {
 
 
 	},
+	viewUserEnrollEvent: async (req, res) => {
+		try {
+			const payload = req.body;
+			const db = new dbClass(req.db);
+			let response = await nefserivce.viewUserEnrollEvent({
+				payload, db
+			});
+			if (response) {
+				res.type("application/json").status(200).send({
+					status: "200",
+					result: response
+				});
+			} else {
+				res.type("application/json").status(200).send({
+					status: "400",
+					result: response
+				});
+			}
+		} catch (error) {
+			res.type("application/json").status(500).send({
+				status: "500",
+				error: error
+			});
+		}
+
+
+	},
 
 	unenrollevent: async (req, res) => {
 		try {

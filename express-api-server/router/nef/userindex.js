@@ -17,5 +17,9 @@ expressrouter
 	.get((req, res, next) =>  nefcontroller.viewenrollevent(req, res, next));
 expressrouter
 	.route("/event/unenrollevent")
-	.delete((req, res, next) =>  nefcontroller.unenrollevent(req, res, next));	
+	.delete((req, res, next) =>  nefcontroller.unenrollevent(req, res, next));
+expressrouter
+	.route("/event/viewuserenrollevent")
+	.get((req, res, next) =>  nefcontroller.viewUserEnrollEvent(req, res, next));		
+
 module.exports = expressrouter;

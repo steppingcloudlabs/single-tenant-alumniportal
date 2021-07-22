@@ -569,6 +569,28 @@ module.exports = () => {
 			}
 		});
 	};
+	let viewUserEnrollEvent = ({
+		payload,
+		db
+	}) => {
+		return new Promise(async (resolve, reject) => {
+			try {
+				let schema = await utils.currentSchema({ db })
+				let LIMIT = payload.LIMIT == undefined ? 10 : payload.LIMIT
+				let offset = payload.OFFSET == undefined ? 0 : payload.OFFSET
+				let USERID =payload.payload.USERID
+				let query =`SELECT "EVENTID","USERSTATUS" FROM "${schema}"."SCLABS_ALUMNIPORTAL_EVENTS_RSVP" WHERE "USERID"='${USERID}' LIMIT ${LIMIT} offset ${offset}`
+				console.log(query)
+				let statement = await db.preparePromisified(query)
+				let results = await db.statementExecPromisified(statement, [])
+
+				resolve(results);
+
+			} catch (error) {
+				reject(error);
+			}
+		});
+	};
 	let unenrollevent = ({
 		payload,
 		db
@@ -605,7 +627,9 @@ module.exports = () => {
 		deleteevent,
 		enrollevent,
 		viewenrollevent,
+		viewUserEnrollEvent,
 		unenrollevent
+		
 
 	};
 
